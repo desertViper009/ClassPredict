@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ClassPredict — Data-First Redesign Preview</title>
+  <meta name="description" content="Functional synthetic-data preview of the ClassPredict premium academic analytics redesign.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body class="preview-body">
+  <div class="preview-shell">
+    <aside class="preview-sidebar" id="preview-sidebar">
+      <a class="cp-brand" href="design-preview.html" aria-label="ClassPredict redesign preview home">
+        <span class="cp-brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span><strong>ClassPredict</strong><small>Academic Analytics</small></span>
+      </a>
+      <nav class="cp-sidebar-nav" aria-label="Preview workspaces">
+        <p class="cp-nav-eyebrow">Workspace</p>
+        <button class="cp-nav-item is-active" data-preview-target="overview"><span class="cp-nav-symbol">01</span>Overview</button>
+        <button class="cp-nav-item" data-preview-target="dataset"><span class="cp-nav-symbol">02</span>Dataset Management</button>
+        <button class="cp-nav-item" data-preview-target="individual"><span class="cp-nav-symbol">03</span>Individual Prediction</button>
+        <button class="cp-nav-item" data-preview-target="class"><span class="cp-nav-symbol">04</span>Whole-Class Prediction</button>
+        <button class="cp-nav-item" data-preview-target="ocr"><span class="cp-nav-symbol">05</span>OCR Review</button>
+        <button class="cp-nav-item" data-preview-target="lab"><span class="cp-nav-symbol">06</span>Numerical Methods Lab</button>
+      </nav>
+      <section class="cp-sidebar-status" aria-labelledby="preview-status-title">
+        <span class="cp-status-dot"></span>
+        <div><strong id="preview-status-title">Synthetic dataset</strong><small>13 students · 49 records</small></div>
+      </section>
+      <p class="cp-privacy-note"><span aria-hidden="true">▣</span><span><strong>Privacy first</strong><small>Preview data never enters production state.</small></span></p>
+    </aside>
+    <button class="preview-backdrop" id="preview-backdrop" aria-label="Close navigation"></button>
+
+    <div class="preview-main">
+      <header class="preview-topbar">
+        <button class="cp-icon-button preview-menu-toggle" id="preview-menu-toggle" aria-label="Open navigation">☰</button>
+        <div><span class="cp-kicker">Redesign preview</span><strong id="preview-page-title">Overview</strong></div>
+        <div class="preview-topbar-actions">
+          <span class="cp-badge cp-badge-info">Synthetic demo</span>
+          <a class="cp-button cp-button-ghost cp-button-sm" href="index.html">Open current app</a>
+        </div>
+      </header>
+
+      <main class="preview-canvas">
+        <div class="cp-preview-notice"><strong>Design preview</strong><span>All people, records, and metrics on this page are synthetic and isolated from application state.</span></div>
+
+        <section data-preview-section="overview" class="cp-page-stack">
+          <header class="cp-page-heading cp-page-heading-split">
+            <div><span class="cp-kicker">CSE numerical methods project</span><h1>Academic performance, made explainable.</h1><p>Validate semester data, inspect model evidence, and forecast outcomes without sending records to a server.</p></div>
+            <div class="cp-heading-actions"><button class="cp-button cp-button-primary" data-preview-target="dataset">Load a dataset</button><button class="cp-button cp-button-secondary" data-preview-target="individual">Create prediction</button></div>
+          </header>
+          <div class="cp-kpi-grid">
+            <article class="cp-kpi"><span class="cp-kpi-icon">ST</span><div><small>Unique students</small><strong>13</strong><span>Pseudonymous keys</span></div></article>
+            <article class="cp-kpi"><span class="cp-kpi-icon">RC</span><div><small>Accepted records</small><strong>49</strong><span>Validated entries</span></div></article>
+            <article class="cp-kpi"><span class="cp-kpi-icon">TR</span><div><small>Valid transitions</small><strong>35</strong><span>Consecutive pairs</span></div></article>
+            <article class="cp-kpi"><span class="cp-kpi-icon">ML</span><div><small>Shared model</small><strong class="cp-kpi-text">Linear regression</strong><span><i class="cp-status-dot"></i> Ready</span></div></article>
+          </div>
+          <div class="cp-dashboard-grid">
+            <article class="cp-panel cp-panel-span-7"><header class="cp-panel-header"><div><span class="cp-kicker">Distribution</span><h2>Semester SGPA distribution</h2></div><select class="cp-select cp-select-sm" aria-label="Preview semester"><option>All semesters</option><option>Semester 4</option></select></header><div class="cp-histogram" aria-label="Synthetic SGPA histogram"><i style="--h:15%"></i><i style="--h:26%"></i><i style="--h:42%"></i><i style="--h:70%"></i><i style="--h:92%"></i><i style="--h:78%"></i><i style="--h:48%"></i><i style="--h:24%"></i></div><div class="cp-axis"><span>0.0</span><span>1.0</span><span>2.0</span><span>3.0</span><span>4.0 SGPA</span></div></article>
+            <article class="cp-panel cp-panel-span-5"><header class="cp-panel-header"><div><span class="cp-kicker">Model evidence</span><h2>Historical transitions</h2></div><span class="cp-badge cp-badge-success">35 pairs</span></header><svg class="cp-preview-chart" viewBox="0 0 520 220" role="img" aria-label="Synthetic transition scatter plot"><g class="chart-grid"><path d="M45 20V190M45 190H500M45 147H500M45 104H500M45 61H500"/></g><path class="chart-line" d="M48 172L493 38"/><g class="chart-points"><circle cx="132" cy="151" r="5"/><circle cx="178" cy="139" r="5"/><circle cx="225" cy="120" r="5"/><circle cx="274" cy="112" r="5"/><circle cx="311" cy="92" r="5"/><circle cx="354" cy="84" r="5"/><circle cx="391" cy="67" r="5"/><circle cx="438" cy="58" r="5"/><circle cx="475" cy="42" r="5"/></g></svg><div class="cp-chart-legend"><span><i class="legend-dot"></i>Observed transitions</span><span><i class="legend-line"></i>Fitted regression</span></div></article>
+            <article class="cp-panel cp-panel-span-8"><header class="cp-panel-header"><div><span class="cp-kicker">Forecast preview</span><h2>Next-semester predictions</h2></div><button class="cp-button cp-button-ghost cp-button-sm" data-preview-target="class">View all</button></header><div class="cp-table-scroll"><table class="cp-table"><thead><tr><th>Student key</th><th>Latest</th><th>Regression</th><th>Baseline</th><th>Status</th></tr></thead><tbody><tr><td><code>SYN_001</code></td><td>3.58</td><td>3.63</td><td>3.58</td><td><span class="cp-badge cp-badge-success">In range</span></td></tr><tr><td><code>SYN_002</code></td><td>3.30</td><td>3.37</td><td>3.30</td><td><span class="cp-badge cp-badge-success">In range</span></td></tr><tr><td><code>SYN_013</code></td><td>3.95</td><td>4.18</td><td>3.95</td><td><span class="cp-badge cp-badge-warning">Raw · high</span></td></tr></tbody></table></div></article>
+            <article class="cp-panel cp-panel-span-4"><header class="cp-panel-header"><div><span class="cp-kicker">Temporal validation</span><h2>Error comparison</h2></div></header><div class="cp-metric-compare"><div><span>Regression MAE</span><strong>0.052</strong><i style="--value:52%"></i></div><div><span>Persistence MAE</span><strong>0.078</strong><i style="--value:78%"></i></div></div><p class="cp-panel-note">Synthetic paired holdouts · lower is better.</p></article>
+          </div>
+        </section>
+
+        <section data-preview-section="dataset" class="cp-page-stack" hidden>
+          <header class="cp-page-heading"><span class="cp-kicker">Data foundation</span><h1>Dataset management</h1><p>Import long-format CSV data, review validation evidence, and accept changes safely.</p></header>
+          <div class="cp-split-grid"><article class="cp-panel"><header class="cp-panel-header"><div><span class="cp-kicker">Import CSV</span><h2>Bring in semester records</h2></div><span class="cp-badge cp-badge-info">Local validation</span></header><button class="cp-dropzone" type="button"><span class="cp-dropzone-icon">⇧</span><strong>Choose or drop a CSV file</strong><small>student_key, semester_no, sgpa · UTF-8 · processed in browser memory</small></button><div class="cp-inline-actions"><button class="cp-button cp-button-primary" data-preview-target="overview">Use synthetic dataset</button><button class="cp-button cp-button-secondary" id="preview-open-dialog">Discard preview data</button></div></article><aside class="cp-panel"><span class="cp-kicker">Accepted dataset</span><h2>Ready for analysis</h2><dl class="cp-definition-list"><div><dt>Students</dt><dd>13</dd></div><div><dt>Records</dt><dd>49</dd></div><div><dt>Semester range</dt><dd>1–7</dd></div><div><dt>Warnings</dt><dd class="cp-warning-text">1 gap</dd></div></dl><div class="cp-alert cp-alert-warning"><strong>Non-consecutive history detected</strong><span>One student has a missing semester. No artificial transition will be created.</span></div></aside></div>
+          <article class="cp-panel"><header class="cp-panel-header"><div><span class="cp-kicker">Record preview</span><h2>Validated semester entries</h2></div><span class="cp-badge cp-badge-success">49 accepted</span></header><div class="cp-table-scroll"><table class="cp-table"><thead><tr><th>#</th><th>Student key</th><th>Semester</th><th>Observed SGPA</th><th>Validation</th></tr></thead><tbody><tr><td>01</td><td><code>SYN_001</code></td><td>Semester 1</td><td>3.45</td><td><span class="cp-badge cp-badge-success">Accepted</span></td></tr><tr><td>02</td><td><code>SYN_001</code></td><td>Semester 2</td><td>3.52</td><td><span class="cp-badge cp-badge-success">Accepted</span></td></tr><tr><td>03</td><td><code>SYN_002</code></td><td>Semester 1</td><td>2.80</td><td><span class="cp-badge cp-badge-success">Accepted</span></td></tr></tbody></table></div></article>
+        </section>
+
+        <section data-preview-section="individual" class="cp-page-stack" hidden>
+          <header class="cp-page-heading"><span class="cp-kicker">Prediction workspace</span><h1>Individual student prediction</h1><p>Fit a transparent trajectory from 3–7 observed semesters and compare it with persistence.</p></header>
+          <div class="cp-split-grid cp-split-grid-wide"><form class="cp-panel" id="preview-prediction-form"><header class="cp-panel-header"><div><span class="cp-kicker">Observation history</span><h2>Semester results</h2></div><span class="cp-badge">4 observations</span></header><div class="cp-observation-list"><label><span>Semester 1</span><input class="cp-input" type="number" value="3.20" min="0" max="4" step="0.01" data-sgpa></label><label><span>Semester 2</span><input class="cp-input" type="number" value="3.35" min="0" max="4" step="0.01" data-sgpa></label><label><span>Semester 3</span><input class="cp-input" type="number" value="3.48" min="0" max="4" step="0.01" data-sgpa></label><label><span>Semester 4</span><input class="cp-input" type="number" value="3.56" min="0" max="4" step="0.01" data-sgpa></label></div><label class="cp-field"><span>Forecasting method</span><select class="cp-select"><option>Individual least-squares trend</option><option>Persistence baseline</option></select></label><button class="cp-button cp-button-primary cp-button-block" type="submit">Compute next-semester forecast</button></form><article class="cp-result-panel"><div id="preview-result-empty" class="cp-empty-state"><span>ƒ(x)</span><h2>Ready to calculate</h2><p>Adjust the synthetic observations and compute a transparent forecast.</p></div><div id="preview-result-ready" hidden><span class="cp-kicker">Semester 5 forecast</span><strong class="cp-result-value" id="preview-forecast-value">—</strong><div class="cp-result-comparison"><div><span>Persistence baseline</span><strong id="preview-baseline-value">—</strong></div><div><span>Model</span><strong>Linear trend</strong></div></div><div class="cp-alert cp-alert-info"><strong>Raw result preserved</strong><span>Production ClassPredict warns instead of silently clipping predictions.</span></div></div></article></div>
+        </section>
+
+        <section data-preview-section="class" class="cp-page-stack" hidden>
+          <header class="cp-page-heading cp-page-heading-split"><div><span class="cp-kicker">Cohort forecasting</span><h1>Whole-class prediction</h1><p>Review every eligible student against the shared transition model and persistence baseline.</p></div><button class="cp-button cp-button-secondary">Export synthetic CSV</button></header>
+          <div class="cp-toolbar"><label class="cp-search-field"><span class="sr-only">Filter students</span><input class="cp-input" id="preview-class-filter" type="search" placeholder="Filter student key or status"></label><div class="cp-filter-group"><button class="cp-chip is-active">All · 13</button><button class="cp-chip">In range · 12</button><button class="cp-chip">Review · 1</button></div></div>
+          <article class="cp-panel"><div class="cp-table-scroll"><table class="cp-table cp-table-wide" id="preview-class-table"><thead><tr><th>Student key</th><th>Latest semester</th><th>Latest SGPA</th><th>Target</th><th>Regression</th><th>Persistence</th><th>Difference</th><th>Status</th></tr></thead><tbody><tr><td><code>SYN_001</code></td><td>4</td><td>3.58</td><td>5</td><td>3.63</td><td>3.58</td><td class="cp-positive">+0.05</td><td><span class="cp-badge cp-badge-success">In range</span></td></tr><tr><td><code>SYN_002</code></td><td>5</td><td>3.30</td><td>6</td><td>3.37</td><td>3.30</td><td class="cp-positive">+0.07</td><td><span class="cp-badge cp-badge-success">In range</span></td></tr><tr><td><code>SYN_013</code></td><td>3</td><td>3.95</td><td>4</td><td>4.18</td><td>3.95</td><td class="cp-warning-text">+0.23</td><td><span class="cp-badge cp-badge-warning">Raw · high</span></td></tr></tbody></table></div></article>
+        </section>
+
+        <section data-preview-section="ocr" class="cp-page-stack" hidden>
+          <header class="cp-page-heading"><span class="cp-kicker">Human-reviewed extraction</span><h1>OCR review and import</h1><p>Crop only the SGPA column, verify every reading, reconcile pseudonymous keys, then explicitly confirm.</p></header>
+          <ol class="cp-stepper" aria-label="OCR workflow"><li data-ocr-step="1" data-step-label="Upload image or PDF"><b>1</b><span>Upload</span></li><li data-ocr-step="2" data-step-label="Select document page"><b>2</b><span>Page</span></li><li data-ocr-step="3" data-step-label="Rotate and crop the SGPA column"><b>3</b><span>Crop</span></li><li data-ocr-step="4" data-step-label="Run OCR on the crop"><b>4</b><span>Extract</span></li><li data-ocr-step="5" data-step-label="Review and correct values"><b>5</b><span>Review</span></li><li data-ocr-step="6" data-step-label="Reconcile pseudonymous keys"><b>6</b><span>Keys</span></li><li data-ocr-step="7" data-step-label="Confirm and import"><b>7</b><span>Confirm</span></li></ol>
+          <div class="cp-ocr-workspace"><article class="cp-document-stage"><div class="cp-document-sheet"><header>University Result Sheet · Synthetic</header><div class="cp-document-lines"></div><div class="cp-crop-region"><span>SGPA column crop</span><strong>3.45<br>3.52<br>2.80<br>3.10</strong></div></div></article><aside class="cp-panel"><span class="cp-kicker">Current step</span><h2 id="preview-ocr-step-label">Upload image or PDF</h2><p>Only a user-selected crop is sent to the in-browser OCR worker. Library assets may require network access on first use.</p><div class="cp-alert cp-alert-info"><strong>Safety barrier active</strong><span>Nothing enters the accepted dataset until step 7 is confirmed.</span></div><div class="cp-inline-actions"><button class="cp-button cp-button-secondary" data-ocr-direction="-1">Previous</button><button class="cp-button cp-button-primary" data-ocr-direction="1">Next step</button></div></aside></div>
+        </section>
+
+        <section data-preview-section="lab" class="cp-page-stack" hidden>
+          <header class="cp-page-heading"><span class="cp-kicker">Interactive numerical methods</span><h1>Educational laboratory</h1><p>Inspect the calculations behind prediction, interpolation, and numerical stability.</p></header>
+          <div class="cp-lab-layout"><aside class="cp-panel cp-lab-menu"><label class="cp-field"><span>Experiment</span><select class="cp-select" id="preview-lab-select"><option value="gaussian">Gaussian elimination</option><option value="regression">Linear vs quadratic regression</option><option value="newton">Newton divided differences</option><option value="runge">Runge phenomenon</option><option value="stability">Numerical stability</option></select></label><nav aria-label="Laboratory experiments"><button class="cp-lab-nav is-active">A · Gaussian elimination</button><button class="cp-lab-nav">B · Regression comparison</button><button class="cp-lab-nav">C · Newton interpolation</button><button class="cp-lab-nav">D · Runge phenomenon</button><button class="cp-lab-nav">E · Stability topics</button></nav></aside><article class="cp-panel cp-lab-stage"><header class="cp-panel-header"><div><span class="cp-kicker">Experiment A</span><h2>Partial-pivot Gaussian elimination</h2></div><span class="cp-badge cp-badge-success">Step 3 of 12</span></header><p id="preview-lab-description">Trace row swaps, scale-aware pivots, elimination multipliers, and back substitution.</p><div class="cp-matrix" aria-label="Augmented matrix"><div><span>1.0000</span><span>2.0000</span><span>3.0000</span><b>14.0000</b></div><div class="is-pivot"><span>2.0000</span><span>5.0000</span><span>2.0000</span><b>18.0000</b></div><div><span>3.0000</span><span>1.0000</span><span>5.0000</span><b>20.0000</b></div></div><div class="cp-step-controls"><button class="cp-icon-button" aria-label="First step">|◀</button><button class="cp-button cp-button-secondary">Previous</button><button class="cp-button cp-button-primary">Next operation</button><button class="cp-icon-button" aria-label="Last step">▶|</button></div><div class="cp-formula"><span>Row operation</span><code>R₃ ← R₃ − 1.5R₂</code></div></article></div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <dialog class="cp-dialog" id="preview-confirm-dialog"><form method="dialog"><span class="cp-dialog-icon">!</span><h2>Discard synthetic preview data?</h2><p>This demonstration only resets the preview. Production data remains isolated.</p><div class="cp-dialog-actions"><button class="cp-button cp-button-secondary" value="cancel" data-dialog-close>Cancel</button><button class="cp-button cp-button-danger" value="confirm" data-dialog-close>Discard preview</button></div></form></dialog>
+  <script type="module" src="js/design_preview.js"></script>
+</body>
+</html>

@@ -15,6 +15,7 @@ import { loadOcrTests } from './test_ocr.js';
 import { loadDashboardTests } from './test_dashboard.js';
 import { loadNumericalLabTests } from './test_numerical_lab.js';
 import { loadReleaseHardeningTests } from './test_release_hardening.js';
+import { loadUiContractTests } from './test_ui_contract.js';
 
 const suites = [];
 let currentSuite = null;
@@ -128,4 +129,5 @@ loadOcrTests();
 loadDashboardTests();
 loadNumericalLabTests();
 loadReleaseHardeningTests();
+loadUiContractTests();
 await runAllTests();
