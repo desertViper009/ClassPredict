@@ -20,4 +20,19 @@ export function loadUiContractTests() {
       );
     });
   });
+
+  describe('Premium UI: Application Shell Contract', () => {
+    it('maps one navigation item to each real workspace and separates prediction modes', async () => {
+      const { getNavigationModel, navigateTo } = await import('../js/app.js');
+      const items = getNavigationModel();
+      const ids = items.map(item => item.id);
+
+      assertEqual(new Set(ids).size, ids.length, 'Navigation IDs must be unique');
+      assertEqual(ids.join(','), 'dashboard,dataset,individual,class,ocr,lab');
+      assertEqual(items.find(item => item.id === 'individual').tab, 'predictions');
+      assertEqual(items.find(item => item.id === 'individual').predictionMode, 'individual');
+      assertEqual(items.find(item => item.id === 'class').predictionMode, 'class');
+      assertEqual(typeof navigateTo, 'function', 'Shell must expose one navigation entry point');
+    });
+  });
 }
