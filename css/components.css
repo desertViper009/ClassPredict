@@ -1610,3 +1610,109 @@
   .cp-step-controls { display: grid; grid-template-columns: 44px 1fr 1fr 44px; }
   .cp-formula { align-items: flex-start; flex-direction: column; }
 }
+
+/* ==========================================================================
+   10. Academic Hero Banner (Data-First Premium Redesign)
+   ========================================================================== */
+.cp-academic-hero {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--cp-line);
+  border-radius: var(--cp-radius-lg);
+  background: radial-gradient(circle at 88% 22%, rgba(255, 48, 56, 0.12), transparent 48%), var(--cp-surface-1);
+  padding: 30px 32px;
+  margin-bottom: 20px;
+}
+
+.cp-academic-hero-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(240px, 0.75fr);
+  gap: 24px;
+  align-items: center;
+}
+
+.cp-hero-kicker {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(255, 48, 56, 0.14);
+  border: 1px solid rgba(255, 48, 56, 0.32);
+  color: #ff525a;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.cp-hero-title {
+  font-size: clamp(28px, 3.8vw, 36px);
+  font-weight: 800;
+  line-height: 1.15;
+  color: #ffffff;
+  margin: 0 0 8px 0;
+  letter-spacing: -0.03em;
+}
+
+.cp-hero-title span {
+  color: var(--cp-accent);
+}
+
+.cp-hero-subtitle {
+  font-size: 15px;
+  font-weight: 600;
+  color: #cbd5e1;
+  margin: 0 0 10px 0;
+}
+
+.cp-hero-desc {
+  font-size: 13.5px;
+  color: var(--cp-text-muted);
+  line-height: 1.55;
+  margin: 0 0 20px 0;
+  max-width: 580px;
+}
+
+.cp-hero-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.cp-hero-features {
+  display: grid;
+  gap: 9px;
+  padding: 16px 18px;
+  border-radius: var(--cp-radius-md);
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid var(--cp-line);
+}
+
+.cp-hero-feature-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #e2e8f0;
+}
+
+.cp-hero-feature-item .cp-feat-icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  background: var(--cp-accent-soft);
+  border: 1px solid rgba(255, 48, 56, 0.25);
+  color: var(--cp-accent);
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 820px) {
+  .cp-academic-hero-content {
+    grid-template-columns: 1fr;
+  }
+}
+
