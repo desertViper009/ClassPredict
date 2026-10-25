@@ -1,0 +1,19 @@
+{
+  "name": "classpredict",
+  "version": "1.0.0",
+  "description": "Web-based academic performance analysis and next-semester SGPA prediction software for Numerical Methods capstone",
+  "type": "module",
+  "scripts": {
+    "test": "node tests/test_runner.js",
+    "start": "python -m http.server 8000"
+  },
+  "keywords": [
+    "numerical-methods",
+    "linear-algebra",
+    "regression",
+    "sgpa-prediction",
+    "gaussian-elimination"
+  ],
+  "author": "Undergraduate CSE Student",
+  "license": "MIT"
+}

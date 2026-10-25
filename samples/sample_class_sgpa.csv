@@ -1,0 +1,56 @@
+# SYNTHETIC DEMONSTRATION DATASET - NOT REAL STUDENT RECORDS
+# This dataset contains artificially generated academic histories for educational and testing purposes.
+# Grading scale: 0.00 to 4.00 SGPA.
+student_key,semester_no,sgpa
+SYN_001,1,3.45
+SYN_001,2,3.52
+SYN_001,3,3.60
+SYN_001,4,3.58
+SYN_002,1,2.80
+SYN_002,2,2.95
+SYN_002,3,3.10
+SYN_002,4,3.25
+SYN_002,5,3.30
+SYN_003,1,3.85
+SYN_003,2,3.90
+SYN_003,3,3.88
+SYN_004,1,3.10
+SYN_004,2,3.05
+SYN_004,3,3.15
+SYN_004,4,3.20
+SYN_004,5,3.18
+SYN_004,6,3.25
+SYN_005,1,2.50
+SYN_005,2,2.65
+SYN_005,3,2.70
+SYN_005,4,2.85
+SYN_005,5,2.90
+SYN_005,6,3.00
+SYN_005,7,3.12
+SYN_006,1,3.65
+SYN_006,2,3.70
+SYN_006,3,3.72
+SYN_006,4,3.68
+SYN_007,1,3.20
+SYN_007,2,3.15
+SYN_007,3,3.30
+SYN_008,1,2.90
+SYN_008,2,3.00
+SYN_008,3,3.10
+SYN_008,4,3.05
+SYN_009,1,3.95
+SYN_009,2,3.98
+SYN_009,3,4.00
+SYN_010,1,3.35
+SYN_010,2,3.40
+SYN_010,3,3.42
+SYN_010,4,3.50
+# SYN_011: Demonstrates missing semester gap (semesters 1 & 3; missing semester 2)
+SYN_011,1,3.25
+SYN_011,3,3.35
+# SYN_012: Demonstrates short trajectory with only 1 semester (insufficient for regression, triggers persistence)
+SYN_012,1,3.10
+# SYN_013: Demonstrates steep trajectory where unclipped linear extrapolation exceeds 4.00
+SYN_013,1,3.50
+SYN_013,2,3.75
+SYN_013,3,3.95

@@ -1,0 +1,39 @@
+# Operating System & IDE Files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# Node & Package Managers
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# Build Outputs & Bundles
+dist/
+build/
+coverage/
+
+# Python Cache & Virtual Environments (if helper scripts used)
+__pycache__/
+*.py[cod]
+.venv/
+env/
+venv/
+
+# Academic & Personal Data Protection (Strict Security Requirement)
+# Never commit real student records, gradesheets, or OCR scan files
+data/raw/
+data/uploads/
+*.pdf
+*.png
+*.jpg
+*.jpeg
+*.tiff
+*.bmp
+!docs/assets/**
+!samples/**

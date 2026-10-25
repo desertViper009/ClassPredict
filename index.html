@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ClassPredict — Academic Performance Analysis & SGPA Prediction</title>
+  <meta name="description" content="CSE Undergraduate Numerical Methods Final Project: Academic performance analysis, consecutive-semester transition modeling, and SGPA forecasting.">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <!-- Client-side Document Rasterization & OCR Libraries (Inbound Only, Zero Server Upload) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  <script>
+    if (window.pdfjsLib) {
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    }
+  </script>
+</head>
+<body>
+  <!-- Top Navigation Bar -->
+  <header class="app-header">
+    <div class="container header-inner">
+      <a href="#" class="brand" id="brand-home">
+        <span class="brand-badge">CP</span>
+        <span class="brand-name">ClassPredict</span>
+        <span class="brand-tag">v1.0 (Production Release)</span>
+      </a>
+
+      <nav aria-label="Main Navigation">
+        <ul class="nav-tabs" role="tablist">
+          <li role="presentation">
+            <button class="nav-link active" id="tab-btn-dashboard" role="tab" aria-selected="true" data-tab="dashboard">Dashboard</button>
+          </li>
+          <li role="presentation">
+            <button class="nav-link" id="tab-btn-dataset" role="tab" aria-selected="false" data-tab="dataset">Dataset Ingestion</button>
+          </li>
+          <li role="presentation">
+            <button class="nav-link" id="tab-btn-predictions" role="tab" aria-selected="false" data-tab="predictions">Predictions</button>
+          </li>
+          <li role="presentation">
+            <button class="nav-link" id="tab-btn-ocr" role="tab" aria-selected="false" data-tab="ocr">OCR Ingestion</button>
+          </li>
+          <li role="presentation">
+            <button class="nav-link" id="tab-btn-lab" role="tab" aria-selected="false" data-tab="lab">Numerical Lab</button>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="header-controls">
+        <span class="scale-tag">SGPA Scale: 0.00 – 4.00</span>
+        <span class="badge badge-emerald" id="net-status-badge" title="Network status: client-side processing">Online</span>
+        <button class="badge badge-synthetic" id="btn-header-demo" title="Inspect or Toggle Synthetic Demonstration Mode" style="cursor: pointer; border: none; font-family: inherit;">SYNTHETIC DEMO MODE</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Project State Banner -->
+  <div class="status-banner">
+    <div class="container banner-content">
+      <span>
+        <strong>Status</strong>: Phase 10 Production Release Active • Fully Hardened • Privacy-Preserving OCR • Analytical Dashboard • Educational Lab • Ephemeral Local Memory
+      </span>
+      <span>
+        <a href="docs/INDEX.md" style="color: var(--accent-primary); text-decoration: none;">View Documentation ↗</a>
+      </span>
+    </div>
+  </div>
+
+  <!-- Main View Container -->
+  <main class="container" style="padding-top: var(--space-xl); padding-bottom: var(--space-2xl);" id="main-content">
+    <div id="view-container">
+      <!-- Mounted dynamically by js/app.js -->
+    </div>
+  </main>
+
+  <footer style="border-top: 1px solid var(--border-subtle); padding: var(--space-lg) 0; color: var(--text-tertiary); font-size: 13px;">
+    <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+      <span>ClassPredict • Numerical Methods Capstone</span>
+      <span>Strict Privacy by Design • Ephemeral Local Memory</span>
+    </div>
+  </footer>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
