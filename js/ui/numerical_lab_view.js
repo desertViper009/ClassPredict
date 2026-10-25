@@ -121,36 +121,32 @@ export class NumericalLabView {
 
   render() {
     this.container.innerHTML = `
-      <div class="card" style="margin-bottom: var(--space-xl);">
-        <div class="card-header">
-          <div>
-            <h1 class="card-title" style="font-size: 24px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">
-              Numerical Methods Educational Laboratory
-            </h1>
-            <p class="card-subtitle" style="font-size: 14px; color: var(--text-secondary); margin: 0;">
-              Interactive algorithmic investigations, step-by-step matrix elimination traces, polynomial fitting, and stability proofs.
-            </p>
-          </div>
-          <span class="badge badge-crimson">Phase 9 Active</span>
-        </div>
+      <div class="cp-page-stack">
+        <header class="cp-page-heading">
+          <span class="cp-kicker">CSE Numerical Methods Project · Phase 9</span>
+          <h1>Numerical Methods Educational Laboratory</h1>
+          <p>Interactive algorithmic investigations, step-by-step matrix elimination traces, polynomial fitting, and stability proofs.</p>
+        </header>
 
-        <!-- Sub-Navigation Pill Tabs -->
-        <div class="pill-group" style="margin-bottom: var(--space-lg); display: flex; flex-wrap: wrap; gap: var(--space-xs);" role="tablist">
-          <button class="pill-btn ${this.activeSubTab === 'exp-a' ? 'active' : ''}" data-subtab="exp-a" role="tab" aria-selected="${this.activeSubTab === 'exp-a'}">
-            Exp A: Gaussian Elimination Trace
-          </button>
-          <button class="pill-btn ${this.activeSubTab === 'exp-b' ? 'active' : ''}" data-subtab="exp-b" role="tab" aria-selected="${this.activeSubTab === 'exp-b'}">
-            Exp B: Linear vs. Quadratic Regression
-          </button>
-          <button class="pill-btn ${this.activeSubTab === 'exp-c' ? 'active' : ''}" data-subtab="exp-c" role="tab" aria-selected="${this.activeSubTab === 'exp-c'}">
-            Exp C: Newton Divided Differences
-          </button>
-          <button class="pill-btn ${this.activeSubTab === 'exp-d' ? 'active' : ''}" data-subtab="exp-d" role="tab" aria-selected="${this.activeSubTab === 'exp-d'}">
-            Exp D: Runge Phenomenon & Risk
-          </button>
-          <button class="pill-btn ${this.activeSubTab === 'topics' ? 'active' : ''}" data-subtab="topics" role="tab" aria-selected="${this.activeSubTab === 'topics'}">
-            Numerical Stability Topics
-          </button>
+        <!-- Sub-Navigation Pill Tabs in Toolbar -->
+        <div class="cp-toolbar" style="margin-bottom: 20px;">
+          <div class="cp-filter-group" role="tablist" aria-label="Laboratory experiments">
+            <button class="cp-chip ${this.activeSubTab === 'exp-a' ? 'is-active active' : ''} pill-btn" data-subtab="exp-a" role="tab" aria-selected="${this.activeSubTab === 'exp-a'}">
+              A · Gaussian Elimination Trace
+            </button>
+            <button class="cp-chip ${this.activeSubTab === 'exp-b' ? 'is-active active' : ''} pill-btn" data-subtab="exp-b" role="tab" aria-selected="${this.activeSubTab === 'exp-b'}">
+              B · Linear vs. Quadratic Regression
+            </button>
+            <button class="cp-chip ${this.activeSubTab === 'exp-c' ? 'is-active active' : ''} pill-btn" data-subtab="exp-c" role="tab" aria-selected="${this.activeSubTab === 'exp-c'}">
+              C · Newton Divided Differences
+            </button>
+            <button class="cp-chip ${this.activeSubTab === 'exp-d' ? 'is-active active' : ''} pill-btn" data-subtab="exp-d" role="tab" aria-selected="${this.activeSubTab === 'exp-d'}">
+              D · Runge Phenomenon & Risk
+            </button>
+            <button class="cp-chip ${this.activeSubTab === 'topics' ? 'is-active active' : ''} pill-btn" data-subtab="topics" role="tab" aria-selected="${this.activeSubTab === 'topics'}">
+              E · Numerical Stability Topics
+            </button>
+          </div>
         </div>
 
         <div id="lab-subtab-content">
@@ -188,12 +184,12 @@ export class NumericalLabView {
       const n = M.length;
 
       matrixHtml = `
-        <div class="matrix-augmented-container" style="overflow-x: auto; margin: var(--space-md) 0;">
-          <table class="table matrix-table" style="width: auto; margin: 0 auto; border-collapse: separate; border-spacing: 4px;">
+        <div class="matrix-augmented-container cp-table-scroll" style="overflow-x: auto; margin: var(--space-md) 0;">
+          <table class="table matrix-table cp-table" style="width: auto; margin: 0 auto; border-collapse: separate; border-spacing: 4px;">
             <thead>
               <tr>
-                ${Array.from({ length: n }, (_, j) => `<th style="text-align: center; color: var(--text-muted); font-size: 11px;">Col ${j + 1}</th>`).join('')}
-                <th style="text-align: center; color: var(--brand-crimson); font-size: 11px; border-left: 2px dashed var(--border-subtle); padding-left: 12px;">RHS (b)</th>
+                ${Array.from({ length: n }, (_, j) => `<th style="text-align: center; color: var(--cp-text-muted); font-size: 11px;">Col ${j + 1}</th>`).join('')}
+                <th style="text-align: center; color: var(--cp-accent); font-size: 11px; border-left: 2px dashed var(--cp-line-strong); padding-left: 12px;">RHS (b)</th>
               </tr>
             </thead>
             <tbody>
@@ -208,9 +204,9 @@ export class NumericalLabView {
                     } else if (j < i && Math.abs(val) < 1e-12) {
                       cellClass += ' matrix-cell-zero';
                     }
-                    return `<td class="${cellClass}" style="text-align: right; padding: 6px 12px; font-family: monospace; font-size: 13px;">${val.toFixed(4)}</td>`;
+                    return `<td class="${cellClass}" style="text-align: right; padding: 6px 12px; font-family: var(--font-mono); font-size: 13px;">${val.toFixed(4)}</td>`;
                   }).join('')}
-                  <td style="text-align: right; padding: 6px 12px; font-family: monospace; font-size: 13px; font-weight: 600; color: var(--brand-crimson); border-left: 2px dashed var(--border-subtle); padding-left: 12px;">
+                  <td style="text-align: right; padding: 6px 12px; font-family: var(--font-mono); font-size: 13px; font-weight: 600; color: var(--cp-accent); border-left: 2px dashed var(--cp-line-strong); padding-left: 12px;">
                     ${rhs[i].toFixed(4)}
                   </td>
                 </tr>
@@ -222,29 +218,30 @@ export class NumericalLabView {
     }
 
     return `
-      <div class="chart-card">
-        <div class="chart-header">
+      <article class="cp-panel cp-lab-stage chart-card">
+        <header class="cp-panel-header chart-header">
           <div>
-            <h2 style="font-size: 16px; font-weight: 600; color: var(--text-primary); margin: 0;">
-              Experiment A: Gaussian Elimination with Row Partial Pivoting
+            <span class="cp-kicker">Experiment A</span>
+            <h2 style="font-size: 16px; font-weight: 600; color: var(--cp-text); margin: 0;">
+              Gaussian Elimination with Row Partial Pivoting
             </h2>
-            <p style="font-size: 12px; color: var(--text-muted); margin: 2px 0 0 0;">
+            <p style="font-size: 12px; color: var(--cp-text-muted); margin: 2px 0 0 0;">
               Step-by-step matrix reduction, scale-aware pivot selection, row multipliers, and back substitution.
             </p>
           </div>
-          <div style="display: flex; gap: var(--space-xs); align-items: center;">
-            <label for="gauss-example-select" style="font-size: 12px; color: var(--text-muted);">Preset:</label>
-            <select id="gauss-example-select" class="btn btn-secondary btn-sm">
+          <div style="display: flex; gap: var(--space-xs); align-items: center; flex-wrap: wrap;">
+            <label for="gauss-example-select" style="font-size: 12px; color: var(--cp-text-muted);">Preset:</label>
+            <select id="gauss-example-select" class="cp-select cp-select-sm btn btn-secondary btn-sm">
               ${Object.values(GAUSSIAN_EXAMPLES).map(ex => `
                 <option value="${ex.id}" ${this.gaussExampleKey === ex.id ? 'selected' : ''}>${ex.name}</option>
               `).join('')}
             </select>
-            <button class="btn btn-secondary btn-sm" id="btn-gauss-reset">Reset</button>
+            <button class="cp-button cp-button-ghost cp-button-sm btn btn-secondary btn-sm" id="btn-gauss-reset">Reset</button>
           </div>
-        </div>
+        </header>
 
         ${!res.success ? `
-          <div class="alert alert-error" style="margin: var(--space-md) 0;">
+          <div class="cp-alert cp-alert-danger alert alert-error" style="margin: var(--space-md) 0;">
             <strong>Singular System Rejection:</strong> ${res.error}
             <p style="margin: 4px 0 0 0; font-size: 12px;">
               The scale-aware pivot condition |a_pk| ≥ τ · s_scale was violated. Zero or near-zero pivot detected. The solver safely rejected the system without inventing numbers.
@@ -252,25 +249,27 @@ export class NumericalLabView {
           </div>
         ` : `
           <!-- Step Controls -->
-          <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); padding: var(--space-sm) var(--space-md); border-radius: var(--radius-sm); margin-bottom: var(--space-md);">
+          <div class="cp-step-controls" style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.25); padding: 10px 16px; border-radius: var(--cp-radius-md); border: 1px solid var(--cp-line); margin-bottom: 16px;">
             <div style="display: flex; gap: 6px;">
-              <button class="btn btn-secondary btn-sm" id="btn-gauss-first" ${this.gaussStepIndex === 0 ? 'disabled' : ''}>|◀ First</button>
-              <button class="btn btn-secondary btn-sm" id="btn-gauss-prev" ${this.gaussStepIndex === 0 ? 'disabled' : ''}>◀ Prev</button>
-              <button class="btn btn-secondary btn-sm" id="btn-gauss-next" ${this.gaussStepIndex >= totalSteps - 1 ? 'disabled' : ''}>Next ▶</button>
-              <button class="btn btn-secondary btn-sm" id="btn-gauss-last" ${this.gaussStepIndex >= totalSteps - 1 ? 'disabled' : ''}>Last ▶|</button>
+              <button class="cp-button cp-button-secondary cp-button-sm btn btn-secondary btn-sm" id="btn-gauss-first" ${this.gaussStepIndex === 0 ? 'disabled' : ''}>|◀ First</button>
+              <button class="cp-button cp-button-secondary cp-button-sm btn btn-secondary btn-sm" id="btn-gauss-prev" ${this.gaussStepIndex === 0 ? 'disabled' : ''}>◀ Prev</button>
+              <button class="cp-button cp-button-primary cp-button-sm btn btn-secondary btn-sm" id="btn-gauss-next" data-step="next" ${this.gaussStepIndex >= totalSteps - 1 ? 'disabled' : ''}>Next ▶</button>
+              <button class="cp-button cp-button-secondary cp-button-sm btn btn-secondary btn-sm" id="btn-gauss-last" ${this.gaussStepIndex >= totalSteps - 1 ? 'disabled' : ''}>Last ▶|</button>
             </div>
-            <span style="font-size: 12px; font-weight: 600; color: var(--text-secondary);">
+            <span class="cp-badge cp-badge-info" style="font-weight: 600;">
               Step ${this.gaussStepIndex + 1} of ${totalSteps}
             </span>
           </div>
 
           <!-- Step Description Card -->
-          <div style="background: rgba(220, 38, 38, 0.05); border: 1px solid rgba(220, 38, 38, 0.2); border-radius: var(--radius-sm); padding: var(--space-sm) var(--space-md); margin-bottom: var(--space-md);">
-            <div style="font-size: 13px; font-weight: 600; color: var(--brand-crimson); margin-bottom: 2px;">
-              ${step ? step.title : ''}
-            </div>
-            <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.4;">
-              ${step ? step.description : ''}
+          <div class="cp-formula" style="margin-bottom: 16px;">
+            <div>
+              <strong style="font-size: 13px; font-weight: 600; color: var(--cp-accent); display: block; margin-bottom: 2px;">
+                ${step ? step.title : ''}
+              </strong>
+              <div style="font-size: 12px; color: var(--cp-text-muted); line-height: 1.4;">
+                ${step ? step.description : ''}
+              </div>
             </div>
           </div>
 
@@ -279,23 +278,23 @@ export class NumericalLabView {
 
           <!-- Final Solution & Residual Vector -->
           ${res.solution ? `
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md); margin-top: var(--space-md);">
-              <div style="background: rgba(255,255,255,0.02); padding: var(--space-sm) var(--space-md); border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
-                <div style="font-size: 11px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px;">Computed Solution Vector (x)</div>
-                <div style="font-family: monospace; font-size: 13px; color: var(--brand-crimson); font-weight: 600;">
+            <div class="cp-result-comparison" style="margin-top: 16px;">
+              <div>
+                <span style="font-size: 11px; text-transform: uppercase; color: var(--cp-text-muted); margin-bottom: 4px;">Computed Solution Vector (x)</span>
+                <div style="font-family: var(--font-mono); font-size: 13px; color: var(--cp-accent); font-weight: 600;">
                   [ ${res.solution.map((v, i) => `x_${i + 1} = ${v.toFixed(6)}`).join(', ')} ]
                 </div>
               </div>
-              <div style="background: rgba(255,255,255,0.02); padding: var(--space-sm) var(--space-md); border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
-                <div style="font-size: 11px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px;">Euclidean Residual Norm ||b - Ax||₂</div>
-                <div style="font-family: monospace; font-size: 13px; color: var(--brand-amber); font-weight: 600;">
+              <div>
+                <span style="font-size: 11px; text-transform: uppercase; color: var(--cp-text-muted); margin-bottom: 4px;">Euclidean Residual Norm ||b - Ax||₂</span>
+                <div style="font-family: var(--font-mono); font-size: 13px; color: var(--cp-warning); font-weight: 600;">
                   ${res.residualNorm.toExponential(4)} (r = [${res.residual.map(v => v.toExponential(2)).join(', ')}])
                 </div>
               </div>
             </div>
           ` : ''}
         `}
-      </div>
+      </article>
     `;
   }
 
@@ -307,11 +306,11 @@ export class NumericalLabView {
 
     if (!res || res.error) {
       return `
-        <div class="chart-card">
-          <div class="alert alert-error">
+        <article class="cp-panel chart-card">
+          <div class="cp-alert cp-alert-danger alert alert-error">
             ${res ? res.error : "Unable to fit comparative regression models."}
           </div>
-        </div>
+        </article>
       `;
     }
 
@@ -353,33 +352,34 @@ export class NumericalLabView {
     const quadPath = quadPoints.join(' ');
 
     return `
-      <div class="chart-card">
-        <div class="chart-header">
+      <article class="cp-panel chart-card">
+        <header class="cp-panel-header chart-header">
           <div>
-            <h2 style="font-size: 16px; font-weight: 600; color: var(--text-primary); margin: 0;">
-              Experiment B: Linear vs. Quadratic Least-Squares Regression
+            <span class="cp-kicker">Experiment B</span>
+            <h2 style="font-size: 16px; font-weight: 600; color: var(--cp-text); margin: 0;">
+              Linear vs. Quadratic Least-Squares Regression
             </h2>
-            <p style="font-size: 12px; color: var(--text-muted); margin: 2px 0 0 0;">
+            <p style="font-size: 12px; color: var(--cp-text-muted); margin: 2px 0 0 0;">
               Demonstrates polynomial flexibility, centered normal equations, condition squaring, and overfitting risk.
             </p>
           </div>
-          <div style="display: flex; gap: var(--space-xs); align-items: center;">
-            <label for="reg-dataset-select" style="font-size: 12px; color: var(--text-muted);">Dataset:</label>
-            <select id="reg-dataset-select" class="btn btn-secondary btn-sm">
+          <div style="display: flex; gap: var(--space-xs); align-items: center; flex-wrap: wrap;">
+            <label for="reg-dataset-select" style="font-size: 12px; color: var(--cp-text-muted);">Dataset:</label>
+            <select id="reg-dataset-select" class="cp-select cp-select-sm btn btn-secondary btn-sm">
               ${Object.values(REGRESSION_LAB_DATASETS).map(ds => `
                 <option value="${ds.id}" ${this.regDatasetKey === ds.id ? 'selected' : ''}>${ds.name}</option>
               `).join('')}
               <option value="cohort_transitions" ${this.regDatasetKey === 'cohort_transitions' ? 'selected' : ''}>Current Cohort Transitions (Phase 3)</option>
             </select>
-            <button class="btn btn-secondary btn-sm" id="btn-toggle-reg-view">
+            <button class="cp-button cp-button-ghost cp-button-sm btn btn-secondary btn-sm" id="btn-toggle-reg-view">
               ${this.regTableView ? 'Show Chart' : 'Show Data Table'}
             </button>
           </div>
-        </div>
+        </header>
 
         ${this.regTableView ? `
-          <div class="table-responsive" style="margin: var(--space-md) 0;">
-            <table class="table" style="font-size: 12px;">
+          <div class="cp-table-scroll table-responsive" style="margin: var(--space-md) 0;">
+            <table class="table cp-table" style="font-size: 12px;">
               <thead>
                 <tr>
                   <th>Index</th>
@@ -397,9 +397,9 @@ export class NumericalLabView {
                     <td>${r.index + 1}</td>
                     <td>${r.x.toFixed(4)}</td>
                     <td>${r.y.toFixed(4)}</td>
-                    <td style="color: var(--brand-crimson);">${r.linearFitted.toFixed(4)}</td>
+                    <td style="color: var(--cp-accent); font-weight: 600;">${r.linearFitted.toFixed(4)}</td>
                     <td>${r.linearResidual >= 0 ? '+' : ''}${r.linearResidual.toFixed(4)}</td>
-                    <td style="color: var(--brand-cyan);">${r.quadraticFitted.toFixed(4)}</td>
+                    <td style="color: var(--cp-info); font-weight: 600;">${r.quadraticFitted.toFixed(4)}</td>
                     <td>${r.quadraticResidual >= 0 ? '+' : ''}${r.quadraticResidual.toFixed(4)}</td>
                   </tr>
                 `).join('')}
@@ -407,71 +407,71 @@ export class NumericalLabView {
             </table>
           </div>
         ` : `
-          <div class="svg-chart-container" style="margin: var(--space-md) 0;">
-            <svg class="chart-svg" viewBox="0 0 ${svgWidth} ${svgHeight}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Linear vs Quadratic Regression Plot">
+          <div class="svg-chart-container cp-table-scroll" style="margin: var(--space-md) 0;">
+            <svg class="chart-svg" viewBox="0 0 ${svgWidth} ${svgHeight}" style="max-width: 100%; height: auto;" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Linear vs Quadratic Regression Plot">
               <!-- Gridlines -->
-              <line x1="${padLeft}" y1="${padTop}" x2="${padLeft + plotW}" y2="${padTop}" stroke="var(--border-subtle)" stroke-width="1" stroke-dasharray="2,2"/>
-              <line x1="${padLeft}" y1="${padTop + plotH / 2}" x2="${padLeft + plotW}" y2="${padTop + plotH / 2}" stroke="var(--border-subtle)" stroke-width="1" stroke-dasharray="2,2"/>
-              <line x1="${padLeft}" y1="${padTop + plotH}" x2="${padLeft + plotW}" y2="${padTop + plotH}" stroke="var(--border-subtle)" stroke-width="1"/>
+              <line x1="${padLeft}" y1="${padTop}" x2="${padLeft + plotW}" y2="${padTop}" stroke="var(--cp-line)" stroke-width="1" stroke-dasharray="2,2"/>
+              <line x1="${padLeft}" y1="${padTop + plotH / 2}" x2="${padLeft + plotW}" y2="${padTop + plotH / 2}" stroke="var(--cp-line)" stroke-width="1" stroke-dasharray="2,2"/>
+              <line x1="${padLeft}" y1="${padTop + plotH}" x2="${padLeft + plotW}" y2="${padTop + plotH}" stroke="var(--cp-line)" stroke-width="1"/>
 
               <!-- Linear Fit Line -->
-              <path d="${linPath}" fill="none" stroke="var(--brand-crimson)" stroke-width="2.5" />
+              <path d="${linPath}" fill="none" stroke="var(--cp-accent)" stroke-width="2.5" />
 
               <!-- Quadratic Fit Curve -->
-              <path d="${quadPath}" fill="none" stroke="var(--brand-cyan)" stroke-width="2.5" stroke-dasharray="5,3" />
+              <path d="${quadPath}" fill="none" stroke="var(--cp-info)" stroke-width="2.5" stroke-dasharray="5,3" />
 
               <!-- Observations -->
               ${observations.map(o => `
-                <circle cx="${scaleX(o.x).toFixed(1)}" cy="${scaleY(o.y).toFixed(1)}" r="4" fill="var(--brand-amber)" stroke="#0a0a0c" stroke-width="1.5" />
+                <circle cx="${scaleX(o.x).toFixed(1)}" cy="${scaleY(o.y).toFixed(1)}" r="4" fill="var(--cp-warning)" stroke="#0a0a0c" stroke-width="1.5" />
               `).join('')}
 
               <!-- Axis Labels -->
-              <text x="${padLeft + plotW / 2}" y="${svgHeight - 8}" text-anchor="middle" font-size="11" fill="var(--text-muted)">Predictor (x)</text>
-              <text x="12" y="${padTop + plotH / 2}" text-anchor="middle" font-size="11" fill="var(--text-muted)" transform="rotate(-90 12 ${padTop + plotH / 2})">Response (y)</text>
+              <text x="${padLeft + plotW / 2}" y="${svgHeight - 8}" text-anchor="middle" font-size="11" fill="var(--cp-text-muted)">Predictor (x)</text>
+              <text x="12" y="${padTop + plotH / 2}" text-anchor="middle" font-size="11" fill="var(--cp-text-muted)" transform="rotate(-90 12 ${padTop + plotH / 2})">Response (y)</text>
             </svg>
           </div>
         `}
 
         <!-- Legend and Model Metrics Cards -->
-        <div class="chart-legend" style="display: flex; gap: var(--space-md); justify-content: center; margin-bottom: var(--space-md);">
-          <span style="font-size: 12px; color: var(--text-secondary); display: flex; align-items: center; gap: 4px;">
-            <span style="display: inline-block; width: 12px; height: 12px; border-radius: 50%; background: var(--brand-amber);"></span> Observations (n = ${observations.length})
+        <div class="chart-legend cp-chart-legend" style="display: flex; gap: var(--space-md); justify-content: center; margin-bottom: var(--space-md);">
+          <span style="font-size: 12px; color: var(--cp-text-muted); display: flex; align-items: center; gap: 4px;">
+            <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--cp-warning);"></span> Observations (n = ${observations.length})
           </span>
-          <span style="font-size: 12px; color: var(--text-secondary); display: flex; align-items: center; gap: 4px;">
-            <span style="display: inline-block; width: 16px; height: 3px; background: var(--brand-crimson);"></span> Linear Model (Degree 1)
+          <span style="font-size: 12px; color: var(--cp-text-muted); display: flex; align-items: center; gap: 4px;">
+            <span style="display: inline-block; width: 16px; height: 3px; background: var(--cp-accent);"></span> Linear Model (Degree 1)
           </span>
-          <span style="font-size: 12px; color: var(--text-secondary); display: flex; align-items: center; gap: 4px;">
-            <span style="display: inline-block; width: 16px; height: 3px; background: var(--brand-cyan);"></span> Quadratic Model (Degree 2)
+          <span style="font-size: 12px; color: var(--cp-text-muted); display: flex; align-items: center; gap: 4px;">
+            <span style="display: inline-block; width: 16px; height: 3px; background: var(--cp-info);"></span> Quadratic Model (Degree 2)
           </span>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md); margin-bottom: var(--space-md);">
+        <div class="cp-result-comparison" style="margin-bottom: var(--space-md);">
           <!-- Linear Model Card -->
-          <div style="background: rgba(220, 38, 38, 0.04); border: 1px solid rgba(220, 38, 38, 0.2); border-radius: var(--radius-sm); padding: var(--space-sm) var(--space-md);">
-            <div style="font-size: 12px; font-weight: 600; color: var(--brand-crimson); margin-bottom: 4px;">Model 1: First-Order Linear</div>
-            <div style="font-family: monospace; font-size: 13px; color: var(--text-primary); margin-bottom: 6px;">${linearModel.formula}</div>
-            <div style="font-size: 12px; color: var(--text-muted);">
-              Residual Sum of Squares (RSS): <strong style="color: var(--text-primary);">${linearModel.rss.toFixed(4)}</strong><br>
+          <div style="background: rgba(255, 48, 56, 0.05); border: 1px solid rgba(255, 48, 56, 0.2); border-radius: var(--cp-radius-sm); padding: var(--space-sm) var(--space-md);">
+            <div style="font-size: 12px; font-weight: 600; color: var(--cp-accent); margin-bottom: 4px;">Model 1: First-Order Linear</div>
+            <div style="font-family: var(--font-mono); font-size: 13px; color: var(--cp-text); margin-bottom: 6px;">${linearModel.formula}</div>
+            <div style="font-size: 12px; color: var(--cp-text-muted);">
+              Residual Sum of Squares (RSS): <strong style="color: var(--cp-text);">${linearModel.rss.toFixed(4)}</strong><br>
               Mean Squared Error (MSE): ${linearModel.mse.toFixed(4)}
             </div>
           </div>
 
           <!-- Quadratic Model Card -->
-          <div style="background: rgba(6, 182, 212, 0.04); border: 1px solid rgba(6, 182, 212, 0.2); border-radius: var(--radius-sm); padding: var(--space-sm) var(--space-md);">
-            <div style="font-size: 12px; font-weight: 600; color: var(--brand-cyan); margin-bottom: 4px;">Model 2: Second-Order Quadratic</div>
-            <div style="font-family: monospace; font-size: 13px; color: var(--text-primary); margin-bottom: 6px;">${quadraticModel.formula}</div>
-            <div style="font-size: 12px; color: var(--text-muted);">
-              Residual Sum of Squares (RSS): <strong style="color: var(--text-primary);">${quadraticModel.rss.toFixed(4)}</strong> (${rssImprovementPercent.toFixed(1)}% reduction)<br>
+          <div style="background: rgba(6, 182, 212, 0.05); border: 1px solid rgba(6, 182, 212, 0.2); border-radius: var(--cp-radius-sm); padding: var(--space-sm) var(--space-md);">
+            <div style="font-size: 12px; font-weight: 600; color: var(--cp-info); margin-bottom: 4px;">Model 2: Second-Order Quadratic</div>
+            <div style="font-family: var(--font-mono); font-size: 13px; color: var(--cp-text); margin-bottom: 6px;">${quadraticModel.formula}</div>
+            <div style="font-size: 12px; color: var(--cp-text-muted);">
+              Residual Sum of Squares (RSS): <strong style="color: var(--cp-text);">${quadraticModel.rss.toFixed(4)}</strong> (${rssImprovementPercent.toFixed(1)}% reduction)<br>
               Mean Squared Error (MSE): ${quadraticModel.mse.toFixed(4)}
             </div>
           </div>
         </div>
 
         <!-- Academic Overfitting Warning -->
-        <div class="alert alert-warning" style="font-size: 12px; line-height: 1.4;">
+        <div class="cp-alert cp-alert-warning alert alert-warning" style="font-size: 12px; line-height: 1.4;">
           <strong>Educational Takeaway:</strong> ${academicWarning}
         </div>
-      </div>
+      </article>
     `;
   }
 
@@ -483,11 +483,11 @@ export class NumericalLabView {
 
     if (!res || res.error) {
       return `
-        <div class="chart-card">
-          <div class="alert alert-error">
+        <article class="cp-panel chart-card">
+          <div class="cp-alert cp-alert-danger alert alert-error">
             ${res ? res.error : "Unable to construct Newton interpolating polynomial."}
           </div>
-        </div>
+        </article>
       `;
     }
 
@@ -516,44 +516,45 @@ export class NumericalLabView {
     const pathData = curvePoints.map((p, i) => `${i === 0 ? 'M' : 'L'} ${scaleX(p.x).toFixed(1)},${scaleY(p.y).toFixed(1)}`).join(' ');
 
     return `
-      <div class="chart-card">
-        <div class="chart-header">
+      <article class="cp-panel chart-card">
+        <header class="cp-panel-header chart-header">
           <div>
-            <h2 style="font-size: 16px; font-weight: 600; color: var(--text-primary); margin: 0;">
-              Experiment C: Newton Divided-Difference Polynomial Interpolation
+            <span class="cp-kicker">Experiment C</span>
+            <h2 style="font-size: 16px; font-weight: 600; color: var(--cp-text); margin: 0;">
+              Newton Divided-Difference Polynomial Interpolation
             </h2>
-            <p style="font-size: 12px; color: var(--text-muted); margin: 2px 0 0 0;">
+            <p style="font-size: 12px; color: var(--cp-text-muted); margin: 2px 0 0 0;">
               Triangular divided-difference recurrence, term-by-term evaluation, and interpolation hull boundaries.
             </p>
           </div>
-          <div style="display: flex; gap: var(--space-xs); align-items: center;">
-            <label for="interp-example-select" style="font-size: 12px; color: var(--text-muted);">Preset:</label>
-            <select id="interp-example-select" class="btn btn-secondary btn-sm">
+          <div style="display: flex; gap: var(--space-xs); align-items: center; flex-wrap: wrap;">
+            <label for="interp-example-select" style="font-size: 12px; color: var(--cp-text-muted);">Preset:</label>
+            <select id="interp-example-select" class="cp-select cp-select-sm btn btn-secondary btn-sm">
               ${Object.values(INTERPOLATION_EXAMPLES).map(ex => `
                 <option value="${ex.id}" ${this.interpExampleKey === ex.id ? 'selected' : ''}>${ex.name}</option>
               `).join('')}
             </select>
-            <button class="btn btn-secondary btn-sm" id="btn-toggle-interp-view">
+            <button class="cp-button cp-button-ghost cp-button-sm btn btn-secondary btn-sm" id="btn-toggle-interp-view">
               ${this.interpTableView ? 'Show Chart' : 'Show Terms Table'}
             </button>
           </div>
-        </div>
+        </header>
 
         <!-- Evaluation Coordinate Input -->
-        <div style="display: flex; align-items: center; gap: var(--space-sm); background: rgba(255,255,255,0.02); padding: var(--space-sm) var(--space-md); border-radius: var(--radius-sm); margin-bottom: var(--space-md);">
-          <label for="input-interp-eval" style="font-size: 12px; color: var(--text-secondary); font-weight: 500;">Query Coordinate (x):</label>
-          <input type="number" step="0.1" id="input-interp-eval" class="input input-sm" style="width: 100px;" value="${xEval}">
-          <button class="btn btn-secondary btn-sm" id="btn-interp-eval">Evaluate P(x)</button>
-          <span style="font-size: 12px; color: var(--text-muted); margin-left: auto;">
+        <div class="cp-toolbar" style="margin-bottom: var(--space-md); flex-wrap: wrap;">
+          <label for="input-interp-eval" style="font-size: 12px; color: var(--cp-text-muted); font-weight: 500;">Query Coordinate (x):</label>
+          <input type="number" step="0.1" id="input-interp-eval" class="cp-input input input-sm" style="width: 100px;" value="${xEval}">
+          <button class="cp-button cp-button-secondary cp-button-sm btn btn-secondary btn-sm" id="btn-interp-eval">Evaluate P(x)</button>
+          <span style="font-size: 12px; color: var(--cp-text-muted); margin-left: auto;">
             Observed Node Domain: [${res.domain.min.toFixed(2)}, ${res.domain.max.toFixed(2)}]
           </span>
         </div>
 
         <!-- Divided-Difference Triangular Table -->
         <div style="margin-bottom: var(--space-md);">
-          <div style="font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px;">Divided-Difference Recurrence Table:</div>
-          <div class="table-responsive">
-            <table class="table" style="font-size: 12px; font-family: monospace;">
+          <div style="font-size: 12px; font-weight: 600; color: var(--cp-text-muted); margin-bottom: 6px;">Divided-Difference Recurrence Table:</div>
+          <div class="cp-table-scroll table-responsive">
+            <table class="table cp-table" style="font-size: 12px; font-family: var(--font-mono);">
               <thead>
                 <tr>
                   <th>x_i</th>
@@ -564,9 +565,9 @@ export class NumericalLabView {
               <tbody>
                 ${nodes.map((node, i) => `
                   <tr>
-                    <td style="font-weight: 600; color: var(--brand-amber);">${node.x.toFixed(2)}</td>
+                    <td style="font-weight: 600; color: var(--cp-warning);">${node.x.toFixed(2)}</td>
                     ${table[i].slice(0, nodes.length - i).map((val, j) => `
-                      <td style="${i === 0 ? 'color: var(--brand-crimson); font-weight: 600;' : ''}">${val.toFixed(4)}</td>
+                      <td style="${i === 0 ? 'color: var(--cp-accent); font-weight: 600;' : ''}">${val.toFixed(4)}</td>
                     `).join('')}
                   </tr>
                 `).join('')}
@@ -577,8 +578,8 @@ export class NumericalLabView {
 
         ${this.interpTableView ? `
           <!-- Term-by-Term Polynomial Breakdown Table -->
-          <div class="table-responsive" style="margin-bottom: var(--space-md);">
-            <table class="table" style="font-size: 12px;">
+          <div class="cp-table-scroll table-responsive" style="margin-bottom: var(--space-md);">
+            <table class="table cp-table" style="font-size: 12px;">
               <thead>
                 <tr>
                   <th>Order (k)</th>
@@ -593,11 +594,11 @@ export class NumericalLabView {
                 ${terms.map(t => `
                   <tr>
                     <td>${t.order}</td>
-                    <td style="font-family: monospace; color: var(--brand-crimson);">${t.coefficient.toFixed(4)}</td>
-                    <td style="font-family: monospace;">${t.basisFormula}</td>
-                    <td style="font-family: monospace;">${t.basisValueAtEval.toFixed(4)}</td>
-                    <td style="font-family: monospace; font-weight: 600;">${t.termValue.toFixed(4)}</td>
-                    <td style="font-family: monospace; color: var(--brand-amber); font-weight: 600;">${t.runningSum.toFixed(4)}</td>
+                    <td style="font-family: var(--font-mono); color: var(--cp-accent);">${t.coefficient.toFixed(4)}</td>
+                    <td style="font-family: var(--font-mono);">${t.basisFormula}</td>
+                    <td style="font-family: var(--font-mono);">${t.basisValueAtEval.toFixed(4)}</td>
+                    <td style="font-family: var(--font-mono); font-weight: 600;">${t.termValue.toFixed(4)}</td>
+                    <td style="font-family: var(--font-mono); color: var(--cp-warning); font-weight: 600;">${t.runningSum.toFixed(4)}</td>
                   </tr>
                 `).join('')}
               </tbody>
@@ -605,47 +606,49 @@ export class NumericalLabView {
           </div>
         ` : `
           <!-- SVG Interpolation Curve -->
-          <div class="svg-chart-container" style="margin-bottom: var(--space-md);">
-            <svg class="chart-svg" viewBox="0 0 ${svgWidth} ${svgHeight}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Newton Interpolating Polynomial">
+          <div class="svg-chart-container cp-table-scroll" style="margin-bottom: var(--space-md);">
+            <svg class="chart-svg" viewBox="0 0 ${svgWidth} ${svgHeight}" style="max-width: 100%; height: auto;" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Newton Interpolating Polynomial">
               <!-- Interpolation Domain Hull Guide -->
-              <rect x="${scaleX(res.domain.min)}" y="${padTop}" width="${scaleX(res.domain.max) - scaleX(res.domain.min)}" height="${plotH}" fill="rgba(255,255,255,0.015)" stroke="var(--border-subtle)" stroke-dasharray="2,2" />
+              <rect x="${scaleX(res.domain.min)}" y="${padTop}" width="${scaleX(res.domain.max) - scaleX(res.domain.min)}" height="${plotH}" fill="rgba(255,255,255,0.02)" stroke="var(--cp-line)" stroke-dasharray="2,2" />
 
               <!-- Interpolating Polynomial Path -->
-              <path d="${pathData}" fill="none" stroke="var(--brand-crimson)" stroke-width="2.5" />
+              <path d="${pathData}" fill="none" stroke="var(--cp-accent)" stroke-width="2.5" />
 
               <!-- Data Nodes -->
               ${nodes.map(n => `
-                <circle cx="${scaleX(n.x).toFixed(1)}" cy="${scaleY(n.y).toFixed(1)}" r="4.5" fill="var(--brand-amber)" stroke="#0a0a0c" stroke-width="1.5" />
+                <circle cx="${scaleX(n.x).toFixed(1)}" cy="${scaleY(n.y).toFixed(1)}" r="4.5" fill="var(--cp-warning)" stroke="#0a0a0c" stroke-width="1.5" />
               `).join('')}
 
               <!-- Evaluation Query Point -->
-              <line x1="${scaleX(xEval).toFixed(1)}" y1="${padTop + plotH}" x2="${scaleX(xEval).toFixed(1)}" y2="${scaleY(evaluatedValue).toFixed(1)}" stroke="var(--brand-cyan)" stroke-width="1.5" stroke-dasharray="3,3" />
-              <circle cx="${scaleX(xEval).toFixed(1)}" cy="${scaleY(evaluatedValue).toFixed(1)}" r="5.5" fill="var(--brand-cyan)" stroke="#0a0a0c" stroke-width="1.5" />
+              <line x1="${scaleX(xEval).toFixed(1)}" y1="${padTop + plotH}" x2="${scaleX(xEval).toFixed(1)}" y2="${scaleY(evaluatedValue).toFixed(1)}" stroke="var(--cp-info)" stroke-width="1.5" stroke-dasharray="3,3" />
+              <circle cx="${scaleX(xEval).toFixed(1)}" cy="${scaleY(evaluatedValue).toFixed(1)}" r="5.5" fill="var(--cp-info)" stroke="#0a0a0c" stroke-width="1.5" />
 
               <!-- Axis Labels -->
-              <text x="${padLeft + plotW / 2}" y="${svgHeight - 8}" text-anchor="middle" font-size="11" fill="var(--text-muted)">Evaluation Coordinate (x)</text>
-              <text x="12" y="${padTop + plotH / 2}" text-anchor="middle" font-size="11" fill="var(--text-muted)" transform="rotate(-90 12 ${padTop + plotH / 2})">P(x)</text>
+              <text x="${padLeft + plotW / 2}" y="${svgHeight - 8}" text-anchor="middle" font-size="11" fill="var(--cp-text-muted)">Evaluation Coordinate (x)</text>
+              <text x="12" y="${padTop + plotH / 2}" text-anchor="middle" font-size="11" fill="var(--cp-text-muted)" transform="rotate(-90 12 ${padTop + plotH / 2})">P(x)</text>
             </svg>
           </div>
         `}
 
         <!-- Result Callout & Extrapolation Warning -->
-        <div style="background: rgba(255,255,255,0.02); padding: var(--space-sm) var(--space-md); border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); margin-bottom: var(--space-sm); display: flex; justify-content: space-between; align-items: center;">
+        <div class="cp-result-comparison" style="margin-bottom: var(--space-sm);">
           <div>
-            <span style="font-size: 12px; color: var(--text-muted);">Evaluated Polynomial Result:</span>
-            <span style="font-family: monospace; font-size: 15px; font-weight: 700; color: var(--brand-cyan); margin-left: 8px;">
+            <span style="font-size: 12px; color: var(--cp-text-muted);">Evaluated Polynomial Result:</span>
+            <div style="font-family: var(--font-mono); font-size: 15px; font-weight: 700; color: var(--cp-info); margin-top: 4px;">
               P_${nodes.length - 1}(${xEval}) = ${evaluatedValue.toFixed(4)}
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; justify-content: flex-end;">
+            <span class="cp-badge badge ${isExtrapolation ? 'cp-badge-warning badge-amber' : 'cp-badge-success badge-emerald'}">
+              ${isExtrapolation ? `EXTRAPOLATION (Δ = +${extrapolationDistance.toFixed(2)})` : 'INTERIOR INTERPOLATION'}
             </span>
           </div>
-          <span class="badge ${isExtrapolation ? 'badge-amber' : 'badge-emerald'}">
-            ${isExtrapolation ? `EXTRAPOLATION (Δ = +${extrapolationDistance.toFixed(2)})` : 'INTERIOR INTERPOLATION'}
-          </span>
         </div>
 
-        <div class="alert ${isExtrapolation ? 'alert-warning' : 'alert-info'}" style="font-size: 12px; line-height: 1.4;">
+        <div class="cp-alert alert ${isExtrapolation ? 'cp-alert-warning alert-warning' : 'cp-alert-info alert-info'}" style="font-size: 12px; line-height: 1.4;">
           ${academicNotice}
         </div>
-      </div>
+      </article>
     `;
   }
 
@@ -657,11 +660,11 @@ export class NumericalLabView {
 
     if (!res || res.error) {
       return `
-        <div class="chart-card">
-          <div class="alert alert-error">
+        <article class="cp-panel chart-card">
+          <div class="cp-alert cp-alert-danger alert alert-error">
             ${res ? res.error : "Unable to simulate Runge phenomenon."}
           </div>
-        </div>
+        </article>
       `;
     }
 
@@ -680,7 +683,6 @@ export class NumericalLabView {
 
     const scaleX = (x) => padLeft + ((x - minX) / (maxX - minX)) * plotW;
     const scaleY = (y) => {
-      // Clamp extreme oscillations to SVG bounds for clean rendering
       const clampedY = Math.max(-0.5, Math.min(1.5, y));
       return padTop + plotH - ((clampedY - minY) / (maxY - minY)) * plotH;
     };
@@ -692,99 +694,100 @@ export class NumericalLabView {
     const polyPath = grid.map((pt, i) => `${i === 0 ? 'M' : 'L'} ${scaleX(pt.x).toFixed(1)},${scaleY(pt.fPoly).toFixed(1)}`).join(' ');
 
     return `
-      <div class="chart-card">
-        <div class="chart-header">
+      <article class="cp-panel chart-card">
+        <header class="cp-panel-header chart-header">
           <div>
-            <h2 style="font-size: 16px; font-weight: 600; color: var(--text-primary); margin: 0;">
-              Experiment D: Runge Phenomenon & Extrapolation Risk
+            <span class="cp-kicker">Experiment D</span>
+            <h2 style="font-size: 16px; font-weight: 600; color: var(--cp-text); margin: 0;">
+              Runge Phenomenon & Extrapolation Risk
             </h2>
-            <p style="font-size: 12px; color: var(--text-muted); margin: 2px 0 0 0;">
+            <p style="font-size: 12px; color: var(--cp-text-muted); margin: 2px 0 0 0;">
               Deterministic synthetic test function f(x) = 1 / (1 + 25x²) illustrating catastrophic edge oscillation.
             </p>
           </div>
-          <span class="badge badge-synthetic">SYNTHETIC EXPERIMENT</span>
-        </div>
+          <span class="cp-badge cp-badge-info badge badge-synthetic">SYNTHETIC EXPERIMENT</span>
+        </header>
 
         <!-- Controls: Node count and Distribution -->
-        <div style="display: flex; flex-wrap: wrap; gap: var(--space-md); align-items: center; background: rgba(255,255,255,0.02); padding: var(--space-sm) var(--space-md); border-radius: var(--radius-sm); margin-bottom: var(--space-md);">
+        <div class="cp-toolbar" style="margin-bottom: var(--space-md); flex-wrap: wrap;">
           <div style="display: flex; align-items: center; gap: 6px;">
-            <label for="select-runge-nodes" style="font-size: 12px; color: var(--text-secondary); font-weight: 500;">Node Count (N):</label>
-            <select id="select-runge-nodes" class="btn btn-secondary btn-sm">
+            <label for="select-runge-nodes" style="font-size: 12px; color: var(--cp-text-muted); font-weight: 500;">Node Count (N):</label>
+            <select id="select-runge-nodes" class="cp-select cp-select-sm btn btn-secondary btn-sm">
               ${[5, 7, 9, 11, 13].map(n => `
                 <option value="${n}" ${this.rungeNodes === n ? 'selected' : ''}>N = ${n} (Degree ${n - 1})</option>
               `).join('')}
             </select>
           </div>
 
-          <div style="display: flex; align-items: center; gap: var(--space-sm);">
-            <span style="font-size: 12px; color: var(--text-secondary); font-weight: 500;">Node Distribution:</span>
-            <label style="font-size: 12px; color: var(--text-primary); display: flex; align-items: center; gap: 4px; cursor: pointer;">
+          <div style="display: flex; align-items: center; gap: var(--space-sm); margin-left: auto;">
+            <span style="font-size: 12px; color: var(--cp-text-muted); font-weight: 500;">Node Distribution:</span>
+            <label style="font-size: 12px; color: var(--cp-text); display: flex; align-items: center; gap: 4px; cursor: pointer;">
               <input type="radio" name="runge-dist" value="equally_spaced" ${distributionType === 'equally_spaced' ? 'checked' : ''}> Equally Spaced
             </label>
-            <label style="font-size: 12px; color: var(--text-primary); display: flex; align-items: center; gap: 4px; cursor: pointer;">
+            <label style="font-size: 12px; color: var(--cp-text); display: flex; align-items: center; gap: 4px; cursor: pointer;">
               <input type="radio" name="runge-dist" value="chebyshev" ${distributionType === 'chebyshev' ? 'checked' : ''}> Chebyshev Density
             </label>
           </div>
         </div>
 
         <!-- SVG Plot -->
-        <div class="svg-chart-container" style="margin-bottom: var(--space-md);">
-          <svg class="chart-svg" viewBox="0 0 ${svgWidth} ${svgHeight}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Runge Phenomenon Oscillation Plot">
+        <div class="svg-chart-container cp-table-scroll" style="margin-bottom: var(--space-md);">
+          <svg class="chart-svg" viewBox="0 0 ${svgWidth} ${svgHeight}" style="max-width: 100%; height: auto;" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Runge Phenomenon Oscillation Plot">
             <!-- Zero reference line -->
-            <line x1="${padLeft}" y1="${scaleY(0)}" x2="${padLeft + plotW}" y2="${scaleY(0)}" stroke="var(--border-subtle)" stroke-width="1"/>
+            <line x1="${padLeft}" y1="${scaleY(0)}" x2="${padLeft + plotW}" y2="${scaleY(0)}" stroke="var(--cp-line)" stroke-width="1"/>
 
             <!-- True Function f(x) (Cyan) -->
-            <path d="${truePath}" fill="none" stroke="var(--brand-cyan)" stroke-width="2" stroke-dasharray="4,3" />
+            <path d="${truePath}" fill="none" stroke="var(--cp-info)" stroke-width="2" stroke-dasharray="4,3" />
 
             <!-- Interpolating Polynomial P_n(x) (Crimson) -->
-            <path d="${polyPath}" fill="none" stroke="var(--brand-crimson)" stroke-width="2.5" />
+            <path d="${polyPath}" fill="none" stroke="var(--cp-accent)" stroke-width="2.5" />
 
             <!-- Interpolation Nodes -->
             ${nodes.map(n => `
-              <circle cx="${scaleX(n.x).toFixed(1)}" cy="${scaleY(n.y).toFixed(1)}" r="4" fill="var(--brand-amber)" stroke="#0a0a0c" stroke-width="1.5" />
+              <circle cx="${scaleX(n.x).toFixed(1)}" cy="${scaleY(n.y).toFixed(1)}" r="4" fill="var(--cp-warning)" stroke="#0a0a0c" stroke-width="1.5" />
             `).join('')}
 
             <!-- Axis Labels -->
-            <text x="${padLeft + plotW / 2}" y="${svgHeight - 8}" text-anchor="middle" font-size="11" fill="var(--text-muted)">Interval x ∈ [-1.0, +1.0]</text>
-            <text x="12" y="${padTop + plotH / 2}" text-anchor="middle" font-size="11" fill="var(--text-muted)" transform="rotate(-90 12 ${padTop + plotH / 2})">f(x), P_n(x)</text>
+            <text x="${padLeft + plotW / 2}" y="${svgHeight - 8}" text-anchor="middle" font-size="11" fill="var(--cp-text-muted)">Interval x ∈ [-1.0, +1.0]</text>
+            <text x="12" y="${padTop + plotH / 2}" text-anchor="middle" font-size="11" fill="var(--cp-text-muted)" transform="rotate(-90 12 ${padTop + plotH / 2})">f(x), P_n(x)</text>
           </svg>
         </div>
 
         <!-- Legend and Metrics -->
-        <div class="chart-legend" style="display: flex; gap: var(--space-md); justify-content: center; margin-bottom: var(--space-md);">
-          <span style="font-size: 12px; color: var(--text-secondary); display: flex; align-items: center; gap: 4px;">
-            <span style="display: inline-block; width: 16px; height: 2px; border-top: 2px dashed var(--brand-cyan);"></span> True Function f(x)
+        <div class="chart-legend cp-chart-legend" style="display: flex; gap: var(--space-md); justify-content: center; margin-bottom: var(--space-md);">
+          <span style="font-size: 12px; color: var(--cp-text-muted); display: flex; align-items: center; gap: 4px;">
+            <span style="display: inline-block; width: 16px; height: 2px; border-top: 2px dashed var(--cp-info);"></span> True Function f(x)
           </span>
-          <span style="font-size: 12px; color: var(--text-secondary); display: flex; align-items: center; gap: 4px;">
-            <span style="display: inline-block; width: 16px; height: 3px; background: var(--brand-crimson);"></span> Interpolating Polynomial (Degree ${degree})
+          <span style="font-size: 12px; color: var(--cp-text-muted); display: flex; align-items: center; gap: 4px;">
+            <span style="display: inline-block; width: 16px; height: 3px; background: var(--cp-accent);"></span> Interpolating Polynomial (Degree ${degree})
           </span>
-          <span style="font-size: 12px; color: var(--text-secondary); display: flex; align-items: center; gap: 4px;">
-            <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--brand-amber);"></span> Exact Nodes (${nodes.length})
+          <span style="font-size: 12px; color: var(--cp-text-muted); display: flex; align-items: center; gap: 4px;">
+            <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--cp-warning);"></span> Exact Nodes (${nodes.length})
           </span>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md); margin-bottom: var(--space-md);">
-          <div style="background: rgba(255,255,255,0.02); padding: var(--space-sm) var(--space-md); border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
-            <div style="font-size: 11px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px;">Maximum Interpolation Error (Interior)</div>
-            <div style="font-family: monospace; font-size: 15px; font-weight: 700; color: var(--brand-crimson);">
-              ${errorMetrics.maxAbsError.toFixed(4)} <span style="font-size: 11px; font-weight: 400; color: var(--text-muted);">(at x = ${errorMetrics.maxErrorLocation.toFixed(2)})</span>
+        <div class="cp-result-comparison" style="margin-bottom: var(--space-md);">
+          <div>
+            <span style="font-size: 11px; text-transform: uppercase; color: var(--cp-text-muted); margin-bottom: 4px;">Maximum Interpolation Error (Interior)</span>
+            <div style="font-family: var(--font-mono); font-size: 15px; font-weight: 700; color: var(--cp-accent);">
+              ${errorMetrics.maxAbsError.toFixed(4)} <span style="font-size: 11px; font-weight: 400; color: var(--cp-text-muted);">(at x = ${errorMetrics.maxErrorLocation.toFixed(2)})</span>
             </div>
-            <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Root Mean Squared Error (RMSE): ${errorMetrics.rmse.toFixed(4)}</div>
+            <div style="font-size: 11px; color: var(--cp-text-muted); margin-top: 2px;">Root Mean Squared Error (RMSE): ${errorMetrics.rmse.toFixed(4)}</div>
           </div>
 
-          <div style="background: rgba(255,255,255,0.02); padding: var(--space-sm) var(--space-md); border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
-            <div style="font-size: 11px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px;">Forward Extrapolation Sample (at x = +1.15)</div>
-            <div style="font-family: monospace; font-size: 15px; font-weight: 700; color: var(--brand-amber);">
+          <div>
+            <span style="font-size: 11px; text-transform: uppercase; color: var(--cp-text-muted); margin-bottom: 4px;">Forward Extrapolation Sample (at x = +1.15)</span>
+            <div style="font-family: var(--font-mono); font-size: 15px; font-weight: 700; color: var(--cp-warning);">
               Error = ${errorMetrics.extrapolationSample.error.toFixed(4)}
             </div>
-            <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">f_true = ${errorMetrics.extrapolationSample.fTrue.toFixed(4)} vs P(1.15) = ${errorMetrics.extrapolationSample.fPoly.toFixed(4)}</div>
+            <div style="font-size: 11px; color: var(--cp-text-muted); margin-top: 2px;">f_true = ${errorMetrics.extrapolationSample.fTrue.toFixed(4)} vs P(1.15) = ${errorMetrics.extrapolationSample.fPoly.toFixed(4)}</div>
           </div>
         </div>
 
-        <div class="alert alert-warning" style="font-size: 12px; line-height: 1.4;">
+        <div class="cp-alert cp-alert-warning alert alert-warning" style="font-size: 12px; line-height: 1.4;">
           <strong>Educational Proof:</strong> ${academicTakeaway}
         </div>
-      </div>
+      </article>
     `;
   }
 
@@ -793,17 +796,17 @@ export class NumericalLabView {
      -------------------------------------------------------------------------- */
   renderStabilityTopics() {
     return `
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md);">
+      <div class="cp-dashboard-grid" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px;">
         ${NUMERICAL_STABILITY_TOPICS.map(topic => `
-          <div class="chart-card" style="padding: var(--space-md);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-sm);">
-              <h3 style="font-size: 15px; font-weight: 600; color: var(--text-primary); margin: 0;">${topic.title}</h3>
-              <span class="badge badge-crimson" style="font-size: 10px;">${topic.badge}</span>
-            </div>
-            <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.5;">
+          <article class="cp-panel chart-card" style="padding: var(--space-md);">
+            <header class="cp-panel-header" style="margin-bottom: var(--space-sm);">
+              <h3 style="font-size: 15px; font-weight: 600; color: var(--cp-text); margin: 0;">${topic.title}</h3>
+              <span class="cp-badge cp-badge-danger badge badge-crimson" style="font-size: 10px;">${topic.badge}</span>
+            </header>
+            <div style="font-size: 12px; color: var(--cp-text-muted); line-height: 1.5;">
               ${topic.content.trim().split('\n\n').map(p => `<p style="margin: 0 0 8px 0;">${p.trim()}</p>`).join('')}
             </div>
-          </div>
+          </article>
         `).join('')}
       </div>
     `;

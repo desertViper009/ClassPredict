@@ -178,7 +178,52 @@ export function loadUiContractTests() {
       assert(html.includes('Safety') || html.includes('Barrier') || html.includes('commitment'), 'Must state safety barrier condition before dataset commitment');
     });
   });
+
+  describe('Premium UI: Numerical Methods Lab Contract', () => {
+    it('covers all five educational experiments with accessible navigation and numerical traces', async () => {
+      const { NumericalLabView } = await import('../js/ui/numerical_lab_view.js');
+
+      const mockContainer = { innerHTML: '', querySelector: () => null, querySelectorAll: () => [] };
+      const view = new NumericalLabView(mockContainer);
+
+      // Experiment A: Gaussian
+      view.activeSubTab = 'exp-a';
+      view.render();
+      let html = mockContainer.innerHTML;
+      assert(html.includes('Gaussian') || html.includes('Elimination'), 'Must render Gaussian experiment');
+      assert(html.includes('id="btn-gauss-next"') || html.includes('id="gauss-btn-next"') || html.includes('data-step="next"'), 'Must have Gaussian forward step control');
+      assert(html.includes('matrix') || html.includes('Matrix'), 'Must render augmented matrix');
+
+      // Experiment B: Regression Comparison
+      view.activeSubTab = 'exp-b';
+      view.runRegressionExperiment();
+      view.render();
+      html = mockContainer.innerHTML;
+      assert(html.includes('Linear') && html.includes('Quadratic'), 'Must render Linear vs Quadratic regression comparison');
+
+      // Experiment C: Newton Divided Differences
+      view.activeSubTab = 'exp-c';
+      view.runInterpolationExperiment();
+      view.render();
+      html = mockContainer.innerHTML;
+      assert(html.includes('Newton') || html.includes('Divided Differences'), 'Must render Newton interpolation');
+
+      // Experiment D: Runge Phenomenon
+      view.activeSubTab = 'exp-d';
+      view.runRungeDemo();
+      view.render();
+      html = mockContainer.innerHTML;
+      assert(html.includes('Runge'), 'Must render Runge phenomenon experiment');
+
+      // Topics: Stability Topics
+      view.activeSubTab = 'topics';
+      view.render();
+      html = mockContainer.innerHTML;
+      assert(html.includes('Stability') || html.includes('Conditioning'), 'Must render stability topics');
+    });
+  });
 }
+
 
 
 
