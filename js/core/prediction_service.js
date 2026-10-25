@@ -442,10 +442,15 @@ export function exportIndividualCSV(individualResult) {
     ? individualResult.rawPrediction.toFixed(4)
     : '';
 
+  let safeModelName = String(individualResult.modelName || '').replace(/"/g, '""');
+  if (/^[=+\-@\t\r]/.test(safeModelName)) {
+    safeModelName = "'" + safeModelName;
+  }
+
   const metaRows = [
     `# ClassPredict Individual Prediction Result`,
     `# Target Semester,Predicted SGPA,Model Name,Latest Semester,Latest SGPA,Out Of Range`,
-    `${individualResult.targetSemester},${rawPred},"${individualResult.modelName}",${individualResult.latestSemester},${individualResult.latestSgpa.toFixed(4)},${individualResult.isOutOfRange ? "TRUE" : "FALSE"}`,
+    `${individualResult.targetSemester},${rawPred},"${safeModelName}",${individualResult.latestSemester},${individualResult.latestSgpa.toFixed(4)},${individualResult.isOutOfRange ? "TRUE" : "FALSE"}`,
     ``,
     `semester_no,sgpa`
   ];

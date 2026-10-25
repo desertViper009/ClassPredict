@@ -156,6 +156,11 @@ function initializeApplication() {
   updateDatasetStatus();
   navigateTo('dashboard');
 
+  if (typeof window !== 'undefined') {
+    window.stateManager = stateManager;
+    window.navigateTo = navigateTo;
+  }
+
   if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('./sw.js').catch(error => {
