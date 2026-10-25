@@ -81,10 +81,11 @@ export class DashboardView {
       <div class="card" style="margin-bottom: var(--space-xl);">
         <div class="card-header">
           <div>
-            <h2 class="card-title">Cohort Analytical Dashboard</h2>
-            <p class="card-subtitle">Empirical transition modeling, semester distributions, and model evaluation</p>
+            <h1 class="card-title" style="font-size: 20px; font-weight: 700;">ClassPredict Overview</h1>
+            <p class="card-subtitle">Academic Performance Analytics & SGPA Transition Modeling</p>
           </div>
-          <div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            ${overview.isSynthetic ? '<span class="badge badge-synthetic">Synthetic Demo Mode</span>' : ''}
             <span class="badge badge-success">● Dataset Active (${overview.totalRecords} Records)</span>
           </div>
         </div>
@@ -128,16 +129,16 @@ export class DashboardView {
     return `
       <div class="card" style="margin-bottom: var(--space-xl); text-align: center; padding: var(--space-2xl) var(--space-lg);">
         <div style="font-size: 48px; margin-bottom: var(--space-md);">📊</div>
-        <h2 style="font-size: 20px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px;">
+        <h2 style="font-size: 20px; font-weight: 700; color: var(--color-text); margin-bottom: 8px;">
           No Cohort Dataset Loaded in Session Memory
         </h2>
-        <p style="font-size: 14px; max-width: 620px; margin: 0 auto var(--space-xl) auto; color: var(--text-secondary); line-height: 1.6;">
+        <p style="font-size: 14px; max-width: 620px; margin: 0 auto var(--space-xl) auto; color: var(--color-muted); line-height: 1.6;">
           The Analytical Dashboard computes empirical transition dynamics, semester histograms, boxplots, in-sample residuals, and rolling-origin backtesting. Import a long-format CSV or scan marksheet PDFs via client-side OCR to begin.
         </p>
 
         <div style="display: flex; justify-content: center; gap: var(--space-md); flex-wrap: wrap;">
           <button class="btn btn-primary" id="btn-demo-load">
-            ⚡ Load Synthetic Sample Dataset (10 Students)
+            ⚡ Load Synthetic Sample Dataset (13 Students)
           </button>
           <button class="btn btn-secondary" id="btn-goto-dataset">
             📥 Import Long-Format CSV
@@ -155,39 +156,55 @@ export class DashboardView {
    */
   renderOverviewKPIs(overview) {
     const gapsNotice = overview.studentsWithGapsCount > 0
-      ? `<div style="margin-top: 12px; padding: 8px 12px; background-color: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: var(--radius-sm); font-size: 12px; color: var(--accent-warning);">
-           ⚠️ Notice: ${overview.studentsWithGapsCount} student(s) contain non-consecutive semester gaps. Non-bridging policy strictly excludes artificial transition jumps.
+      ? `<div style="margin-top: 14px; padding: 10px 14px; background-color: var(--color-warning-bg); border: 1px solid var(--color-warning-border); border-radius: var(--radius-sm); font-size: 12.5px; color: var(--color-warning); display: flex; align-items: center; gap: 8px;">
+           <span>⚠️</span>
+           <span><strong>Notice</strong>: ${overview.studentsWithGapsCount} student(s) contain non-consecutive semester gaps. Non-bridging policy strictly excludes artificial transition jumps.</span>
          </div>`
       : '';
 
     return `
       <div class="kpi-grid">
         <div class="kpi-card">
-          <div class="kpi-label">Unique Students</div>
+          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div class="kpi-label">Unique Students</div>
+            <span style="font-size: 16px; opacity: 0.8;">👥</span>
+          </div>
           <div class="kpi-value">${overview.totalStudents}</div>
           <div class="kpi-meta">Pseudonymous keys</div>
         </div>
         <div class="kpi-card">
-          <div class="kpi-label">Total Records</div>
+          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div class="kpi-label">Accepted Records</div>
+            <span style="font-size: 16px; opacity: 0.8;">📑</span>
+          </div>
           <div class="kpi-value">${overview.totalRecords}</div>
-          <div class="kpi-meta">Accepted semester entries</div>
+          <div class="kpi-meta">Across Semesters ${overview.minSemester}–${overview.maxSemester}</div>
         </div>
         <div class="kpi-card">
-          <div class="kpi-label">Observed Span</div>
-          <div class="kpi-value">Sem ${overview.minSemester} – Sem ${overview.maxSemester}</div>
-          <div class="kpi-meta">${overview.observedSemesters.length} semesters active</div>
+          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div class="kpi-label">Observed Span</div>
+            <span style="font-size: 16px; opacity: 0.8;">📅</span>
+          </div>
+          <div class="kpi-value" style="font-size: 22px; margin-top: 5px;">Sem ${overview.minSemester} – Sem ${overview.maxSemester}</div>
+          <div class="kpi-meta">${overview.observedSemesters.length} active semesters</div>
         </div>
         <div class="kpi-card">
-          <div class="kpi-label">Valid Transitions</div>
+          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div class="kpi-label">Valid Transitions</div>
+            <span style="font-size: 16px; opacity: 0.8;">⚡</span>
+          </div>
           <div class="kpi-value">${overview.validTransitionsCount}</div>
           <div class="kpi-meta">1-step consecutive pairs</div>
         </div>
         <div class="kpi-card">
-          <div class="kpi-label">Shared Regression</div>
-          <div class="kpi-value" style="font-size: 15px; margin-top: 6px;">
-            ${overview.canFitRegression ? 'Available' : 'Unavailable'}
+          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div class="kpi-label">Shared Regression</div>
+            <span style="font-size: 16px; opacity: 0.8;">📐</span>
           </div>
-          <div class="kpi-meta">${overview.canFitRegression ? 'Fit confirmed (Model B)' : overview.regressionStatus}</div>
+          <div class="kpi-value" style="font-size: 17px; margin-top: 6px; color: ${overview.canFitRegression ? 'var(--color-success)' : 'var(--color-warning)'};">
+            ${overview.canFitRegression ? 'Model B Active' : 'Fallback (Model A)'}
+          </div>
+          <div class="kpi-meta">${overview.canFitRegression ? 'Least-squares confirmed' : overview.regressionStatus}</div>
         </div>
       </div>
       ${gapsNotice}
@@ -301,6 +318,75 @@ export class DashboardView {
         ` : `
           <p style="color: var(--text-secondary); font-size: 13px;">${residuals.message}</p>
         `}
+      </div>
+
+      <!-- Next-Semester Prediction Preview Card -->
+      ${this.renderPredictionPreviewCard(dataset, scatter)}
+    `;
+  }
+
+  /**
+   * Renders a live preview card of next-semester prediction for a cohort student.
+   */
+  renderPredictionPreviewCard(dataset, scatter) {
+    if (!dataset || dataset.length === 0) return '';
+    const sampleStudent = dataset.find(r => r.student_key === 'SYN_001') || dataset[0];
+    const studentHistory = dataset
+      .filter(r => r.student_key === sampleStudent.student_key)
+      .sort((a, b) => a.semester_no - b.semester_no);
+    const lastObs = studentHistory[studentHistory.length - 1];
+    const nextSem = lastObs.semester_no + 1;
+
+    let predValue = lastObs.sgpa;
+    let modelUsed = 'Model A: Persistence Baseline';
+    let isOor = false;
+
+    if (scatter.regressionModel && typeof scatter.regressionModel.slope === 'number') {
+      predValue = scatter.regressionModel.intercept + scatter.regressionModel.slope * lastObs.sgpa;
+      modelUsed = 'Model B: Class-Wide Linear Transition';
+      if (predValue > 4.00 || predValue < 0.00) isOor = true;
+    }
+
+    return `
+      <div class="card" style="margin-top: var(--space-xl); background: linear-gradient(135deg, rgba(23, 26, 33, 0.95), rgba(30, 20, 25, 0.9)); border: 1px solid rgba(255, 48, 56, 0.35);">
+        <div class="card-header">
+          <div>
+            <span class="badge badge-crimson" style="margin-bottom: 4px;">Next-Semester Prediction Preview</span>
+            <h3 class="card-title" style="margin-top: 2px;">Cohort Sample: ${this.escapeHtml(sampleStudent.student_key)}</h3>
+            <p class="card-subtitle">Real-time transition model preview for upcoming academic session</p>
+          </div>
+          <button class="btn btn-secondary btn-sm" id="btn-goto-predictions-preview" style="font-size: 12px;">
+            Open Prediction Workspace →
+          </button>
+        </div>
+        <div class="grid grid-cols-4" style="margin-top: var(--space-sm);">
+          <div style="background: var(--color-surface); padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--color-border);">
+            <div class="kpi-label">Latest Observed</div>
+            <div class="kpi-value" style="font-size: 22px;">${lastObs.sgpa.toFixed(2)} <span style="font-size: 12px; font-weight: normal; color: var(--color-muted);">(Sem ${lastObs.semester_no})</span></div>
+            <div class="kpi-meta">Last recorded GPA</div>
+          </div>
+          <div style="background: var(--color-surface); padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--color-border);">
+            <div class="kpi-label">Predicted SGPA</div>
+            <div class="kpi-value" style="font-size: 22px; color: ${isOor ? 'var(--color-warning)' : 'var(--color-primary)'};">
+              ${predValue.toFixed(2)} <span style="font-size: 12px; font-weight: normal; color: var(--color-muted);">(Sem ${nextSem})</span>
+            </div>
+            <div class="kpi-meta">Raw unclipped estimate</div>
+          </div>
+          <div style="background: var(--color-surface); padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--color-border);">
+            <div class="kpi-label">Model Applied</div>
+            <div style="font-size: 13.5px; font-weight: 600; color: var(--color-text); margin-top: 5px;">${modelUsed}</div>
+            <div class="kpi-meta">1-step transition rule</div>
+          </div>
+          <div style="background: var(--color-surface); padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--color-border);">
+            <div class="kpi-label">Trajectory Status</div>
+            <div style="margin-top: 6px;">
+              ${isOor 
+                ? '<span class="badge badge-warning">⚠️ Out of Range (> 4.00)</span>' 
+                : '<span class="badge badge-success">✓ Bounded [0.00 – 4.00]</span>'}
+            </div>
+            <div class="kpi-meta">${isOor ? 'Extreme trajectory flagged' : 'Within standard bounds'}</div>
+          </div>
+        </div>
       </div>
     `;
   }
@@ -1110,7 +1196,7 @@ export class DashboardView {
     });
 
     // Toggle table view
-    const btnToggleTable = this.container.getElementById('btn-toggle-table');
+    const btnToggleTable = this.container.querySelector('#btn-toggle-table');
     if (btnToggleTable) {
       btnToggleTable.addEventListener('click', () => {
         this.showTableView = !this.showTableView;
@@ -1120,7 +1206,7 @@ export class DashboardView {
     }
 
     // Toggle persistence line
-    const chkPersistence = this.container.getElementById('chk-persistence-line');
+    const chkPersistence = this.container.querySelector('#chk-persistence-line');
     if (chkPersistence) {
       chkPersistence.addEventListener('change', (e) => {
         this.showPersistenceLine = e.target.checked;
@@ -1129,8 +1215,17 @@ export class DashboardView {
       });
     }
 
+    // Prediction preview navigation button
+    const btnGotoPredPreview = this.container.querySelector('#btn-goto-predictions-preview');
+    if (btnGotoPredPreview) {
+      btnGotoPredPreview.addEventListener('click', () => {
+        const predTab = document.getElementById('tab-btn-predictions');
+        if (predTab) predTab.click();
+      });
+    }
+
     // Empty state buttons
-    const btnDemoLoad = this.container.getElementById('btn-demo-load');
+    const btnDemoLoad = this.container.querySelector('#btn-demo-load');
     if (btnDemoLoad) {
       btnDemoLoad.addEventListener('click', async () => {
         try {
@@ -1147,7 +1242,7 @@ export class DashboardView {
       });
     }
 
-    const btnGotoDataset = this.container.getElementById('btn-goto-dataset');
+    const btnGotoDataset = this.container.querySelector('#btn-goto-dataset');
     if (btnGotoDataset) {
       btnGotoDataset.addEventListener('click', () => {
         const datasetTab = document.getElementById('tab-btn-dataset');
@@ -1155,7 +1250,7 @@ export class DashboardView {
       });
     }
 
-    const btnGotoOcr = this.container.getElementById('btn-goto-ocr');
+    const btnGotoOcr = this.container.querySelector('#btn-goto-ocr');
     if (btnGotoOcr) {
       btnGotoOcr.addEventListener('click', () => {
         const ocrTab = document.getElementById('tab-btn-ocr');

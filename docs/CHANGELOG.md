@@ -4,6 +4,38 @@ All notable changes to the ClassPredict project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - October 2026 (Complete Website UI Redesign: Premium Dark Analytics Dashboard)
+
+### Added & Redesigned
+* **Cinematic Dark Analytics Design System (`css/main.css`, `css/components.css`)**:
+  - Implemented cohesive dark charcoal design tokens: near-black canvas (`--color-bg: #090a0d`), deep panels (`--color-surface: #101217`), elevated hover cards (`--color-surface-raised: #171a21`), subtle borders (`--color-border: #232732`), vivid crimson brand accents (`--color-primary: #ff3038`), warm coral secondary accents (`--color-accent: #ff7857`), warm white text (`--color-text: #f5f5f7`), and muted cool gray text (`--color-muted: #a0a4ae`).
+  - Added full backwards compatibility with legacy tokens (`--bg-primary`, `--bg-card`, `--accent-primary`, etc.).
+  - Integrated modern Google Fonts typography: `Inter` (sans-serif) and `JetBrains Mono` (tabular numbers and code).
+  - Designed custom slim scrollbars, interactive focus rings, restrained shadows, and micro-transitions.
+* **Persistent Left Sidebar Application Shell (`index.html`, `js/app.js`)**:
+  - Created persistent desktop sidebar featuring brand badge, logo, 5 core navigation tabs with crimson active markers, live session dataset telemetry card, and client-side privacy indicator.
+  - Implemented responsive mobile drawer navigation (`<= 1024px`) with hamburger toggle, smooth slide-in cubic-bezier transition, backdrop overlay, and auto-dismiss on tab navigation.
+  - Built sticky top control bar with responsive breadcrumbs, synthetic demo dataset trigger button, grading scale badge (`0.00 – 4.00 SGPA`), and online/offline Service Worker network badge.
+* **Overview Dashboard Visual Showcase (`js/ui/dashboard_view.js`)**:
+  - Refined cohort KPI cards with icon badges (`👥 Unique Students`, `📑 Accepted Records`, `📅 Observed Span`, `⚡ Valid Transitions`, `📐 Shared Regression`).
+  - Integrated real-time **Next-Semester Prediction Preview** card with direct deep-link action to the prediction workspace.
+  - Replaced DOM lookup bugs with `querySelector` and enhanced SVG plot color coordinates to match the crimson SaaS palette.
+* **Prediction Workflows & Result Visualization (`js/ui/prediction_view.js`, `css/components.css`)**:
+  - Elevated prediction hero card with crimson border accent, raw unclamped mathematical output, degree-of-freedom volatility notices, and RFC-4180 export buttons.
+  - Modernized segmented pill tab switcher (`.subtab-bar`, `.subtab-btn`) for Individual vs. Whole-Class forecasting.
+* **Dataset Management & Ingestion (`js/ui/dataset_view.js`)**:
+  - Polished drag-and-drop CSV dropzone with animated hover states, schema guidance card, live error diagnostics table, and staged confirmation workflow.
+* **Privacy-Preserving OCR Review (`js/ui/ocr_view.js`)**:
+  - Multi-stage progress indicator, interactive canvas crop container with crimson draggable handles, and key reconciliation auditing table.
+* **Numerical Methods Educational Laboratory (`js/ui/numerical_lab_view.js`)**:
+  - Enhanced augmented matrix tables with active pivot cell highlights (`.matrix-cell-pivot`), row elimination markers (`.matrix-cell-eliminated`), and row swap tracking (`.matrix-row-swap`).
+
+### Verified
+* Executed full automated regression test suite: 40 suites, 226 tests, 226 passed, 0 failed.
+* Verified responsive behavior across desktop (1440px), laptop (1280px), tablet (768px), and mobile (390px) viewports with zero horizontal overflow.
+
+---
+
 ## [1.0.0] - October 2026 (Phase 10: Final Hardening, Production Deployment & Portfolio Release)
 
 ### Added

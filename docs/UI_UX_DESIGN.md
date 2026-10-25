@@ -23,40 +23,50 @@ Key aesthetic principles:
 ## 2. Design Tokens & Color Palette
 
 ```
-Surface (Obsidian)     Card Surface (Charcoal)  Primary Accent (Crimson) Warning Accent (Amber)
-#0B0B0E                #14141A                  #DC2626                  #F59E0B
-[████████████████]     [████████████████]       [████████████████]       [████████████████]
+Near-Black Background    Surface Panel           Elevated Surface        Primary Crimson Accent  Coral Accent
+#090A0D                  #101217                 #171A21                 #FF3038                 #FF7857
+[████████████████]       [████████████████]      [████████████████]      [████████████████]      [████████████████]
 ```
 
 ### 2.1 CSS Color Token Specification
 
 ```css
 :root {
-  /* Surfaces & Backgrounds */
-  --bg-primary: #0B0B0E;         /* Deep Obsidian Black */
-  --bg-card: #14141A;            /* Charcoal Elevation */
-  --bg-card-hover: #1A1A22;      /* Interactive Hover */
-  --bg-input: #0E0E14;           /* Form Field Background */
-  --bg-overlay: rgba(11, 11, 14, 0.85); /* Modal Backdrop */
+  /* Core Modern Dark SaaS Palette */
+  --color-bg: #090a0d;            /* Cinematic Charcoal Canvas */
+  --color-surface: #101217;       /* Card & Main Panel Surface */
+  --color-surface-raised: #171a21;/* Hover / Elevated Container */
+  --color-border: #232732;        /* Subtle Border Divider */
+  --color-border-subtle: #1c202a; /* Card Internal Divider */
+  --color-primary: #ff3038;       /* Vivid Crimson Brand Accent */
+  --color-primary-hover: #ff5057; /* Hover State for Crimson Accent */
+  --color-accent: #ff7857;        /* Warm Coral Secondary Accent */
+  --color-text: #f5f5f7;          /* Warm High-Contrast White */
+  --color-muted: #a0a4ae;         /* Slate Secondary Muted Text */
+  --color-subtle: #6b7280;        /* Dimmed Metadata Text */
+  --color-success: #35c98a;       /* Emerald Success State */
+  --color-warning: #ffb454;       /* Amber Warning & Out-of-Bounds */
+  --color-danger: #ff525b;        /* Error & Danger Badge */
 
-  /* Borders & Dividers */
-  --border-subtle: #242430;      /* Structural Divider */
-  --border-focus: #DC2626;       /* Focused Form Outline */
-  --border-card-glow: rgba(220, 38, 38, 0.18); /* Card Accent Glow */
-
-  /* Brand & Semantic Accents */
-  --accent-primary: #DC2626;     /* Deep Crimson / Brand Red */
-  --accent-primary-hover: #EF4444;/* Lighter Red on Hover */
-  --accent-secondary: #991B1B;   /* Dark Burgundy Border/Pill */
-  --accent-warning: #F59E0B;     /* Amber (Out of bounds / Low confidence) */
-  --accent-success: #10B981;     /* Emerald (Validated / Beat baseline) */
-  --accent-info: #3B82F6;        /* Cobalt (Synthetic data flag) */
-
-  /* Typography */
-  --text-primary: #F8FAFC;       /* High Contrast White */
-  --text-secondary: #94A3B8;     /* Muted Slate Grey */
-  --text-tertiary: #64748B;      /* Dimmed Metadata */
-  --text-code: #F43F5E;          /* Inline Code / Formula Highlight */
+  /* Backwards-Compatible Legacy Aliases */
+  --bg-primary: var(--color-bg);
+  --bg-card: var(--color-surface);
+  --bg-card-hover: var(--color-surface-raised);
+  --bg-input: #0c0e12;
+  --bg-overlay: rgba(9, 10, 13, 0.85);
+  --border-subtle: var(--color-border);
+  --border-focus: var(--color-primary);
+  --border-card-glow: rgba(255, 48, 56, 0.16);
+  --accent-primary: var(--color-primary);
+  --accent-primary-hover: var(--color-primary-hover);
+  --accent-secondary: var(--color-accent);
+  --accent-warning: var(--color-warning);
+  --accent-success: var(--color-success);
+  --accent-info: #60a5fa;
+  --text-primary: var(--color-text);
+  --text-secondary: var(--color-muted);
+  --text-tertiary: var(--color-subtle);
+  --text-code: #ff7857;
 
   /* Typography Fonts */
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -106,27 +116,53 @@ For individual predictions (Model C, $s_k = a + b\,k$), the UI renders statistic
 
 ```
 +---------------------------------------------------------------------------------------------------------+
-|  [CP] ClassPredict  |  Dashboard  |  Dataset Ingestion  |  Predictions  |  OCR Import  |  Numerical Lab | [Scale: 4.00]
-+---------------------------------------------------------------------------------------------------------+
-|                                                                                                         |
-|  [Active View Container: Responsive Grid 12-Columns]                                                   |
-|                                                                                                         |
-+---------------------------------------------------------------------------------------------------------+
-|  ClassPredict v1.0 • Academic Numerical Methods Capstone • Ephemeral Session                            |
+| [CP] ClassPredict | Top Control Bar: [Breadcrumb] | [Demo] [Scale: 4.00] [Status: Online]              |
++-------------------+-------------------------------------------------------------------------------------+
+| PERSISTENT SIDEBAR| MAIN CONTENT CANVAS                                                                 |
+|                   |                                                                                     |
+| [📊 Overview]     | Page Title & Subtitle                                                               |
+| [📥 Dataset Mgmt] | Dynamic KPI Metrics Grid (Cards with hover glow & tabular figures)                  |
+| [⚡ Predictions]  | Interactive Charts / Forms / Stepper / Matrix Visualizers                           |
+| [📷 OCR Review]   | Secondary Tabular & Diagnostic Data Panels                                          |
+| [🔬 Numerical Lab]|                                                                                     |
+|                   |                                                                                     |
+| [Dataset Widget]  |                                                                                     |
+| [Privacy Badge]   |                                                                                     |
++-------------------+-------------------------------------------------------------------------------------+
+| ClassPredict v1.1.0 • Academic Numerical Methods Capstone • Ephemeral Client-Side Session               |
 +---------------------------------------------------------------------------------------------------------+
 ```
 
-### 5.1 Navigation Tabs
-1. **Dashboard (`#tab-dashboard`)**: Analytical overview hosting 5 sub-tabs:
-   - **Transitions & Regression (`transitions`)**: SVG Scatter plot ($s_t$ vs $s_{t+1}$), fitted regression line, persistence baseline ($y = x$), point hover tooltips, accessible tabular toggle, and in-sample residual plot ($e_i = y_i - \hat{y}_i$).
+### 5.1 Shell Components
+1. **Persistent Left Sidebar (`.app-sidebar`)**:
+   - ClassPredict Logo and Wordmark with crimson badge.
+   - Core Navigation: Overview (`#tab-btn-dashboard`), Dataset Management (`#tab-btn-dataset`), Predictions (`#tab-btn-predictions`), OCR Review (`#tab-btn-ocr`), and Numerical Methods Lab (`#tab-btn-lab`).
+   - Active state styling: Left crimson accent border (`3px solid var(--color-primary)`), elevated background (`var(--color-surface-raised)`), and warm white text.
+   - Dynamic session dataset status widget (`#sidebar-dataset-widget`) displaying real-time record count and active semester range.
+   - Compact client-side privacy indicator.
+2. **Top Control Bar (`.topbar`)**:
+   - Mobile hamburger drawer toggle (`#sidebar-toggle-btn`) with responsive breakpoint visibility (`<= 1024px`).
+   - Dynamic view breadcrumb title (`#page-breadcrumb-title`).
+   - Synthetic demonstration dataset loader button (`#btn-header-demo`).
+   - Standard academic grading scale indicator tag (`0.00 – 4.00 SGPA`).
+   - Network status badge (`#net-status-badge`) indicating `Online` or `Offline Shell`.
+3. **Mobile Drawer Navigation (`<= 1024px`)**:
+   - Slides from left on drawer toggle with smooth cubic-bezier transition.
+   - Backdrop overlay (`#sidebar-backdrop`) with tap-to-dismiss behavior.
+   - Automatic collapse upon navigation selection.
+   - Responsive Reflow: Single-column KPI reflow at `<= 768px`, horizontally scrolling data tables with sticky headers, touch-friendly form inputs, and zero horizontal page overflow.
+
+### 5.2 Navigation Views
+1. **Dashboard (`#tab-btn-dashboard`)**: Analytical overview hosting 5 sub-tabs:
+   - **Transitions & Regression (`transitions`)**: SVG Scatter plot ($s_t$ vs $s_{t+1}$), fitted regression line, persistence baseline ($y = x$), point hover tooltips, accessible tabular toggle, in-sample residual plot ($e_i = y_i - \hat{y}_i$), and real-time next-semester prediction preview card with deep link to prediction workspace.
    - **Semester Distributions (`distributions`)**: Semester selector pills, 8-bin frequency histogram over $[0.00, 4.00]$, Tukey boxplot with whiskers and highlighted outliers, and descriptive statistics.
    - **Temporal Evaluation (`evaluation`)**: Paired holdout MAE and RMSE comparison cards, side-by-side error bars, and chronological fold breakdown table.
    - **Transition Matrix (`matrix`)**: $K \times K$ transition availability table showing 1-step counts and non-consecutive gap exclusions.
    - **Review Candidates (`candidates`)**: Deterministic 1.5x IQR outlier candidates table with pseudonymous keys, bounds, and ethical auditor guidance.
-2. **Dataset Ingestion (`#tab-dataset`)**: Manual CSV drag-and-drop dropzone, schema guidance, staged dataset confirmation, and raw records inspection.
-3. **Predictions (`#tab-predictions`)**: Dual-pane forecasting view (Individual Student Trend & Whole-Class Cohort Prediction) with RFC-4180 CSV export.
-4. **OCR Ingestion (`#tab-ocr`)**: Mark sheet upload, page selector, canvas rectangular cropping boundary, and editable review table with key reconciliation.
-5. **Numerical Lab (`#tab-lab`)**: Interactive educational sandbox hosting 5 sub-tabs:
+2. **Dataset Management (`#tab-btn-dataset`)**: Manual CSV drag-and-drop dropzone with dragover highlighting, schema guidance banner, staged dataset confirmation, live validation diagnostics, and raw records inspection.
+3. **Predictions (`#tab-btn-predictions`)**: Dual-pane forecasting view (Individual Student Trajectory with 3–7 semester constraint & Whole-Class Cohort Prediction) with hero prediction card and RFC-4180 CSV export.
+4. **OCR Review (`#tab-btn-ocr`)**: Mark sheet upload, page selector, canvas rectangular cropping boundary with interactive drag-and-drop handles, Web Worker recognition progress, and editable review table with student key reconciliation.
+5. **Numerical Lab (`#tab-btn-lab`)**: Interactive educational sandbox hosting 5 sub-tabs:
    - **Experiment A: Gaussian Elimination (`exp-a`)**: Step-by-step augmented matrix $[A | \mathbf{b}]$ reduction, pivot selection, row swap highlights, multiplier display $m_{ik} = a_{ik}/a_{kk}$, row operation formulas, back-substitution stepping, and residual norm $\|\mathbf{r}\|_2$.
    - **Experiment B: Linear vs. Quadratic Regression (`exp-b`)**: Simultaneous curve fitting comparison, centered normal equations $(X'^T X')\mathbf{c} = X'^T \mathbf{y}$, condition squaring demonstration, in-sample RSS improvement vs. out-of-sample overfitting risk, and accessible data table toggle.
    - **Experiment C: Newton Divided Differences (`exp-c`)**: Interactive divided-difference recurrence triangle table, Horner's nested polynomial construction, term-by-term running sums, SVG domain hull, and extrapolation warning flags.

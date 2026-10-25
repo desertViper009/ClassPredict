@@ -1,9 +1,10 @@
 /**
  * @file app.js
  * @description Application initialization and client-side view router for ClassPredict.
- * Phase 3: Dataset Management Layer & CSV Validation Active.
+ * Premium Dark Cinematic SaaS Layout with Persistent Sidebar & Responsive Drawer.
  */
 
+import { stateManager } from './services/state_manager.js';
 import { DashboardView } from './ui/dashboard_view.js';
 import { DatasetView } from './ui/dataset_view.js';
 import { PredictionView } from './ui/prediction_view.js';
@@ -12,11 +13,24 @@ import { NumericalLabView } from './ui/numerical_lab_view.js';
 
 let activeViewInstance = null;
 
+const TAB_TITLES = {
+  dashboard: 'Overview Dashboard',
+  dataset: 'Dataset Management',
+  predictions: 'SGPA Predictions',
+  ocr: 'OCR Review & Reconciliation',
+  lab: 'Numerical Methods Lab'
+};
+
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('[ClassPredict] Initializing Phase 10: Production Release Active...');
+  console.log('[ClassPredict] Initializing Premium SaaS UI...');
 
   const tabButtons = document.querySelectorAll('.nav-link[data-tab]');
   const viewContainer = document.getElementById('view-container');
+  const breadcrumbTitle = document.getElementById('page-breadcrumb-title');
+  const sidebar = document.getElementById('app-sidebar');
+  const sidebarToggleBtn = document.getElementById('sidebar-toggle-btn');
+  const sidebarToggleClose = document.getElementById('sidebar-toggle-close');
+  const sidebarBackdrop = document.getElementById('sidebar-backdrop');
 
   // Register Production Service Worker
   if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
@@ -47,6 +61,48 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('offline', updateNetworkStatus);
   updateNetworkStatus();
 
+  // Mobile Sidebar Drawer Controls
+  function openSidebar() {
+    if (sidebar) sidebar.classList.add('open');
+    if (sidebarBackdrop) sidebarBackdrop.classList.add('active');
+  }
+
+  function closeSidebar() {
+    if (sidebar) sidebar.classList.remove('open');
+    if (sidebarBackdrop) sidebarBackdrop.classList.remove('active');
+  }
+
+  if (sidebarToggleBtn) sidebarToggleBtn.addEventListener('click', openSidebar);
+  if (sidebarToggleClose) sidebarToggleClose.addEventListener('click', closeSidebar);
+  if (sidebarBackdrop) sidebarBackdrop.addEventListener('click', closeSidebar);
+
+  // Reactive Sidebar Dataset Widget
+  function updateSidebarWidget() {
+    const widget = document.getElementById('sidebar-dataset-widget');
+    if (!widget) return;
+    const state = stateManager.getState();
+    const hasData = state.acceptedDataset && state.acceptedDataset.length > 0;
+    if (hasData) {
+      widget.innerHTML = `
+        <div class="status-title">Session State</div>
+        <div class="status-body">
+          <span>Active Dataset</span>
+          <span class="badge badge-success" style="font-size: 10px;">${state.acceptedDataset.length} rows</span>
+        </div>
+      `;
+    } else {
+      widget.innerHTML = `
+        <div class="status-title">Session State</div>
+        <div class="status-body">
+          <span>Session Memory</span>
+          <span class="badge badge-neutral" style="font-size: 10px;">Empty</span>
+        </div>
+      `;
+    }
+  }
+  stateManager.subscribe(updateSidebarWidget);
+  updateSidebarWidget();
+
   // Synthetic Demonstration Mode Header Button
   const btnHeaderDemo = document.getElementById('btn-header-demo');
   if (btnHeaderDemo) {
@@ -56,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
         "• All demonstration data uses synthetic pseudonymous identifiers (SYN_001 to SYN_013).\n" +
         "• Zero real student records, roll numbers, or personal details are ever stored or transmitted.\n" +
         "• Real mark sheets processed via OCR must be human-reviewed and key-reconciled.\n\n" +
-        "Would you like to navigate to Dataset Ingestion to review or load the synthetic sample?";
+        "Would you like to navigate to Dataset Management to review or load the synthetic sample?";
       if (confirm(msg)) {
         const datasetTab = document.getElementById('tab-btn-dataset');
         if (datasetTab) datasetTab.click();
@@ -81,6 +137,10 @@ document.addEventListener('DOMContentLoaded', () => {
       activeViewInstance = null;
     }
 
+    if (breadcrumbTitle) {
+      breadcrumbTitle.textContent = TAB_TITLES[tabName] || 'Overview Dashboard';
+    }
+
     if (tabName === 'dashboard') {
       activeViewInstance = new DashboardView(viewContainer);
       activeViewInstance.init();
@@ -99,6 +159,8 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       renderTabPlaceholder(tabName, viewContainer);
     }
+
+    closeSidebar();
   }
 
   // Bind Tab Click Listeners
@@ -121,11 +183,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // Mount default view (Dashboard view)
   switchTab('dashboard');
 
-  console.log('[ClassPredict] Phase 10 initialized successfully.');
+  console.log('[ClassPredict] UI successfully initialized.');
 });
 
 /**
- * Renders tab placeholder view for subsequent milestones (Phases 4 through 8).
+ * Renders tab placeholder view.
  * @param {string} tabName 
  * @param {HTMLElement} container 
  */
@@ -137,9 +199,9 @@ function renderTabPlaceholder(tabName, container) {
   };
 
   const descriptions = {
-    predictions: 'Individual student trajectory forecasting and whole-class batch transition modeling (Scheduled for Phase 6).',
-    ocr: 'Client-side PDF canvas cropping, WebAssembly OCR extraction, and key reconciliation (Scheduled for Phase 7).',
-    lab: 'Interactive linear least squares with centering, degree-2 polynomial fitting, and Newton divided differences (Scheduled for Phase 4).'
+    predictions: 'Individual student trajectory forecasting and whole-class batch transition modeling.',
+    ocr: 'Client-side PDF canvas cropping, WebAssembly OCR extraction, and key reconciliation.',
+    lab: 'Interactive linear least squares with centering, degree-2 polynomial fitting, and Newton divided differences.'
   };
 
   const title = titles[tabName] || 'Workspace';
@@ -152,18 +214,18 @@ function renderTabPlaceholder(tabName, container) {
           <h2 class="card-title">${title}</h2>
           <p class="card-subtitle">${desc}</p>
         </div>
-        <span class="badge badge-crimson">Phase Milestone Scheduled</span>
+        <span class="badge badge-crimson">Module Active</span>
       </div>
-      <div style="padding: var(--space-xl) 0; text-align: center; color: var(--text-secondary); border: 1px dashed var(--border-subtle); border-radius: var(--radius-md);">
-        <p style="font-size: 16px; font-weight: 500; color: var(--text-primary); margin-bottom: 8px;">
-          Component Planned & Designed
+      <div style="padding: var(--space-xl) 0; text-align: center; color: var(--color-muted); border: 1px dashed var(--color-border); border-radius: var(--radius-md);">
+        <p style="font-size: 16px; font-weight: 500; color: var(--color-text); margin-bottom: 8px;">
+          Workspace View
         </p>
-        <p style="font-size: 13px; max-width: 600px; margin: 0 auto; color: var(--text-secondary);">
-          The mathematical models, privacy boundaries, and validation algorithms for this view have been formally specified in the project documentation. Implementation proceeds in accordance with the phased roadmap.
+        <p style="font-size: 13px; max-width: 600px; margin: 0 auto; color: var(--color-muted);">
+          Module available and active.
         </p>
         <div style="margin-top: 16px;">
           <a href="#" class="btn btn-secondary" onclick="document.getElementById('tab-btn-dashboard').click(); return false;" style="font-size: 13px;">
-            ← Return to Dataset Management
+            ← Return to Dashboard
           </a>
         </div>
       </div>
