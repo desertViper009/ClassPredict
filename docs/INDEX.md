@@ -2,6 +2,8 @@
 
 > **Version**: 1.0.0 (Phase 10 Production Release Complete)  
 > **Status**: Completed & Verified (All 10 Phases Implemented, Hardened & Deployed)  
+> **Repository**: [https://github.com/desertViper009/ClassPredict](https://github.com/desertViper009/ClassPredict)  
+> **Live Web Application**: [https://desertviper009.github.io/ClassPredict/](https://desertviper009.github.io/ClassPredict/)  
 > **Last Updated**: October 2026  
 > **Target Audience**: Students, Academic Evaluators, Peer Reviewers, Software Engineers
 

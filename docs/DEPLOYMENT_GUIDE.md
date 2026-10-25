@@ -83,15 +83,11 @@ In `index.html`, the browser runtime loads the following vendor libraries for do
 ## 4. Production Static Hosting
 
 ### 4.1 GitHub Pages Deployment
-1. Commit all files to a GitHub repository:
-   ```bash
-   git init
-   git add .
-   git commit -m "feat: ClassPredict release v1.0.0"
-   ```
-2. Enable Pages in repository settings: **Settings $\to$ Pages $\to$ Source: GitHub Actions** (or Deploy from branch `main` / root).
-3. The included GitHub Actions workflow (`.github/workflows/deploy.yml`) runs `npm test` automatically before publishing.
-4. Access at `https://<username>.github.io/ClassPredict/`.
+1. Repository: [https://github.com/desertViper009/ClassPredict](https://github.com/desertViper009/ClassPredict)
+2. Live Production Site: [https://desertviper009.github.io/ClassPredict/](https://desertviper009.github.io/ClassPredict/)
+3. The included GitHub Actions workflow (`.github/workflows/deploy.yml`) runs `npm test` automatically before assembling and uploading the `_site` production artifact.
+4. Pages build source is configured to **GitHub Actions** (`build_type: workflow`).
+5. Every push to `main` executes 226 unit and numerical tests before automatically deploying to GitHub Pages.
 
 ### 4.2 Cloudflare Pages / Vercel Deployment
 * Connect GitHub repository.

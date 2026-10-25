@@ -36,6 +36,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - Execution Time: ~60ms
 * Verified zero machine-specific absolute paths across all HTML, CSS, and JS sources.
 * Confirmed strict privacy boundary: zero student data transmission, zero persistent caching of academic records, and 100% client-side computation.
+* **Public GitHub Release & GitHub Pages Deployment**:
+  - Published public repository to GitHub: [https://github.com/desertViper009/ClassPredict](https://github.com/desertViper009/ClassPredict)
+  - Successfully deployed live web application to GitHub Pages: [https://desertviper009.github.io/ClassPredict/](https://desertviper009.github.io/ClassPredict/)
+  - Configured GitHub Actions static assembly workflow to isolate runtime assets (`_site`) with `.nojekyll`.
 
 ---
 
