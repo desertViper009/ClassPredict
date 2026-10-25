@@ -46,61 +46,64 @@ export class DatasetView {
     const hasErrors = state.stagedErrors && state.stagedErrors.length > 0;
 
     this.container.innerHTML = `
-      <div class="card" style="margin-bottom: var(--space-xl);">
-        <div class="card-header">
-          <div>
-            <h2 class="card-title">Dataset Management & Ingestion Layer</h2>
-            <p class="card-subtitle">Import, validate, and inspect historical SGPA datasets (Phase 3)</p>
-          </div>
-          <div>
-            ${hasAccepted 
-              ? '<span class="badge badge-success">● Dataset Active in Session Memory</span>' 
-              : '<span class="badge badge-synthetic">No Dataset Accepted</span>'}
-          </div>
-        </div>
-
-        <!-- Schema Guidance Banner -->
-        <div style="background-color: var(--bg-primary); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: var(--space-md); margin-bottom: var(--space-lg);">
-          <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: var(--space-sm);">
+      <div class="cp-page-stack">
+        <div class="card cp-panel" style="margin-bottom: var(--space-xl);">
+          <div class="card-header cp-panel-header">
             <div>
-              <div style="font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 2px;">
-                Required Long-Format CSV Schema:
-              </div>
-              <div style="font-size: 12px; color: var(--text-secondary);">
-                Only three columns are permitted: <code style="color: var(--text-code);">student_key,semester_no,sgpa</code>.
-                Personal identifiers (names, roll numbers, contact details) are rejected to enforce data privacy.
-              </div>
+              <span class="cp-kicker">Data Foundation</span>
+              <h2 class="card-title">Dataset Management &amp; Ingestion Layer</h2>
+              <p class="card-subtitle">Import, validate, and inspect historical SGPA datasets (Phase 3)</p>
             </div>
-            <button class="btn btn-secondary" id="btn-load-sample" style="font-size: 12px; padding: 6px 12px;">
-              Load Synthetic Sample
-            </button>
+            <div>
+              ${hasAccepted 
+                ? '<span class="badge badge-success cp-badge cp-badge-success">● Dataset Active in Session Memory</span>' 
+                : '<span class="badge badge-synthetic cp-badge cp-badge-info">No Dataset Accepted</span>'}
+            </div>
           </div>
-          <div class="code-block">
+
+          <!-- Schema Guidance Banner -->
+          <div style="background-color: var(--bg-primary); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: var(--space-md); margin-bottom: var(--space-lg);">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: var(--space-sm);">
+              <div>
+                <div style="font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 2px;">
+                  Required Long-Format CSV Schema:
+                </div>
+                <div style="font-size: 12px; color: var(--text-secondary);">
+                  Only three columns are permitted: <code style="color: var(--text-code);">student_key,semester_no,sgpa</code>.
+                  Personal identifiers (names, roll numbers, contact details) are rejected to enforce data privacy.
+                </div>
+              </div>
+              <button class="btn btn-secondary cp-button cp-button-secondary" id="btn-load-sample" style="font-size: 12px; padding: 6px 12px;">
+                Load Synthetic Sample
+              </button>
+            </div>
+            <div class="code-block" style="margin-top: 10px;">
 student_key,semester_no,sgpa<br>
 SYN_001,1,3.45<br>
 SYN_001,2,3.52<br>
 SYN_002,1,2.80
+            </div>
+          </div>
+
+          <!-- File Ingestion Dropzone -->
+          <div class="dropzone cp-dropzone" id="csv-dropzone">
+            <input type="file" id="csv-file-input" accept=".csv" title="Upload long-format CSV dataset">
+            <div class="dropzone-icon cp-dropzone-icon">📥</div>
+            <div class="dropzone-title" style="font-weight: 700; font-size: 15px;">Select or Drag &amp; Drop Long-Format CSV</div>
+            <div class="dropzone-subtitle" style="color: var(--cp-text-muted); font-size: 12px;">UTF-8 encoded CSV • Evaluated client-side • Zero server upload</div>
+            <button class="btn btn-pill-crimson cp-button cp-button-primary" type="button" style="pointer-events: none; margin-top: 8px;">Browse Files ↗</button>
           </div>
         </div>
 
-        <!-- File Ingestion Dropzone -->
-        <div class="dropzone" id="csv-dropzone">
-          <input type="file" id="csv-file-input" accept=".csv" title="Upload long-format CSV dataset">
-          <div class="dropzone-icon">📥</div>
-          <div class="dropzone-title">Select or Drag & Drop Long-Format CSV</div>
-          <div class="dropzone-subtitle">UTF-8 encoded CSV • Evaluated client-side • Zero server upload</div>
-          <button class="btn btn-pill-crimson" type="button" style="pointer-events: none;">Browse Files ↗</button>
-        </div>
+        <!-- Error Diagnostics Container -->
+        ${hasErrors ? this.renderErrorAlert(state.stagedErrors, hasAccepted) : ''}
+
+        <!-- Staged Dataset Confirmation Card -->
+        ${hasStaged ? this.renderStagedConfirmation(state.stagedDataset, state.stagedSummary) : ''}
+
+        <!-- Active Accepted Dataset Overview -->
+        ${hasAccepted ? this.renderAcceptedOverview(state.acceptedDataset, state.acceptedSummary) : this.renderEmptyState(hasStaged, hasErrors)}
       </div>
-
-      <!-- Error Diagnostics Container -->
-      ${hasErrors ? this.renderErrorAlert(state.stagedErrors, hasAccepted) : ''}
-
-      <!-- Staged Dataset Confirmation Card -->
-      ${hasStaged ? this.renderStagedConfirmation(state.stagedDataset, state.stagedSummary) : ''}
-
-      <!-- Active Accepted Dataset Overview -->
-      ${hasAccepted ? this.renderAcceptedOverview(state.acceptedDataset, state.acceptedSummary) : this.renderEmptyState(hasStaged, hasErrors)}
     `;
 
     this.bindEvents();
@@ -241,8 +244,8 @@ SYN_002,1,2.80
     }
 
     return `
-      <div class="table-wrapper">
-        <table class="data-table">
+      <div class="table-wrapper cp-table-scroll">
+        <table class="data-table cp-table">
           <thead>
             <tr>
               <th>#</th>

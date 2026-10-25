@@ -89,4 +89,73 @@ export function loadUiContractTests() {
       stateManager.clearAcceptedDataset();
     });
   });
+
+  describe('Premium UI: Dataset Workflow Contract', () => {
+    it('renders accessible import zone, schema guidance, and safe discard actions', async () => {
+      const { DatasetView } = await import('../js/ui/dataset_view.js');
+      const { stateManager } = await import('../js/services/state_manager.js');
+
+      stateManager.clearAcceptedDataset();
+      const mockContainer = { innerHTML: '', querySelector: () => null, querySelectorAll: () => [] };
+      const view = new DatasetView(mockContainer);
+      view.render();
+
+      let html = mockContainer.innerHTML;
+      assert(html.includes('student_key,semester_no,sgpa'), 'Must specify exact permitted 3-column CSV schema');
+      assert(html.includes('id="csv-dropzone"') || html.includes('cp-dropzone'), 'Must render CSV upload dropzone');
+      assert(html.includes('id="btn-load-sample"'), 'Must provide synthetic sample loader button');
+
+      // Test with accepted dataset
+      const sampleCsv = "student_key,semester_no,sgpa\nSTU_001,1,3.20\nSTU_001,2,3.40";
+      stateManager.loadCSV(sampleCsv);
+      stateManager.acceptStagedDataset();
+      view.render();
+
+      html = mockContainer.innerHTML;
+      assert(html.includes('id="btn-clear-accepted"'), 'Must provide explicit discard action for active dataset');
+      assert(html.includes('cp-table-scroll') || html.includes('table-wrapper'), 'Must contain table in scrollable wrapper');
+      assert(html.includes('STU_001'), 'Must render accepted records in preview table');
+
+      stateManager.clearAcceptedDataset();
+    });
+  });
+
+  describe('Premium UI: Prediction Workflows Contract', () => {
+    it('supports distinct individual and whole-class workspaces with responsive tables and export', async () => {
+      const { PredictionView } = await import('../js/ui/prediction_view.js');
+      const { stateManager } = await import('../js/services/state_manager.js');
+
+      const mockContainer = { innerHTML: '', querySelector: () => null, querySelectorAll: () => [] };
+      const view = new PredictionView(mockContainer);
+
+      // Individual mode
+      view.activeSubtab = 'individual';
+      view.render();
+      let html = mockContainer.innerHTML;
+      assert(html.includes('Individual'), 'Must render individual prediction workspace');
+      assert(html.includes('id="btn-calculate-individual"') || html.includes('id="btn-calc-individual"'), 'Must have forecast calculation button');
+      assert(html.includes('id="btn-add-observation"'), 'Must allow adding observation up to 7 semesters');
+
+      // Whole-class mode
+      const sampleCsv = "student_key,semester_no,sgpa\nSTU_001,1,3.20\nSTU_001,2,3.40\nSTU_002,1,2.80\nSTU_002,2,3.00";
+      stateManager.clearAcceptedDataset();
+      stateManager.loadCSV(sampleCsv);
+      stateManager.acceptStagedDataset();
+
+      view.activeSubtab = 'wholeClass';
+      view.updateWholeClassPredictions();
+      view.render();
+      html = mockContainer.innerHTML;
+
+      assert(html.includes('Whole-Class') || html.includes('Whole Class'), 'Must render whole-class workspace');
+      assert(html.includes('cp-table-scroll') || html.includes('table-wrapper'), 'Must contain whole-class table in scroll-contained container');
+      assert(html.includes('id="input-class-search"'), 'Must provide student key search filter');
+      assert(html.includes('id="btn-export-class-csv"') || html.includes('id="btn-export-class"'), 'Must provide whole-class CSV export button');
+      assert(html.includes('STU_001'), 'Whole-class table must list student STU_001');
+
+      stateManager.clearAcceptedDataset();
+    });
+  });
 }
+
+

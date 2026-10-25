@@ -555,8 +555,8 @@ export class PredictionView {
         </div>
 
         <!-- Predictions Table -->
-        <div class="table-wrapper">
-          <table class="data-table">
+        <div class="table-wrapper cp-table-scroll">
+          <table class="data-table cp-table">
             <thead>
               <tr>
                 <th class="sortable-th" data-sort="student_key">
