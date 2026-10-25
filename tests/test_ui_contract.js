@@ -156,6 +156,29 @@ export function loadUiContractTests() {
       stateManager.clearAcceptedDataset();
     });
   });
+
+  describe('Premium UI: Seven-Stage OCR Review Contract', () => {
+    it('displays visible seven-stage stepper, accurate network copy, and safety barrier', async () => {
+      const { OCRView } = await import('../js/ui/ocr_view.js');
+
+      const mockContainer = { innerHTML: '', querySelector: () => null, querySelectorAll: () => [] };
+      const view = new OCRView(mockContainer);
+      view.render();
+
+      const html = mockContainer.innerHTML;
+      assert(html.includes('cp-stepper'), 'Must render seven-stage stepper with cp-stepper class');
+      assert(html.includes('Upload'), 'Must include step 1: Upload');
+      assert(html.includes('Page'), 'Must include step 2: Page');
+      assert(html.includes('Crop'), 'Must include step 3: Crop');
+      assert(html.includes('Extract'), 'Must include step 4: Extract');
+      assert(html.includes('Review'), 'Must include step 5: Review');
+      assert(html.includes('Keys'), 'Must include step 6: Keys');
+      assert(html.includes('Confirm'), 'Must include step 7: Confirm');
+      assert(html.includes('network access'), 'Must accurately describe that library assets may require network access');
+      assert(html.includes('Safety') || html.includes('Barrier') || html.includes('commitment'), 'Must state safety barrier condition before dataset commitment');
+    });
+  });
 }
+
 
 
