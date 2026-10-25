@@ -44,31 +44,31 @@
         <div class="nav-section-title">Core Navigation</div>
         <ul class="nav-tabs" role="tablist">
           <li role="presentation">
-            <button class="nav-link active" id="tab-btn-dashboard" role="tab" aria-selected="true" data-tab="dashboard">
+            <button class="nav-link active" id="drawer-tab-btn-dashboard" role="tab" aria-selected="true" data-tab="dashboard">
               <span class="nav-icon">📊</span>
               <span class="nav-label">Overview</span>
             </button>
           </li>
           <li role="presentation">
-            <button class="nav-link" id="tab-btn-dataset" role="tab" aria-selected="false" data-tab="dataset">
+            <button class="nav-link" id="drawer-tab-btn-dataset" role="tab" aria-selected="false" data-tab="dataset">
               <span class="nav-icon">📁</span>
               <span class="nav-label">Dataset Management</span>
             </button>
           </li>
           <li role="presentation">
-            <button class="nav-link" id="tab-btn-predictions" role="tab" aria-selected="false" data-tab="predictions">
+            <button class="nav-link" id="drawer-tab-btn-predictions" role="tab" aria-selected="false" data-tab="predictions">
               <span class="nav-icon">🔮</span>
               <span class="nav-label">Predictions</span>
             </button>
           </li>
           <li role="presentation">
-            <button class="nav-link" id="tab-btn-ocr" role="tab" aria-selected="false" data-tab="ocr">
+            <button class="nav-link" id="drawer-tab-btn-ocr" role="tab" aria-selected="false" data-tab="ocr">
               <span class="nav-icon">📄</span>
               <span class="nav-label">OCR Review</span>
             </button>
           </li>
           <li role="presentation">
-            <button class="nav-link" id="tab-btn-lab" role="tab" aria-selected="false" data-tab="lab">
+            <button class="nav-link" id="drawer-tab-btn-lab" role="tab" aria-selected="false" data-tab="lab">
               <span class="nav-icon">🧪</span>
               <span class="nav-label">Numerical Lab</span>
             </button>
@@ -97,26 +97,44 @@
 
     <!-- Main Content Area -->
     <div class="app-main">
-      <!-- Top Control Bar -->
+      <!-- Top Control Bar with Image 1 Floating Pill Navbar -->
       <header class="topbar">
         <div class="topbar-left">
           <button class="sidebar-toggle-btn" id="sidebar-toggle-btn" aria-label="Toggle Navigation Drawer">
-            ☰ Menu
+            ☰
           </button>
-          <div class="topbar-breadcrumb">
-            <span class="breadcrumb-root">ClassPredict</span>
-            <span class="breadcrumb-separator">/</span>
-            <span class="breadcrumb-current" id="page-breadcrumb-title">Overview Dashboard</span>
-          </div>
+          <a href="#" class="brand" id="brand-home" title="ClassPredict Home">
+            <span class="brand-badge" style="font-family: var(--font-mono); font-weight: 800; font-size: 14px;">&gt;&lt;</span>
+            <span class="brand-name">ClassPredict</span>
+          </a>
         </div>
 
-        <div class="topbar-controls">
-          <span class="scale-tag">SGPA: 0.00 – 4.00</span>
-          <span class="badge badge-emerald" id="net-status-badge" title="Network status: client-side processing">Online</span>
-          <button class="badge badge-synthetic" id="btn-header-demo" title="Inspect or Toggle Synthetic Demonstration Mode" style="cursor: pointer; border: none; font-family: inherit;">
-            ⚡ SYNTHETIC DEMO MODE
+        <!-- Center: Floating Glassmorphic Pill Navbar (Image 1 Style) -->
+        <nav class="pill-nav-bar" id="pill-nav-bar" aria-label="Primary Navigation">
+          <button class="pill-nav-btn active" data-tab="dashboard" id="tab-btn-dashboard" role="tab" aria-selected="true">
+            Overview
           </button>
-          <a href="docs/INDEX.md" class="docs-link" title="Open master documentation">Documentation ↗</a>
+          <button class="pill-nav-btn" data-tab="dataset" id="tab-btn-dataset" role="tab" aria-selected="false">
+            Dataset Mgmt
+          </button>
+          <button class="pill-nav-btn" data-tab="predictions" id="tab-btn-predictions" role="tab" aria-selected="false">
+            Predictions
+          </button>
+          <button class="pill-nav-btn" data-tab="ocr" id="tab-btn-ocr" role="tab" aria-selected="false">
+            OCR Review
+          </button>
+          <button class="pill-nav-btn" data-tab="lab" id="tab-btn-lab" role="tab" aria-selected="false">
+            Numerical Lab
+          </button>
+        </nav>
+
+        <div class="topbar-controls">
+          <span class="header-tagline">Your trusted partner for academic analytics</span>
+          <button class="btn btn-pill-crimson" id="btn-header-demo" style="padding: 6px 14px; font-size: 11.5px;" title="Inspect or Toggle Synthetic Demonstration Mode">
+            ⚡ Demo Mode
+          </button>
+          <span class="scale-tag">0.00 – 4.00 SGPA</span>
+          <span class="badge badge-emerald" id="net-status-badge" title="Network status: client-side processing">Online</span>
         </div>
       </header>
 

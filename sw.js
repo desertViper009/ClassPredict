@@ -9,7 +9,7 @@
  * - All user data remains strictly ephemeral in browser memory and is never written to cache storage.
  */
 
-const CACHE_NAME = 'classpredict-v1.0.0-static';
+const CACHE_NAME = 'classpredict-v1.1.0-static';
 
 const APP_SHELL_ASSETS = [
   './',
@@ -34,7 +34,9 @@ const APP_SHELL_ASSETS = [
   './js/ui/prediction_view.js',
   './js/ui/ocr_view.js',
   './js/ui/numerical_lab_view.js',
-  './samples/sample_class_sgpa.csv'
+  './samples/sample_class_sgpa.csv',
+  './assets/hero_model.jpg',
+  './assets/hero_thumb.jpg'
 ];
 
 // Install: Cache Application Shell

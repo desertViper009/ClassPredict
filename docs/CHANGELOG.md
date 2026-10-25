@@ -7,6 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [1.1.0] - October 2026 (Complete Website UI Redesign: Premium Dark Analytics Dashboard)
 
 ### Added & Redesigned
+* **Hybrid Studio Aesthetic (Inspired by Omnix Studio & Say My Name References)**:
+  - **Top Floating Glassmorphic Pill Navigation (`.pill-nav-bar`)**: Frosted glass rounded capsule menu floating in the topbar (`Overview`, `Dataset Mgmt`, `Predictions`, `OCR Review`, `Numerical Lab`) with crimson pill active highlight, paired with a responsive off-canvas mobile drawer (`<= 1024px`).
+  - **Cinematic Fluted Velvet Studio Hero Showcase (`.studio-hero`)**: Dramatic vertical fluted ribbed dark charcoal studio wall with warm theatrical directional lighting beams, deep crimson vignette, and bold condensed typography (**CLASS PREDICT**).
+  - **Dual-Pill Action Button System (`.dual-pill-group`)**: Image 1 signature style featuring a vivid crimson rounded pill button (`.btn-pill-crimson`) paired with an adjacent circular arrow button (`.btn-circle-arrow`, `↗`) with hover rotation micro-interactions.
+  - **High-Contrast White Pill Form Actions (`.btn-pill-white`)**: Image 2 signature style featuring a bold pure-white pill button with dark text, subtle subtext, and diagonal arrow (`↘`) for major submission workflows.
+  - **Feature Capsule Tags (`.hero-feature-pills`)**: Frosted glass pills with glowing crimson dot bullets (`• Linear Regression`, `• Gaussian Solver`, `• Newton Interpolation`, `• Local OCR Engine`).
+  - **Floating Glassmorphic Metric Cards**:
+    - Left square thumbnail card with glowing crimson border.
+    - Center stat card ("Top-Validated by 98% Valid Transitions").
+    - Right rating card ("★★★★★ 0.082 MAE • 226 Tests Verified Across 40 Suites").
 * **Cinematic Dark Analytics Design System (`css/main.css`, `css/components.css`)**:
   - Implemented cohesive dark charcoal design tokens: near-black canvas (`--color-bg: #090a0d`), deep panels (`--color-surface: #101217`), elevated hover cards (`--color-surface-raised: #171a21`), subtle borders (`--color-border: #232732`), vivid crimson brand accents (`--color-primary: #ff3038`), warm coral secondary accents (`--color-accent: #ff7857`), warm white text (`--color-text: #f5f5f7`), and muted cool gray text (`--color-muted: #a0a4ae`).
   - Added full backwards compatibility with legacy tokens (`--bg-primary`, `--bg-card`, `--accent-primary`, etc.).

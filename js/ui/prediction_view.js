@@ -326,9 +326,9 @@ export class PredictionView {
             </div>
           </div>
 
-          <!-- Action Button -->
-          <button class="btn btn-primary" id="btn-calc-individual" style="width: 100%; padding: 12px; font-size: 14px;">
-            ⚡ Compute Next-Semester Forecast
+          <!-- Action Button (Image 2 High-Contrast White Pill Style) -->
+          <button class="btn btn-pill-white" id="btn-calc-individual" style="width: 100%; padding: 14px; font-size: 13.5px;">
+            <span class="btn-arrow-icon">↘</span> COMPUTE NEXT-SEMESTER FORECAST
           </button>
         </div>
 

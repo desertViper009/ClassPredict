@@ -161,21 +161,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     closeSidebar();
+
+    // Synchronize active classes on all nav buttons (top pill nav and drawer)
+    document.querySelectorAll('[data-tab]').forEach(b => {
+      const isTarget = b.getAttribute('data-tab') === tabName;
+      b.classList.toggle('active', isTarget);
+      b.setAttribute('aria-selected', isTarget ? 'true' : 'false');
+    });
   }
 
-  // Bind Tab Click Listeners
-  tabButtons.forEach(button => {
+  // Bind Tab Click Listeners on all [data-tab] elements
+  document.querySelectorAll('[data-tab]').forEach(button => {
     button.addEventListener('click', (e) => {
       e.preventDefault();
       const targetTab = button.getAttribute('data-tab');
-
-      tabButtons.forEach(b => {
-        b.classList.remove('active');
-        b.setAttribute('aria-selected', 'false');
-      });
-      button.classList.add('active');
-      button.setAttribute('aria-selected', 'true');
-
       switchTab(targetTab);
     });
   });

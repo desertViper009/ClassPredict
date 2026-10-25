@@ -89,7 +89,7 @@ SYN_002,1,2.80
           <div class="dropzone-icon">📥</div>
           <div class="dropzone-title">Select or Drag & Drop Long-Format CSV</div>
           <div class="dropzone-subtitle">UTF-8 encoded CSV • Evaluated client-side • Zero server upload</div>
-          <button class="btn btn-primary" type="button" style="pointer-events: none;">Browse Files</button>
+          <button class="btn btn-pill-crimson" type="button" style="pointer-events: none;">Browse Files ↗</button>
         </div>
       </div>
 
@@ -152,10 +152,10 @@ SYN_002,1,2.80
         ${this.renderRecordsTable(records.slice(0, 10))}
 
         <div class="action-bar">
-          <button class="btn btn-primary" id="btn-confirm-accept">
-            Confirm & Accept Dataset into Memory
+          <button class="btn btn-pill-white" id="btn-confirm-accept">
+            <span class="btn-arrow-icon">↘</span> Confirm & Accept Dataset into Memory
           </button>
-          <button class="btn btn-secondary" id="btn-discard-staged">
+          <button class="btn btn-secondary" id="btn-discard-staged" style="border-radius: var(--radius-pill); padding: 10px 20px;">
             Discard Staged File
           </button>
         </div>
