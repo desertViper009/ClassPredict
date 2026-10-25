@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "node tests/test_runner.js",
+    "audit": "node tests/browser_ui_audit.mjs",
     "start": "python -m http.server 8000"
   },
   "keywords": [

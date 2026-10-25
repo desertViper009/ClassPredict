@@ -181,3 +181,34 @@ For the Fiverr portfolio and final university viva presentation, ClassPredict pl
 4. **Whole-Class Batch Prediction**: Dense, polished data table showing students with sorting, color-coded trajectory arrows, and insufficient data flags.
 5. **Privacy-Preserving OCR Ingestion**: Canvas crop box isolating the SGPA column on a university gradesheet, paired with the editable review table and key reconciliation selector.
 6. **Numerical Methods Educational Laboratory**: Side-by-side comparison of Newton Divided-Difference Interpolation versus Linear Least Squares, illustrating Runge's phenomenon during extrapolation.
+
+---
+
+## 7. Data-First Premium Redesign System (Phase 10 Modernization)
+
+### 7.1 Core Tokens and CSS Namespace (`.cp-*`)
+The redesign introduces centralized CSS custom properties in `css/main.css` and `css/components.css` shared by both `index.html` and `design-preview.html`:
+- `--cp-surface-0` (`#07090d`): Global root background canvas.
+- `--cp-surface-1` (`#0e1117`): Primary card/panel background.
+- `--cp-surface-2` (`#141820`): Raised interactive elements, dialogs, and stepper headers.
+- `--cp-surface-3` (`#1c222e`): Hover states and active filter chips.
+- `--cp-line` (`#1f2633`): Subtle panel boundary dividers.
+- `--cp-line-strong` (`#2e3749`): Emphasized boundaries and focus outlines.
+- `--cp-accent` (`#f12f3e`): Restrained crimson primary brand color.
+- `--cp-accent-soft` (`rgba(241, 47, 62, 0.12)`): Semi-transparent crimson badge & selection highlight.
+
+### 7.2 Component Library
+- **Academic Hero Banner (`.cp-academic-hero`)**: Compact header featuring project kicker `CSE NUMERICAL METHODS PROJECT`, product wordmark, contextual summary, and dataset action buttons without editorial stock photography or fabricated ratings.
+- **Executive KPI Cards (`.cp-kpi-grid`, `.cp-kpi`)**: Reactively computes unique students, total accepted records, valid consecutive-semester transitions, and shared model status directly from session memory.
+- **4-Panel Analytical Grid (`.cp-dashboard-grid`, `.cp-panel`)**: Composes 8-bin SGPA histogram, empirical transitions scatter plot, whole-class prediction preview table, and rolling-origin temporal validation comparison.
+- **Seven-Stage OCR Stepper (`.cp-stepper`)**: Visual indicator mapping the complete human-in-the-loop ingestion flow: `Upload` → `Page` → `Crop` → `Extract` → `Review` → `Keys` → `Confirm`.
+- **Responsive Table Container (`.cp-table-scroll`, `.cp-table`)**: Zero-document-overflow table wrapper with smooth horizontal scrolling for wide matrices and student rosters.
+- **Interactive Laboratory Stage (`.cp-lab-stage`, `.cp-formula`, `.cp-step-controls`)**: Step-by-step augmented matrix and formula animators for Gaussian elimination, polynomial regressions, Newton divided differences, and Runge simulations.
+
+### 7.3 Multi-Viewport Verification Evidence
+Automated verification via Chrome DevTools Protocol (`tests/browser_ui_audit.mjs`) validates:
+- Zero horizontal document overflow (`document.documentElement.scrollWidth <= window.innerWidth`) at 1440, 1280, 1024, 768, and 390px viewports.
+- Zero browser console errors.
+- Verified mobile drawer navigation toggle at 390px.
+- Verified interactive tab switching and dataset demo loading.
+- Real PNG screenshot artifacts saved under `docs/redesign/screenshots/`.

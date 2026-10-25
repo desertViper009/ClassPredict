@@ -4,6 +4,37 @@ All notable changes to the ClassPredict project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - October 2026 (Data-First Premium Academic Analytics Redesign)
+
+### Added & Modernized
+* **Data-First Executive Dashboard & Academic Hero**:
+  - Replaced decorative editorial photography, fictional ratings, and hardcoded MAE claims with authentic academic branding (`CSE NUMERICAL METHODS PROJECT`).
+  - Implemented 4 real-time computed executive KPI cards: `Unique Students`, `Accepted Records`, `Valid Transitions`, and `Shared Model Status`.
+  - Built 4-panel analytical overview grid comprising 8-bin semester SGPA distribution histogram, empirical transitions scatter plot, next-semester prediction preview table, and temporal validation holdout error comparison.
+* **Unified Application Shell & Distinct Prediction Routing**:
+  - Replaced conflicting navigation bars with a single persistent desktop sidebar (264px) and mobile drawer with backdrop overlay.
+  - Separated prediction routes into distinct individual (`03`) and whole-class (`04`) prediction workspaces.
+* **Seven-Stage OCR Review Stepper**:
+  - Implemented visual 7-stage workflow stepper (`Upload` → `Page` → `Crop` → `Extract` → `Review` → `Keys` → `Confirm`).
+  - Added explicit safety barrier ensuring zero session state contamination before step 7 confirmation.
+  - Updated copy with honest disclosure regarding external CDN libraries requiring initial network access.
+* **Modernized Numerical Methods Educational Laboratory**:
+  - Updated all 5 laboratory experiments with `.cp-panel`, `.cp-table-scroll`, `.cp-button`, and `.cp-chip` components.
+  - Preserved Gaussian augmented matrix trace, pivot highlighting, row operations, formula display, and all mathematical solvers.
+* **Shared Design System & Functional Synthetic Preview (`design-preview.html`)**:
+  - Centralized `.cp-*` tokens in `css/main.css` and `css/components.css`.
+  - Created standalone synthetic design preview featuring all 6 workspaces with clearly labeled isolated mock data.
+* **Automated Browser UI & Responsive Audit (`tests/browser_ui_audit.mjs`)**:
+  - Implemented zero-dependency native Node.js browser audit connecting to local Chrome via Chrome DevTools Protocol (CDP) over WebSocket.
+  - Verified 1440x900, 1280x800, 1024x768, 768x1024, and 390x844 viewports with 0 horizontal document overflow flags and 0 console errors.
+  - Captured 15 PNG screenshots stored in `docs/redesign/screenshots/`.
+
+### Verified
+* Executed complete automated test suite: 47 suites, 234 tests, 234 passed (100%), 0 failed.
+* Verified responsive behavior and interaction states across all 5 standard viewports.
+
+---
+
 ## [1.1.0] - October 2026 (Complete Website UI Redesign: Premium Dark Analytics Dashboard)
 
 ### Added & Redesigned

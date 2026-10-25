@@ -42,10 +42,10 @@
 **Interfaces:**
 - Produces: shared `.app-*`, `.cp-*`, button, form, card, table, alert, badge, chart, stepper, drawer, and responsive utility contracts used by all later tasks.
 
-- [ ] Add a failing UI contract test asserting a standalone preview, centralized tokens, reduced-motion handling, and no editorial image references.
-- [ ] Run `npm test` and confirm the new contract test fails.
-- [ ] Implement the token system and functional preview navigation using clearly labeled synthetic data.
-- [ ] Run `npm test` and confirm all tests pass.
+- [x] Add a failing UI contract test asserting a standalone preview, centralized tokens, reduced-motion handling, and no editorial image references.
+- [x] Run `npm test` and confirm the new contract test fails.
+- [x] Implement the token system and functional preview navigation using clearly labeled synthetic data.
+- [x] Run `npm test` and confirm all tests pass.
 
 ### Task 2: Application shell and navigation
 
@@ -59,10 +59,10 @@
 - Consumes: shared shell and navigation classes from Task 1.
 - Produces: `navigateTo(tabName, options)`, one desktop sidebar, mobile drawer, compact top bar, and distinct prediction-mode navigation.
 
-- [ ] Add shell contract assertions for unique IDs, one desktop navigation, real status actions, and individual/class prediction routes.
-- [ ] Run `npm test` and verify the assertions fail.
-- [ ] Replace the competing navigation structures and synchronize active/expanded states with the existing view mounting logic.
-- [ ] Run `npm test` and verify all tests pass.
+- [x] Add shell contract assertions for unique IDs, one desktop navigation, real status actions, and individual/class prediction routes.
+- [x] Run `npm test` and verify the assertions fail.
+- [x] Replace the competing navigation structures and synchronize active/expanded states with the existing view mounting logic.
+- [x] Run `npm test` and verify all tests pass.
 
 ### Task 3: Overview dashboard and charts
 
@@ -75,10 +75,10 @@
 - Consumes: `computeCohortOverview`, distribution, scatter, residual, temporal-evaluation, transition-matrix, and unusual-observation analytics.
 - Produces: compact data-first overview markup with only computed or explicitly unavailable metrics.
 
-- [ ] Add failing assertions excluding star ratings, hardcoded MAE, and editorial assets while requiring real KPI/chart/prediction regions.
-- [ ] Replace the image-led hero with compact dataset context and analytics-first composition.
-- [ ] Make tabs, legends, charts, and preview tables responsive and keyboard accessible.
-- [ ] Run `npm test` and verify all tests pass.
+- [x] Add failing assertions excluding star ratings, hardcoded MAE, and editorial assets while requiring real KPI/chart/prediction regions.
+- [x] Replace the image-led hero with compact dataset context and analytics-first composition.
+- [x] Make tabs, legends, charts, and preview tables responsive and keyboard accessible.
+- [x] Run `npm test` and verify all tests pass.
 
 ### Task 4: Dataset and prediction workflows
 
@@ -92,10 +92,10 @@
 - Consumes: existing state manager, validator, prediction service, sorting/filtering, and CSV export functions.
 - Produces: accessible import/status/record layouts and responsive individual/whole-class workspaces.
 
-- [ ] Add failing UI assertions for import status, safe destructive actions, prediction mode headings, scroll-contained class table, and 44px primary controls.
-- [ ] Refactor presentational inline declarations into shared classes while retaining dynamic values only where necessary.
-- [ ] Verify valid/invalid import, individual prediction, class filters/sorts, and exports in browser automation.
-- [ ] Run `npm test` and verify all tests pass.
+- [x] Add failing UI assertions for import status, safe destructive actions, prediction mode headings, scroll-contained class table, and 44px primary controls.
+- [x] Refactor presentational inline declarations into shared classes while retaining dynamic values only where necessary.
+- [x] Verify valid/invalid import, individual prediction, class filters/sorts, and exports in browser automation.
+- [x] Run `npm test` and verify all tests pass.
 
 ### Task 5: Seven-stage OCR review experience
 
@@ -108,10 +108,10 @@
 - Consumes: existing OCR service state, crop transforms, candidate review, key reconciliation, and atomic commit functions.
 - Produces: visible seven-stage progress semantics mapped onto the existing safe state machine.
 
-- [ ] Add failing assertions for all seven workflow labels and accurate local-processing copy.
-- [ ] Implement the responsive document workspace, stepper, review statuses, and aligned crop container without weakening confirmation rules.
-- [ ] Verify synthetic OCR upload, crop invalidation, review, cancellation, reconciliation, and commit.
-- [ ] Run `npm test` and verify all tests pass.
+- [x] Add failing assertions for all seven workflow labels and accurate local-processing copy.
+- [x] Implement the responsive document workspace, stepper, review statuses, and aligned crop container without weakening confirmation rules.
+- [x] Verify synthetic OCR upload, crop invalidation, review, cancellation, reconciliation, and commit.
+- [x] Run `npm test` and verify all tests pass.
 
 ### Task 6: Numerical Methods Lab redesign
 
@@ -124,10 +124,10 @@
 - Consumes: existing Gaussian, regression comparison, Newton interpolation, Runge, and stability experiment reports.
 - Produces: responsive experiment navigation, accessible step controls, matrix/formula panels, and plots.
 
-- [ ] Add failing assertions covering every experiment and accessible responsive navigation.
-- [ ] Redesign only the laboratory presentation and event wiring, preserving numerical calls and results.
-- [ ] Exercise every experiment and Gaussian trace navigation in browser automation.
-- [ ] Run `npm test` and verify all tests pass.
+- [x] Add failing assertions covering every experiment and accessible responsive navigation.
+- [x] Redesign only the laboratory presentation and event wiring, preserving numerical calls and results.
+- [x] Exercise every experiment and Gaussian trace navigation in browser automation.
+- [x] Run `npm test` and verify all tests pass.
 
 ### Task 7: Responsive, accessibility, documentation, and release verification
 
@@ -145,10 +145,10 @@
 - Consumes: all redesigned pages and shared component contracts.
 - Produces: repeatable browser audit and documented preview/deployment handoff.
 
-- [ ] Implement a browser audit for 1440x900, 1280x800, 1024x768, 768x1024, and 390x844 that checks overflow, console errors, navigation, focus, and representative actions.
-- [ ] Capture before/after application and design-preview screenshots from real renders.
-- [ ] Run `npm test` and require 226 legacy tests plus all new UI contract tests to pass.
-- [ ] Run the browser audit and fix every critical functional, console, and clipping regression.
-- [ ] Update design-system, page, responsive, changelog, local-preview, and GitHub Pages documentation.
-- [ ] Review the diff for fabricated metrics, dead actions, editorial assets, accidental core-engine changes, and unrelated modifications.
+- [x] Implement a browser audit for 1440x900, 1280x800, 1024x768, 768x1024, and 390x844 that checks overflow, console errors, navigation, focus, and representative actions.
+- [x] Capture before/after application and design-preview screenshots from real renders.
+- [x] Run `npm test` and require 226 legacy tests plus all new UI contract tests to pass.
+- [x] Run the browser audit and fix every critical functional, console, and clipping regression.
+- [x] Update design-system, page, responsive, changelog, local-preview, and GitHub Pages documentation.
+- [x] Review the diff for fabricated metrics, dead actions, editorial assets, accidental core-engine changes, and unrelated modifications.
 

@@ -228,7 +228,7 @@ export class DashboardView {
           <span class="cp-kpi-icon">👥</span>
           <div>
             <small>Unique Students</small>
-            <strong>${overview.totalStudents}</strong>
+            <strong id="kpi-unique-students">${overview.totalStudents}</strong>
             <span>Pseudonymous records</span>
           </div>
         </article>
@@ -236,7 +236,7 @@ export class DashboardView {
           <span class="cp-kpi-icon">📑</span>
           <div>
             <small>Accepted Records</small>
-            <strong>${overview.totalRecords}</strong>
+            <strong id="kpi-accepted-records">${overview.totalRecords}</strong>
             <span>Valid semester entries (Sem ${overview.minSemester}–${overview.maxSemester})</span>
           </div>
         </article>
@@ -244,7 +244,7 @@ export class DashboardView {
           <span class="cp-kpi-icon">🔗</span>
           <div>
             <small>Valid Transitions</small>
-            <strong>${overview.validTransitionsCount}</strong>
+            <strong id="kpi-valid-transitions">${overview.validTransitionsCount}</strong>
             <span>Consecutive semesters</span>
           </div>
         </article>
