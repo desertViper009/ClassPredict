@@ -36,8 +36,8 @@ function resolveNavigationItem(target, options = {}) {
 }
 
 function closeSidebar() {
-  shell?.sidebar?.classList.remove('open');
-  shell?.backdrop?.classList.remove('active');
+  shell?.sidebar?.classList.remove('open', 'is-open', 'active');
+  shell?.backdrop?.classList.remove('active', 'is-visible');
   shell?.toggle?.setAttribute('aria-expanded', 'false');
 }
 
@@ -97,6 +97,11 @@ function updateDatasetStatus() {
   if (topbarStatus) {
     topbarStatus.innerHTML = `<span class="cp-status-dot ${active ? '' : 'is-empty'}"></span><span>${active ? `${dataset.length} records` : 'No dataset'}</span>`;
   }
+  const btnDemo = document.querySelector('#btn-header-demo');
+  if (btnDemo) {
+    const isSynthetic = active && dataset.every(r => typeof r.student_key === 'string' && r.student_key.startsWith('SYN_'));
+    btnDemo.textContent = isSynthetic ? 'Exit demo' : 'Synthetic demo';
+  }
 }
 
 function initializeApplication() {
@@ -120,14 +125,32 @@ function initializeApplication() {
   });
 
   shell.toggle?.addEventListener('click', () => {
-    shell.sidebar?.classList.add('open');
-    shell.backdrop?.classList.add('active');
+    shell.sidebar?.classList.add('open', 'is-open', 'active');
+    shell.backdrop?.classList.add('active', 'is-visible');
     shell.toggle?.setAttribute('aria-expanded', 'true');
   });
   document.querySelector('#sidebar-toggle-close')?.addEventListener('click', closeSidebar);
   shell.backdrop?.addEventListener('click', closeSidebar);
 
-  document.querySelector('#btn-header-demo')?.addEventListener('click', () => navigateTo('dataset'));
+  document.querySelector('#btn-header-demo')?.addEventListener('click', async () => {
+    const state = stateManager.getState();
+    const dataset = state.acceptedDataset;
+    const isSynthetic = dataset && dataset.length > 0 && dataset.every(r => typeof r.student_key === 'string' && r.student_key.startsWith('SYN_'));
+    if (isSynthetic) {
+      stateManager.clearAcceptedDataset();
+    } else {
+      try {
+        const res = await fetch('samples/sample_class_sgpa.csv');
+        const text = await res.text();
+        stateManager.loadCSV(text);
+        stateManager.acceptStagedDataset();
+      } catch {
+        const fallback = "student_key,semester_no,sgpa\nSYN_001,1,3.45\nSYN_001,2,3.52\nSYN_001,3,3.60\nSYN_001,4,3.58\nSYN_002,1,2.80\nSYN_002,2,2.95\nSYN_002,3,3.10\nSYN_002,4,3.25\nSYN_002,5,3.30";
+        stateManager.loadCSV(fallback);
+        stateManager.acceptStagedDataset();
+      }
+    }
+  });
 
   stateManager.subscribe(updateDatasetStatus);
   updateDatasetStatus();

@@ -561,10 +561,9 @@ html, body {
 .sidebar-backdrop {
   display: none;
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   background-color: rgba(0, 0, 0, 0.75);
   backdrop-filter: blur(4px);
   z-index: 110;
@@ -578,6 +577,8 @@ html, body {
 
 /* Modern Elevated Card */
 .card {
+  min-width: 0;
+  max-width: 100%;
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
@@ -1299,6 +1300,7 @@ body[data-app-shell] .content-canvas {
 body[data-app-shell] .container {
   width: min(100%, var(--cp-content-max));
   max-width: var(--cp-content-max);
+  min-width: 0;
   margin: 0 auto;
 }
 

@@ -391,7 +391,11 @@ export function exportWholeClassCSV(studentPredictions) {
 
   for (let i = 0; i < studentPredictions.length; i++) {
     const s = studentPredictions[i];
-    const key = `"${String(s.student_key || '').replace(/"/g, '""')}"`;
+    let rawKey = String(s.student_key || '');
+    if (/^[=+\-@\t\r]/.test(rawKey)) {
+      rawKey = "'" + rawKey;
+    }
+    const key = `"${rawKey.replace(/"/g, '""')}"`;
     const latestSem = s.latest_semester !== undefined ? s.latest_semester : '';
     const latestSgpa = typeof s.latest_sgpa === 'number' && Number.isFinite(s.latest_sgpa)
       ? s.latest_sgpa.toFixed(4)

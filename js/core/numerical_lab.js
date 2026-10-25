@@ -75,6 +75,18 @@ export const GAUSSIAN_EXAMPLES = {
     ],
     b: [6, 12, 8],
     expectedSolution: null
+  },
+  qa_benchmark_3x3: {
+    id: 'qa_benchmark_3x3',
+    name: 'Row-Swap Partial Pivoting Benchmark (3×3)',
+    description: 'Requires row swap on first column with negative entries. Known integer solution [2, 3, -1].',
+    A: [
+      [2, 1, -1],
+      [-3, -1, 2],
+      [-2, 1, 2]
+    ],
+    b: [8, -11, -3],
+    expectedSolution: [2, 3, -1]
   }
 };
 
@@ -165,6 +177,22 @@ export const REGRESSION_LAB_DATASETS = {
     isSynthetic: true,
     x: [2.00, 2.40, 2.80, 3.10, 3.40, 3.70, 3.90],
     y: [2.50, 2.95, 3.35, 3.60, 3.78, 3.88, 3.92]
+  },
+  exact_linear_benchmark: {
+    id: 'exact_linear_benchmark',
+    name: 'Exact Linear y = 2x + 1 (Known Fixture)',
+    description: 'Known linear test fixture with slope = 2.00, intercept = 1.00, RSS = 0.',
+    isSynthetic: true,
+    x: [1.0, 2.0, 3.0, 4.0],
+    y: [3.0, 5.0, 7.0, 9.0]
+  },
+  exact_quadratic_benchmark: {
+    id: 'exact_quadratic_benchmark',
+    name: 'Exact Quadratic y = x² + 2x + 3 (Known Fixture)',
+    description: 'Known quadratic test fixture with a2 = 1.00, a1 = 2.00, a0 = 3.00, RSS = 0.',
+    isSynthetic: true,
+    x: [0.0, 1.0, 2.0, 3.0, 4.0],
+    y: [3.0, 6.0, 11.0, 18.0, 27.0]
   }
 };
 
@@ -447,6 +475,15 @@ export const INTERPOLATION_EXAMPLES = {
     x: [1, 2, 3, 4, 5],
     y: [3.50, 2.80, 3.70, 2.90, 3.80],
     xEval: 4.5
+  },
+  perfect_square_3pt: {
+    id: 'perfect_square_3pt',
+    name: 'Parabola P(x) = x² + 2x + 1 (Known Fixture)',
+    description: 'Nodes x = [0, 1, 2], y = [1, 4, 9]. Evaluates at x=3 to 16. Reconstructs exact polynomial P(x) = x² + 2x + 1.',
+    x: [0, 1, 2],
+    y: [1, 4, 9],
+    xEval: 3.0,
+    expectedEval: 16.0
   }
 };
 

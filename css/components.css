@@ -292,6 +292,8 @@
   border: 1px solid var(--color-border);
   margin-bottom: var(--space-lg);
   overflow-x: auto;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .subtab-btn {
@@ -1166,7 +1168,7 @@
    Shared data-first components
    ========================================================================== */
 
-.cp-page-stack { display: grid; gap: 16px; }
+.cp-page-stack { display: grid; gap: 16px; min-width: 0; max-width: 100%; }
 .cp-page-stack[hidden] { display: none !important; }
 
 .cp-preview-notice {

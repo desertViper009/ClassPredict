@@ -155,6 +155,28 @@ export function loadNumericalLabTests() {
       assertEqual(b[0], bClone[0]);
       assertEqual(b[1], bClone[1]);
     });
+
+    it("Case 10b: should solve Phase 10 known-answer 3x3 benchmark system with row swap and exact solution", () => {
+      const ex = GAUSSIAN_EXAMPLES.qa_benchmark_3x3;
+      const res = runGaussianEliminationExperiment(ex.A, ex.b);
+      assertEqual(res.success, true);
+      assertClose(res.solution[0], 2.0, 1e-12, "x must equal 2.0");
+      assertClose(res.solution[1], 3.0, 1e-12, "y must equal 3.0");
+      assertClose(res.solution[2], -1.0, 1e-12, "z must equal -1.0");
+
+      // Verify exact residual against original equations
+      // Eq 1: 2(2) + 1(3) - 1(-1) = 8
+      assertClose(2 * res.solution[0] + 1 * res.solution[1] - 1 * res.solution[2], 8.0, 1e-12);
+      // Eq 2: -3(2) - 1(3) + 2(-1) = -11
+      assertClose(-3 * res.solution[0] - 1 * res.solution[1] + 2 * res.solution[2], -11.0, 1e-12);
+      // Eq 3: -2(2) + 1(3) + 2(-1) = -3
+      assertClose(-2 * res.solution[0] + 1 * res.solution[1] + 2 * res.solution[2], -3.0, 1e-12);
+      assert(res.residualNorm < 1e-12, "Residual norm must be near machine epsilon");
+
+      // Verify row swap on first column with negative entries
+      const rowSwap = res.steps.find(s => s.stage === 'row_swap');
+      assert(rowSwap != null, "Must execute row swap for partial pivoting");
+    });
   });
 
   describe("Phase 9: Linear vs. Quadratic Regression (Experiment B)", () => {
@@ -179,6 +201,23 @@ export function loadNumericalLabTests() {
       assertClose(res.quadraticModel.coefficients.a1, -1.5, 1e-10);
       assertClose(res.quadraticModel.coefficients.a2, 0.8, 1e-10);
       assertClose(res.quadraticModel.rss, 0.0, 1e-12);
+    });
+
+    it("Case 12b: should fit Phase 10 exact linear fixture y = 2x + 1 and exact quadratic fixture y = x² + 2x + 3", () => {
+      // Linear benchmark y = 2x + 1
+      const lin = REGRESSION_LAB_DATASETS.exact_linear_benchmark;
+      const linRes = fitLinearAndQuadraticRegression(lin.x, lin.y);
+      assertClose(linRes.linearModel.coefficients.a1, 2.0, 1e-12, "Slope must be 2.00");
+      assertClose(linRes.linearModel.coefficients.a0, 1.0, 1e-12, "Intercept must be 1.00");
+      assertClose(linRes.linearModel.rss, 0.0, 1e-12, "Linear RSS must be 0");
+
+      // Quadratic benchmark y = x² + 2x + 3
+      const quad = REGRESSION_LAB_DATASETS.exact_quadratic_benchmark;
+      const quadRes = fitLinearAndQuadraticRegression(quad.x, quad.y);
+      assertClose(quadRes.quadraticModel.coefficients.a2, 1.0, 1e-12, "a2 must be 1.00");
+      assertClose(quadRes.quadraticModel.coefficients.a1, 2.0, 1e-12, "a1 must be 2.00");
+      assertClose(quadRes.quadraticModel.coefficients.a0, 3.0, 1e-12, "a0 must be 3.00");
+      assertClose(quadRes.quadraticModel.rss, 0.0, 1e-12, "Quadratic RSS must be 0");
     });
 
     it("Case 13: should evaluate both linear and quadratic models on the exact same observations", () => {
@@ -270,6 +309,22 @@ export function loadNumericalLabTests() {
       assertClose(res.coefficients[0], 1.0, 1e-12);
       assertClose(res.coefficients[1], 2.0, 1e-12);
       assertClose(res.coefficients[2], 1.0, 1e-12);
+    });
+
+    it("Case 20b: should reconstruct Phase 10 known polynomial f(x) = x² + 2x + 1 with nodes [0, 1, 2] and evaluate at 3 to 16", () => {
+      const ex = INTERPOLATION_EXAMPLES.perfect_square_3pt;
+      const res = runNewtonInterpolationExperiment(ex.x, ex.y, ex.xEval);
+
+      // f[x0] = 1, f[x0, x1] = 3, f[x0, x1, x2] = 1
+      assertClose(res.coefficients[0], 1.0, 1e-12, "c0 must be 1");
+      assertClose(res.coefficients[1], 3.0, 1e-12, "c1 must be 3");
+      assertClose(res.coefficients[2], 1.0, 1e-12, "c2 must be 1");
+      assertClose(res.evaluatedValue, 16.0, 1e-12, "P(3) = 3² + 2(3) + 1 = 16");
+
+      // Verify node reconstruction
+      assertEqual(runNewtonInterpolationExperiment(ex.x, ex.y, 0).evaluatedValue, 1);
+      assertEqual(runNewtonInterpolationExperiment(ex.x, ex.y, 1).evaluatedValue, 4);
+      assertEqual(runNewtonInterpolationExperiment(ex.x, ex.y, 2).evaluatedValue, 9);
     });
 
     it("Case 21: should reject duplicate or near-identical nodes to prevent division by zero", () => {

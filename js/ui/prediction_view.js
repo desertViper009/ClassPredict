@@ -795,8 +795,8 @@ export class PredictionView {
     const btnNavDataset = this.container.querySelector('#btn-nav-dataset');
     if (btnNavDataset) {
       btnNavDataset.addEventListener('click', () => {
-        const dashBtn = document.getElementById('tab-btn-dashboard');
-        if (dashBtn) dashBtn.click();
+        const datasetBtn = document.querySelector('[data-nav-id="dataset"]') || document.getElementById('tab-btn-dataset');
+        if (datasetBtn) datasetBtn.click();
       });
     }
   }

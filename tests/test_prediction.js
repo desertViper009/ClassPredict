@@ -438,5 +438,20 @@ export function loadPredictionTests() {
       assert(csv.includes("2,3.3500"));
       assert(csv.includes("3,3.5000"));
     });
+
+    it("Case 27: should sanitize potential formula injection characters (=, +, -, @) in exported CSV keys", () => {
+      const maliciousPredictions = [
+        { student_key: "=SUM(A1:A10)", latest_semester: 3, latest_sgpa: 3.50, target_semester: 4, predicted_sgpa: 3.60, baseline_prediction: 3.50, model_name: "Trend", prediction_status: "PREDICTED", out_of_range: false },
+        { student_key: "+cmd|' /C calc'!A0", latest_semester: 3, latest_sgpa: 3.20, target_semester: 4, predicted_sgpa: 3.40, baseline_prediction: 3.20, model_name: "Trend", prediction_status: "PREDICTED", out_of_range: false },
+        { student_key: "-1+2", latest_semester: 3, latest_sgpa: 3.10, target_semester: 4, predicted_sgpa: 3.30, baseline_prediction: 3.10, model_name: "Trend", prediction_status: "PREDICTED", out_of_range: false },
+        { student_key: "@dangerous", latest_semester: 3, latest_sgpa: 3.00, target_semester: 4, predicted_sgpa: 3.20, baseline_prediction: 3.00, model_name: "Trend", prediction_status: "PREDICTED", out_of_range: false }
+      ];
+
+      const csv = exportWholeClassCSV(maliciousPredictions);
+      assert(csv.includes("\"'=SUM(A1:A10)\""), "Must prepend single quote to escape =");
+      assert(csv.includes("\"'+cmd|' /C calc'!A0\""), "Must prepend single quote to escape +");
+      assert(csv.includes("\"'-1+2\""), "Must prepend single quote to escape -");
+      assert(csv.includes("\"'@dangerous\""), "Must prepend single quote to escape @");
+    });
   });
 }

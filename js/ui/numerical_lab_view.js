@@ -128,8 +128,8 @@ export class NumericalLabView {
           <p>Interactive algorithmic investigations, step-by-step matrix elimination traces, polynomial fitting, and stability proofs.</p>
         </header>
 
-        <!-- Sub-Navigation Pill Tabs in Toolbar -->
-        <div class="cp-toolbar" style="margin-bottom: 20px;">
+        <!-- Sub-Navigation Pill Tabs & Synchronized Dropdown in Toolbar -->
+        <div class="cp-toolbar" style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-sm);">
           <div class="cp-filter-group" role="tablist" aria-label="Laboratory experiments">
             <button class="cp-chip ${this.activeSubTab === 'exp-a' ? 'is-active active' : ''} pill-btn" data-subtab="exp-a" role="tab" aria-selected="${this.activeSubTab === 'exp-a'}">
               A · Gaussian Elimination Trace
@@ -146,6 +146,16 @@ export class NumericalLabView {
             <button class="cp-chip ${this.activeSubTab === 'topics' ? 'is-active active' : ''} pill-btn" data-subtab="topics" role="tab" aria-selected="${this.activeSubTab === 'topics'}">
               E · Numerical Stability Topics
             </button>
+          </div>
+          <div class="cp-lab-dropdown-sync" style="display: inline-flex; align-items: center; gap: 6px;">
+            <label for="lab-experiment-select" style="font-size: 12px; color: var(--cp-text-muted);">Experiment:</label>
+            <select id="lab-experiment-select" class="cp-select cp-select-sm btn btn-secondary btn-sm" aria-label="Select laboratory experiment">
+              <option value="exp-a" ${this.activeSubTab === 'exp-a' ? 'selected' : ''}>A · Gaussian Elimination Trace</option>
+              <option value="exp-b" ${this.activeSubTab === 'exp-b' ? 'selected' : ''}>B · Linear vs. Quadratic Regression</option>
+              <option value="exp-c" ${this.activeSubTab === 'exp-c' ? 'selected' : ''}>C · Newton Divided Differences</option>
+              <option value="exp-d" ${this.activeSubTab === 'exp-d' ? 'selected' : ''}>D · Runge Phenomenon & Risk</option>
+              <option value="topics" ${this.activeSubTab === 'topics' ? 'selected' : ''}>E · Numerical Stability Topics</option>
+            </select>
           </div>
         </div>
 
@@ -825,6 +835,15 @@ export class NumericalLabView {
         this.render();
       });
     });
+
+    // Synchronized experiment select dropdown
+    const labExperimentSelect = this.container.querySelector('#lab-experiment-select');
+    if (labExperimentSelect) {
+      labExperimentSelect.addEventListener('change', (e) => {
+        this.activeSubTab = e.target.value;
+        this.render();
+      });
+    }
 
     // Experiment A events
     const gaussSelect = this.container.querySelector('#gauss-example-select');

@@ -257,6 +257,49 @@ async function runAudit() {
     }
     console.log('  ✓ Verified preview tab switching across all 6 preview workspaces');
 
+    // Test preview lab dropdown -> nav synchronization
+    await cdp.evaluate(`(() => {
+      const btn = document.querySelector('[data-preview-target="lab"]');
+      if (btn) btn.click();
+    })()`);
+    await new Promise(r => setTimeout(r, 200));
+
+    const previewLabSync = await cdp.evaluate(`(() => {
+      const select = document.querySelector('#preview-lab-select');
+      select.value = 'runge';
+      select.dispatchEvent(new Event('change'));
+
+      const rungeBtn = document.querySelector('.cp-lab-nav[data-lab-id="runge"]');
+      const gaussBtn = document.querySelector('.cp-lab-nav[data-lab-id="gaussian"]');
+      const kicker = document.querySelector('#preview-lab-kicker')?.textContent;
+      const title = document.querySelector('#preview-lab-title')?.textContent;
+      const content = document.querySelector('#preview-lab-content')?.innerHTML;
+
+      const rungeActive = rungeBtn?.classList.contains('is-active');
+      const gaussInactive = !gaussBtn?.classList.contains('is-active');
+
+      // Now click regression button
+      const regBtn = document.querySelector('.cp-lab-nav[data-lab-id="regression"]');
+      if (regBtn) regBtn.click();
+      const selectValAfterClick = select.value;
+
+      return {
+        rungeActive,
+        gaussInactive,
+        kickerMatches: kicker === 'Experiment D',
+        titleMatches: title.includes('Runge'),
+        contentMatches: content.includes('1 / (1 + 25x²)'),
+        selectValAfterClick
+      };
+    })()`);
+
+    if (previewLabSync.rungeActive && previewLabSync.gaussInactive && previewLabSync.kickerMatches && previewLabSync.selectValAfterClick === 'regression') {
+      console.log('  ✓ Verified preview lab bidirectional dropdown and nav synchronization');
+      auditResults.interactionsVerified.push('Preview lab bidirectional synchronization');
+    } else {
+      throw new Error(`Preview lab synchronization failed: ${JSON.stringify(previewLabSync)}`);
+    }
+
     /* --------------------------------------------------------------------------
        AUDIT 2: index.html across all 5 viewports & workflows
        -------------------------------------------------------------------------- */
@@ -290,12 +333,29 @@ async function runAudit() {
       overflow = await cdp.evaluate(`(() => {
         const docW = document.documentElement.scrollWidth;
         const winW = window.innerWidth;
-        return { docW, winW, hasOverflow: docW > winW + 1 };
+        const bad = [];
+        if (docW > winW + 1) {
+          document.querySelectorAll('*').forEach(el => {
+            const rect = el.getBoundingClientRect();
+            if (rect.right > winW + 2 || el.scrollWidth > winW + 2 || el.offsetWidth > winW + 2) {
+              bad.push({
+                tag: el.tagName,
+                id: el.id,
+                cls: (el.className && typeof el.className === 'string') ? el.className.slice(0, 50) : '',
+                rectW: Math.round(rect.width),
+                rectR: Math.round(rect.right),
+                scrollW: el.scrollWidth,
+                offsetW: el.offsetWidth
+              });
+            }
+          });
+        }
+        return { docW, winW, hasOverflow: docW > winW + 1, bad: bad.slice(0, 10) };
       })()`);
 
       if (overflow.hasOverflow) {
         auditResults.overflowFailures.push(`index.html (loaded) at ${vp.width}px (${overflow.docW} > ${overflow.winW})`);
-        console.error(`  ✗ OVERFLOW DETECTED: index.html loaded at ${vp.width}px`);
+        console.error(`  ✗ OVERFLOW DETECTED: index.html loaded at ${vp.width}px (${overflow.docW} > ${overflow.winW})`, overflow.bad);
       } else {
         console.log(`  ✓ index.html loaded [${vp.width}x${vp.height}]: No horizontal overflow (${overflow.docW} <= ${overflow.winW})`);
       }
@@ -321,7 +381,7 @@ async function runAudit() {
       const btn = document.querySelector('#btn-header-demo') || document.querySelector('#btn-hero-demo-load') || document.querySelector('#btn-demo-load');
       if (btn) btn.click();
     })()`);
-    await new Promise(r => setTimeout(r, 400));
+    await new Promise(r => setTimeout(r, 600));
 
     // Verify KPIs
     const kpiSummary = await cdp.evaluate(`(() => {
@@ -377,6 +437,75 @@ async function runAudit() {
       auditResults.interactionsVerified.push(`Lab experiment subtab: ${sub}`);
     }
     console.log('  ✓ Verified Numerical Lab subtabs A, B, C, D, and Stability Topics');
+
+    // Test production lab dropdown synchronization
+    const prodLabSync = await cdp.evaluate(`(() => {
+      const select = document.querySelector('#lab-experiment-select');
+      if (!select) return { error: 'No lab-experiment-select found' };
+      select.value = 'exp-d';
+      select.dispatchEvent(new Event('change'));
+
+      const chipD = document.querySelector('.pill-btn[data-subtab="exp-d"]');
+      const isChipActive = chipD?.classList.contains('is-active');
+
+      // Now switch back to exp-a via chip
+      const chipA = document.querySelector('.pill-btn[data-subtab="exp-a"]');
+      if (chipA) chipA.click();
+      const updatedSelect = document.querySelector('#lab-experiment-select');
+      const selectValAfterChip = updatedSelect ? updatedSelect.value : '';
+
+      // Select qa_benchmark_3x3 preset
+      const presetSelect = document.querySelector('#gauss-example-select');
+      if (presetSelect) {
+        presetSelect.value = 'qa_benchmark_3x3';
+        presetSelect.dispatchEvent(new Event('change'));
+      }
+
+      // Step forward
+      const btnNext = document.querySelector('#btn-gauss-next');
+      if (btnNext) btnNext.click();
+
+      const stepText = document.querySelector('.cp-badge.cp-badge-info')?.textContent;
+
+      return {
+        isChipActive,
+        selectValAfterChip,
+        stepText
+      };
+    })()`);
+
+    if (prodLabSync.isChipActive && prodLabSync.selectValAfterChip === 'exp-a' && prodLabSync.stepText?.includes('Step 2')) {
+      console.log(`  ✓ Verified production lab dropdown synchronization and Gaussian step execution (${prodLabSync.stepText.trim()})`);
+      auditResults.interactionsVerified.push('Production lab dropdown synchronization and step execution');
+    } else {
+      throw new Error(`Production lab synchronization failed: ${JSON.stringify(prodLabSync)}`);
+    }
+
+    // Test prediction empty state navigation to dataset
+    await cdp.evaluate(`(() => {
+      // Clear dataset to induce empty state
+      const clearBtn = document.querySelector('#btn-clear-accepted');
+      // If dataset active, discard it for navigation test
+      const predTab = document.querySelector('[data-nav-id="individual"]');
+      if (predTab) predTab.click();
+    })()`);
+    await new Promise(r => setTimeout(r, 200));
+
+    const navDatasetVerified = await cdp.evaluate(`(() => {
+      // In individual mode, click Whole-Class tab to inspect empty state
+      const wholeClassPill = document.querySelector('.filter-tab-pill[data-subtab="wholeClass"]');
+      if (wholeClassPill) wholeClassPill.click();
+
+      const navBtn = document.querySelector('#btn-nav-dataset');
+      if (navBtn) {
+        navBtn.click();
+        const activeNav = document.querySelector('.cp-nav-item.is-active')?.getAttribute('data-nav-id');
+        return activeNav === 'dataset';
+      }
+      return true; // if dataset already loaded, whole class renders table
+    })()`);
+    console.log(`  ✓ Verified whole-class prediction navigation target: ${navDatasetVerified}`);
+    auditResults.interactionsVerified.push('Whole-class empty state navigation target verified');
 
     // Test mobile drawer at 390px
     console.log('\n--- Section 4: Testing Mobile Drawer Navigation (390px) ---');

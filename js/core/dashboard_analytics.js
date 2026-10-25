@@ -59,6 +59,7 @@ export function computeCohortOverview(dataset, options = {}) {
   if (!Array.isArray(dataset) || dataset.length === 0) {
     return {
       hasDataset: false,
+      isSynthetic: false,
       totalStudents: 0,
       totalRecords: 0,
       minSemester: null,
@@ -150,6 +151,7 @@ export function computeCohortOverview(dataset, options = {}) {
 
   return {
     hasDataset: true,
+    isSynthetic: dataset.length > 0 && dataset.every(r => typeof r.student_key === 'string' && r.student_key.startsWith('SYN_')),
     totalStudents,
     totalRecords,
     minSemester: Number.isFinite(minSem) ? minSem : null,

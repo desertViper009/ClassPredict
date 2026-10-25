@@ -221,6 +221,84 @@ export function loadUiContractTests() {
       html = mockContainer.innerHTML;
       assert(html.includes('Stability') || html.includes('Conditioning'), 'Must render stability topics');
     });
+
+    it('enforces bidirectional synchronization between lab experiment select dropdown, navigation buttons, and preview stage', async () => {
+      const { setLabExperiment, EXPERIMENT_PREVIEWS } = await import('../js/design_preview.js');
+      assertEqual(typeof setLabExperiment, 'function', 'setLabExperiment must be exposed');
+
+      // Build simulated DOM environment for preview
+      const select = { value: 'gaussian' };
+      const kicker = { textContent: '' };
+      const title = { textContent: '' };
+      const badge = { textContent: '' };
+      const description = { textContent: '' };
+      const content = { innerHTML: '' };
+      const buttons = [
+        { dataset: { labId: 'gaussian' }, classes: new Set(['is-active']), classList: { toggle(c, v) { if (v) this.set.add(c); else this.set.delete(c); }, contains(c) { return this.set.has(c); }, set: new Set(['is-active']) }, setAttribute() {} },
+        { dataset: { labId: 'regression' }, classes: new Set(), classList: { toggle(c, v) { if (v) this.set.add(c); else this.set.delete(c); }, contains(c) { return this.set.has(c); }, set: new Set() }, setAttribute() {} },
+        { dataset: { labId: 'newton' }, classes: new Set(), classList: { toggle(c, v) { if (v) this.set.add(c); else this.set.delete(c); }, contains(c) { return this.set.has(c); }, set: new Set() }, setAttribute() {} },
+        { dataset: { labId: 'runge' }, classes: new Set(), classList: { toggle(c, v) { if (v) this.set.add(c); else this.set.delete(c); }, contains(c) { return this.set.has(c); }, set: new Set() }, setAttribute() {} },
+        { dataset: { labId: 'stability' }, classes: new Set(), classList: { toggle(c, v) { if (v) this.set.add(c); else this.set.delete(c); }, contains(c) { return this.set.has(c); }, set: new Set() }, setAttribute() {} }
+      ];
+
+      const origDoc = globalThis.document;
+      globalThis.document = {
+        querySelector(sel) {
+          if (sel === '#preview-lab-select') return select;
+          if (sel === '#preview-lab-kicker') return kicker;
+          if (sel === '#preview-lab-title') return title;
+          if (sel === '#preview-lab-badge') return badge;
+          if (sel === '#preview-lab-description') return description;
+          if (sel === '#preview-lab-content') return content;
+          return null;
+        },
+        querySelectorAll(sel) {
+          if (sel.includes('.cp-lab-nav')) return buttons;
+          return [];
+        }
+      };
+
+      try {
+        // Reproduce scenario: user switches to Runge phenomenon
+        setLabExperiment('runge');
+        assertEqual(select.value, 'runge', 'Select dropdown must reflect Runge');
+        assertEqual(kicker.textContent, 'Experiment D', 'Kicker must reflect Experiment D');
+        assert(title.textContent.includes('Runge'), 'Title must display Runge phenomenon');
+        assert(content.innerHTML.includes('1 + 25x²'), 'Content must render Runge rational function');
+        assert(buttons[3].classList.contains('is-active'), 'Runge nav button must be active');
+        assertFalse(buttons[0].classList.contains('is-active'), 'Gaussian nav button must be inactive');
+
+        // Switch to regression
+        setLabExperiment('regression');
+        assertEqual(select.value, 'regression');
+        assertEqual(kicker.textContent, 'Experiment B');
+        assert(buttons[1].classList.contains('is-active'));
+        assertFalse(buttons[3].classList.contains('is-active'));
+      } finally {
+        globalThis.document = origDoc;
+      }
+    });
+
+    it('enforces bidirectional synchronization in NumericalLabView between select dropdown and subtab buttons', async () => {
+      const { NumericalLabView } = await import('../js/ui/numerical_lab_view.js');
+      const mockContainer = { innerHTML: '', querySelector: () => null, querySelectorAll: () => [] };
+      const view = new NumericalLabView(mockContainer);
+
+      // Verify Exp D
+      view.activeSubTab = 'exp-d';
+      view.render();
+      let html = mockContainer.innerHTML;
+      assert(html.includes('id="lab-experiment-select"'), 'Must render synchronized lab-experiment-select dropdown');
+      assert(html.includes('<option value="exp-d" selected'), 'Dropdown must select exp-d');
+      assert(html.includes('data-subtab="exp-d" role="tab" aria-selected="true"'), 'Exp D chip must be active');
+
+      // Verify Exp A reset does not change active experiment
+      view.activeSubTab = 'exp-a';
+      view.gaussStepIndex = 3;
+      view.render();
+      assertEqual(view.activeSubTab, 'exp-a');
+      assertEqual(view.gaussStepIndex, 3);
+    });
   });
 }
 
