@@ -1,0 +1,21 @@
+# Git & CI/CD
+.git
+.github
+
+# Internal Testing & Verification Suites
+tests/
+
+# Internal Project Documentation & QA Artifacts
+docs/
+
+# Local Test Fixtures (do not publish)
+samples/test_synthetic.pdf
+
+# Dependencies & Build artifacts
+node_modules/
+package-lock.json
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+*.log
