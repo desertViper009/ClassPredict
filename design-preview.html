@@ -3,8 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ClassPredict — Data-First Redesign Preview</title>
-  <meta name="description" content="Functional synthetic-data preview of the ClassPredict premium academic analytics redesign.">
+  <title>Gradivue — Data-First Redesign Preview</title>
+  <meta name="description" content="Functional synthetic-data preview of the Gradivue premium academic analytics redesign.">
+  <meta property="og:title" content="Gradivue — Data-First Redesign Preview">
+  <meta property="og:description" content="Functional synthetic-data preview of the Gradivue premium academic analytics redesign.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
@@ -14,9 +16,9 @@
 <body class="preview-body">
   <div class="preview-shell">
     <aside class="preview-sidebar" id="preview-sidebar">
-      <a class="cp-brand" href="design-preview.html" aria-label="ClassPredict redesign preview home">
+      <a class="cp-brand" href="design-preview.html" aria-label="Gradivue redesign preview home">
         <span class="cp-brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
-        <span><strong>ClassPredict</strong><small>Academic Analytics</small></span>
+        <span><strong>Gradivue</strong><small>Academic Analytics</small></span>
       </a>
       <nav class="cp-sidebar-nav" aria-label="Preview workspaces">
         <p class="cp-nav-eyebrow">Workspace</p>
@@ -75,7 +77,7 @@
 
         <section data-preview-section="individual" class="cp-page-stack" hidden>
           <header class="cp-page-heading"><span class="cp-kicker">Prediction workspace</span><h1>Individual student prediction</h1><p>Fit a transparent trajectory from 3–7 observed semesters and compare it with persistence.</p></header>
-          <div class="cp-split-grid cp-split-grid-wide"><form class="cp-panel" id="preview-prediction-form"><header class="cp-panel-header"><div><span class="cp-kicker">Observation history</span><h2>Semester results</h2></div><span class="cp-badge">4 observations</span></header><div class="cp-observation-list"><label><span>Semester 1</span><input class="cp-input" type="number" value="3.20" min="0" max="4" step="0.01" data-sgpa></label><label><span>Semester 2</span><input class="cp-input" type="number" value="3.35" min="0" max="4" step="0.01" data-sgpa></label><label><span>Semester 3</span><input class="cp-input" type="number" value="3.48" min="0" max="4" step="0.01" data-sgpa></label><label><span>Semester 4</span><input class="cp-input" type="number" value="3.56" min="0" max="4" step="0.01" data-sgpa></label></div><label class="cp-field"><span>Forecasting method</span><select class="cp-select"><option>Individual least-squares trend</option><option>Persistence baseline</option></select></label><button class="cp-button cp-button-primary cp-button-block" type="submit">Compute next-semester forecast</button></form><article class="cp-result-panel"><div id="preview-result-empty" class="cp-empty-state"><span>ƒ(x)</span><h2>Ready to calculate</h2><p>Adjust the synthetic observations and compute a transparent forecast.</p></div><div id="preview-result-ready" hidden><span class="cp-kicker">Semester 5 forecast</span><strong class="cp-result-value" id="preview-forecast-value">—</strong><div class="cp-result-comparison"><div><span>Persistence baseline</span><strong id="preview-baseline-value">—</strong></div><div><span>Model</span><strong>Linear trend</strong></div></div><div class="cp-alert cp-alert-info"><strong>Raw result preserved</strong><span>Production ClassPredict warns instead of silently clipping predictions.</span></div></div></article></div>
+          <div class="cp-split-grid cp-split-grid-wide"><form class="cp-panel" id="preview-prediction-form"><header class="cp-panel-header"><div><span class="cp-kicker">Observation history</span><h2>Semester results</h2></div><span class="cp-badge">4 observations</span></header><div class="cp-observation-list"><label><span>Semester 1</span><input class="cp-input" type="number" value="3.20" min="0" max="4" step="0.01" data-sgpa></label><label><span>Semester 2</span><input class="cp-input" type="number" value="3.35" min="0" max="4" step="0.01" data-sgpa></label><label><span>Semester 3</span><input class="cp-input" type="number" value="3.48" min="0" max="4" step="0.01" data-sgpa></label><label><span>Semester 4</span><input class="cp-input" type="number" value="3.56" min="0" max="4" step="0.01" data-sgpa></label></div><label class="cp-field"><span>Forecasting method</span><select class="cp-select"><option>Individual least-squares trend</option><option>Persistence baseline</option></select></label><button class="cp-button cp-button-primary cp-button-block" type="submit">Compute next-semester forecast</button></form><article class="cp-result-panel"><div id="preview-result-empty" class="cp-empty-state"><span>ƒ(x)</span><h2>Ready to calculate</h2><p>Adjust the synthetic observations and compute a transparent forecast.</p></div><div id="preview-result-ready" hidden><span class="cp-kicker">Semester 5 forecast</span><strong class="cp-result-value" id="preview-forecast-value">—</strong><div class="cp-result-comparison"><div><span>Persistence baseline</span><strong id="preview-baseline-value">—</strong></div><div><span>Model</span><strong>Linear trend</strong></div></div><div class="cp-alert cp-alert-info"><strong>Raw result preserved</strong><span>Production Gradivue warns instead of silently clipping predictions.</span></div></div></article></div>
         </section>
 
         <section data-preview-section="class" class="cp-page-stack" hidden>

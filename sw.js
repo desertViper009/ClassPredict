@@ -1,6 +1,6 @@
 /**
  * @file sw.js
- * @description Production Service Worker for ClassPredict.
+ * @description Production Service Worker for Gradivue.
  * Provides offline application shell caching for core client-side numerical workflows.
  * 
  * STRICT PRIVACY & CACHING POLICY:
@@ -9,7 +9,7 @@
  * - All user data remains strictly ephemeral in browser memory and is never written to cache storage.
  */
 
-const CACHE_NAME = 'classpredict-v1.1.0-static';
+const CACHE_NAME = 'gradivue-v1.1.0-static';
 
 const APP_SHELL_ASSETS = [
   './',

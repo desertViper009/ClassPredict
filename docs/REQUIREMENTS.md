@@ -1,4 +1,4 @@
-# Requirements Specification — ClassPredict
+# Requirements Specification — Gradivue
 
 > **Document ID**: DOC-REQ-001  
 > **Status**: Approved (Phase 1 Baseline with Mandatory Corrections)  

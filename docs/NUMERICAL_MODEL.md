@@ -1,4 +1,4 @@
-# Numerical Model Specification — ClassPredict
+# Numerical Model Specification — Gradivue
 
 > **Document ID**: DOC-NUM-001  
 > **Status**: Approved & Implemented (Phase 9 Numerical Methods Laboratory Complete)  
@@ -10,7 +10,7 @@
 
 ## 1. Mathematical Objective & Problem Formulation
 
-The objective of **ClassPredict** is to approximate the transition mechanics governing undergraduate academic performance across sequential semesters:
+The objective of **Gradivue** is to approximate the transition mechanics governing undergraduate academic performance across sequential semesters:
 
 $$s_{t+1} = f(s_t, \mathbf{h}_t) + \epsilon$$
 

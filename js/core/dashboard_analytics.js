@@ -780,7 +780,7 @@ export function detectUnusualObservations(dataset, options = {}) {
     totalCandidates: candidates.length,
     candidates,
     ruleDocumentation: "Tukey 1.5x IQR Rule evaluated independently across observed semester distributions (n >= 4) and in-sample regression residuals (n >= 4).",
-    safetyNotice: "Flagged points are strictly review candidates. ClassPredict never modifies, deletes, or excludes observations automatically."
+    safetyNotice: "Flagged points are strictly review candidates. Gradivue never modifies, deletes, or excludes observations automatically."
   };
 }
 

@@ -6,7 +6,7 @@ export function loadUiContractTests() {
       const { getPreviewModel } = await import('../js/design_preview.js');
       const model = getPreviewModel();
 
-      assertEqual(model.productName, 'ClassPredict');
+      assertEqual(model.productName, 'Gradivue');
       assertEqual(model.isSynthetic, true, 'Preview data must be explicitly labelled synthetic');
       assertEqual(model.sections.length, 6, 'Preview must include all six required workspaces');
       assertEqual(
@@ -47,7 +47,7 @@ export function loadUiContractTests() {
 
       const html = mockContainer.innerHTML;
       assert(html.includes('CSE NUMERICAL METHODS PROJECT'), 'Dashboard must display academic capstone context');
-      assert(html.includes('ClassPredict'), 'Dashboard must include product title');
+      assert(html.includes('Gradivue'), 'Dashboard must include product title');
       assertFalse(html.includes('hero_model.jpg'), 'Must not reference editorial photo hero_model.jpg');
       assertFalse(html.includes('hero_thumb.jpg'), 'Must not reference editorial thumbnail hero_thumb.jpg');
       assertFalse(html.includes('★★★★★'), 'Must not display fabricated star ratings');

@@ -1,4 +1,4 @@
-# System Architecture — ClassPredict
+# System Architecture — Gradivue
 
 > **Document ID**: DOC-ARCH-001  
 > **Status**: Approved & Implemented (Phase 9 Numerical Methods Laboratory Complete)  
@@ -9,7 +9,7 @@
 
 ## 1. Architectural Philosophy & Principles
 
-ClassPredict is designed under four core engineering principles:
+Gradivue is designed under four core engineering principles:
 
 1. **Pedagogical Transparency**: Numerical algorithms must be implemented from first principles in clean, readable code. Opaque "black-box" libraries are deliberately excluded so that the student can inspect, trace, and defend every matrix operation during academic examination.
 2. **Absolute Privacy via Client-Side Locality**: Academic transcripts contain sensitive student records. By executing all data ingestion, OCR extraction, and numerical modeling entirely within the client's browser runtime, zero student data ever traverses a network or rests on a remote server.

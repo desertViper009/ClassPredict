@@ -1,4 +1,4 @@
-name: Deploy ClassPredict to GitHub Pages
+name: Deploy Gradivue to GitHub Pages
 
 on:
   push:
@@ -39,11 +39,13 @@ jobs:
         run: |
           mkdir -p _site
           cp index.html _site/
+          cp design-preview.html _site/
           cp sw.js _site/
           cp -r css _site/
           cp -r js _site/
-          cp -r samples _site/
-          cp -r docs _site/
+          cp -r assets _site/
+          mkdir -p _site/samples
+          cp samples/sample_class_sgpa.csv _site/samples/
           touch _site/.nojekyll
 
       - name: Upload Static Application Artifact

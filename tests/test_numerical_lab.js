@@ -273,6 +273,18 @@ export function loadNumericalLabTests() {
       }, Error);
     });
 
+    it("Case 16b: should accurately fit ill-conditioned inputs and document normal equations condition squaring", () => {
+      // Ill-conditioned inputs: x clustered tightly in [1000.0, 1000.1]
+      // Uncentered normal equations matrix has huge numbers ~10^12, but centering u = x - meanX brings u into [-0.05, 0.05]
+      const x = [1000.00, 1000.02, 1000.05, 1000.08, 1000.10];
+      const y = x.map(xi => 1.0 + 2.0 * (xi - 1000.0) + 3.0 * Math.pow(xi - 1000.0, 2));
+      const res = fitLinearAndQuadraticRegression(x, y);
+
+      // Verify that centered coefficients are stably solved
+      assertClose(res.quadraticModel.centeredCoefficients.c2, 3.0, 1e-6, "Quadratic curvature c2 must equal 3.0");
+      assert(res.quadraticModel.rss < 1e-10, "Centered normal equations must achieve near-zero RSS");
+    });
+
     it("Case 17: should reject datasets with insufficient points (< 3)", () => {
       assertThrows(() => {
         fitLinearAndQuadraticRegression([1, 2], [3, 4]);
@@ -404,6 +416,53 @@ export function loadNumericalLabTests() {
       const res = runRungeExperiment(7, 'equally_spaced');
       assertEqual(res.isSynthetic, true);
       assert(res.academicTakeaway.length > 0);
+    });
+
+    it("Case 28b: should match independently verified Runge maximum interpolation error benchmarks", () => {
+      // Independent analytical benchmarks on dense grid (100,001 points across 100,000 subdivisions, k=0..M with M=100000):
+      // Synthetic function: f(x) = 1 / (1 + 25x^2) on [-1, 1]
+      // Dense-grid estimates of maximum error:
+      // N=5:  Equidistant = 0.438357, Chebyshev roots = 0.402017
+      // N=7:  Equidistant = 0.616948, Chebyshev roots = 0.264228
+      // N=9:  Equidistant = 1.045177, Chebyshev roots = 0.170836
+      // N=11: Equidistant = 1.915659, Chebyshev roots = 0.109154
+
+      const denseOptions = { gridCount: 100001 };
+
+      // N = 5
+      const eq5Dense = runRungeExperiment(5, 'equally_spaced', denseOptions);
+      assertClose(eq5Dense.errorMetrics.maxAbsError, 0.438357, 1e-4, "N=5 Equidistant dense max error");
+      const ch5Dense = runRungeExperiment(5, 'chebyshev', denseOptions);
+      assertClose(ch5Dense.errorMetrics.maxAbsError, 0.402017, 1e-4, "N=5 Chebyshev dense max error");
+
+      // N = 7
+      const eq7Dense = runRungeExperiment(7, 'equally_spaced', denseOptions);
+      assertClose(eq7Dense.errorMetrics.maxAbsError, 0.616948, 1e-4, "N=7 Equidistant dense max error");
+      const ch7Dense = runRungeExperiment(7, 'chebyshev', denseOptions);
+      assertClose(ch7Dense.errorMetrics.maxAbsError, 0.264228, 1e-4, "N=7 Chebyshev dense max error");
+
+      // N = 9
+      const eq9Dense = runRungeExperiment(9, 'equally_spaced', denseOptions);
+      assertClose(eq9Dense.errorMetrics.maxAbsError, 1.045177, 1e-4, "N=9 Equidistant dense max error");
+      const ch9Dense = runRungeExperiment(9, 'chebyshev', denseOptions);
+      assertClose(ch9Dense.errorMetrics.maxAbsError, 0.170836, 1e-4, "N=9 Chebyshev dense max error");
+
+      // N = 11
+      const eq11Dense = runRungeExperiment(11, 'equally_spaced', denseOptions);
+      assertClose(eq11Dense.errorMetrics.maxAbsError, 1.915659, 1e-4, "N=11 Equidistant dense max error");
+      const ch11Dense = runRungeExperiment(11, 'chebyshev', denseOptions);
+      assertClose(ch11Dense.errorMetrics.maxAbsError, 0.109154, 1e-4, "N=11 Chebyshev dense max error");
+
+      // UI 101-point evaluation grid (discrete sampling discrepancy <= 0.001)
+      const eq9UI = runRungeExperiment(9, 'equally_spaced');
+      assertClose(eq9UI.errorMetrics.maxAbsError, 1.045174, 1e-3, "N=9 Equidistant UI 101 grid");
+      const ch9UI = runRungeExperiment(9, 'chebyshev');
+      assertClose(ch9UI.errorMetrics.maxAbsError, 0.170834, 1e-3, "N=9 Chebyshev UI 101 grid");
+
+      const eq11UI = runRungeExperiment(11, 'equally_spaced');
+      assertClose(eq11UI.errorMetrics.maxAbsError, 1.915643, 1e-3, "N=11 Equidistant UI 101 grid");
+      const ch11UI = runRungeExperiment(11, 'chebyshev');
+      assertClose(ch11UI.errorMetrics.maxAbsError, 0.108929, 1e-3, "N=11 Chebyshev UI 101 grid");
     });
   });
 

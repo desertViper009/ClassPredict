@@ -1,6 +1,6 @@
 /**
  * @file test_runner.js
- * @description Lightweight headless test harness for ClassPredict pure numerical & data modules.
+ * @description Lightweight headless test harness for Gradivue pure numerical & data modules.
  * Designed to execute in Node.js LTS with zero external dependencies.
  */
 
@@ -78,7 +78,7 @@ export function assertThrows(fn, expectedErrorType, message) {
  */
 export async function runAllTests() {
   console.log("===============================================================");
-  console.log(" ClassPredict — Headless Numerical Verification Test Harness");
+  console.log(" Gradivue — Headless Numerical Verification Test Harness");
   console.log("===============================================================\n");
 
   const startTime = Date.now();

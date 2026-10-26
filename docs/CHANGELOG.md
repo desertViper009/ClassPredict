@@ -1,8 +1,27 @@
-# Changelog — ClassPredict
+# Changelog — Gradivue
 
-All notable changes to the ClassPredict project will be documented in this file.
+All notable changes to the Gradivue project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [1.3.0] - October 2026 (Official Product Rebranding to Gradivue & Pre-Deployment Preparation)
+
+### Rebranded
+* **Official Product Identity & Nomenclature**:
+  - Rebranded user-facing product identity from ClassPredict to **Gradivue**.
+  - Established official product category: **Academic Analytics Platform**.
+  - Established preferred product tagline: *"See performance. Understand progress."*
+  - Updated application title, browser document titles (`${item.label} — Gradivue`), and Open Graph / Twitter social sharing metadata in `index.html` and `design-preview.html`.
+  - Updated desktop sidebar and mobile drawer navigation branding to **Gradivue** (`Academic Analytics`).
+  - Updated executive academic hero header and wordmark styling (`Gradi<span>vue</span>`) in `js/ui/dashboard_view.js`.
+  - Updated Service Worker cache label to `gradivue-v1.1.0-static` in `sw.js`.
+  - Updated CSV prediction export headers to `# Gradivue Individual Prediction Result` in `js/core/prediction_service.js`.
+  - Updated `package.json` manifest (`name: "gradivue"`, description) and GitHub Actions workflow name in `.github/workflows/deploy.yml`.
+  - Preserved historical changelog entries, technical identifiers, CSS token prefixes (`.cp-*`), data schemas (`student_key,semester_no,sgpa`), and GitHub Pages deployment URLs (`desertViper009/ClassPredict`).
+* **Verification & Hardening**:
+  - Verified all 47 test suites and 246 automated tests passing regression-free (`npm test`).
+  - Executed headless Chrome CDP browser audit across 5 responsive viewports (1440, 1280, 1024, 768, 390px) with 0 horizontal overflow flags and 0 console errors.
+  - Confirmed relative asset path safety for hosting at `/ClassPredict/` subpath.
 
 ## [1.2.0] - October 2026 (Data-First Premium Academic Analytics Redesign)
 

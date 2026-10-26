@@ -121,7 +121,7 @@ export class OCRView {
           <div class="cp-alert cp-alert-info" style="margin-bottom: var(--space-md);">
             <strong>Privacy Architecture &amp; Client-Side Safety Barrier:</strong>
             <span>
-              ClassPredict executes all PDF rasterization, image cropping, and optical character recognition locally inside your browser memory.
+              Gradivue executes all PDF rasterization, image cropping, and optical character recognition locally inside your browser memory.
               Zero document bytes, image crops, or grades are transmitted over the network.
               You are required to crop strictly around the numeric SGPA column so student names and registration numbers are never passed to the OCR engine.
               Note: Library assets (e.g. PDF.js and Tesseract.js workers) may require network access on first use.
@@ -1075,15 +1075,17 @@ export class OCRView {
 
     if (btnPred) {
       btnPred.addEventListener('click', () => {
-        const tab = document.getElementById('tab-btn-predictions');
+        const tab = document.querySelector('[data-nav-id="individual"]');
         if (tab) tab.click();
+        else if (typeof window.navigateTo === 'function') window.navigateTo('individual');
       });
     }
 
     if (btnDataset) {
       btnDataset.addEventListener('click', () => {
-        const tab = document.getElementById('tab-btn-dashboard');
+        const tab = document.querySelector('[data-nav-id="dataset"]');
         if (tab) tab.click();
+        else if (typeof window.navigateTo === 'function') window.navigateTo('dataset');
       });
     }
 

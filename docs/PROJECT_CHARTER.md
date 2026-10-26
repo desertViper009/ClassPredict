@@ -1,4 +1,4 @@
-# Project Charter — ClassPredict
+# Project Charter — Gradivue
 
 > **Document ID**: DOC-CHARTER-001  
 > **Status**: Approved (Phase 1 Baseline with Mandatory Corrections)  
@@ -11,7 +11,7 @@
 
 In university undergraduate Computer Science & Engineering (CSE) curricula, the **Numerical Methods** course establishes theoretical foundations in approximation, system solving, curve fitting, interpolation, and computational error analysis. Often, students study these algorithms in isolation (solving abstract synthetic matrices on paper or in simple CLI scripts).
 
-**ClassPredict** bridges the gap between academic numerical theory and tangible, ethical real-world software engineering. By tackling the challenge of predicting undergraduate academic performance (Semester Grade Point Average, or SGPA) based on historical records, the project grounds computational mathematics in real constraints: small sample sizes, autocorrelated transitions, noisy OCR inputs, and strict privacy boundaries.
+**Gradivue** bridges the gap between academic numerical theory and tangible, ethical real-world software engineering. By tackling the challenge of predicting undergraduate academic performance (Semester Grade Point Average, or SGPA) based on historical records, the project grounds computational mathematics in real constraints: small sample sizes, autocorrelated transitions, noisy OCR inputs, and strict privacy boundaries.
 
 ---
 

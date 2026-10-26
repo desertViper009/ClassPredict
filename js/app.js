@@ -1,6 +1,6 @@
 /**
  * @file app.js
- * @description Application shell, navigation, and view lifecycle for ClassPredict.
+ * @description Application shell, navigation, and view lifecycle for Gradivue.
  */
 
 import { stateManager } from './services/state_manager.js';
@@ -63,7 +63,7 @@ export function navigateTo(target, options = {}) {
   }
 
   shell.title.textContent = item.label;
-  document.title = `${item.label} — ClassPredict`;
+  document.title = `${item.label} — Gradivue`;
 
   document.querySelectorAll('[data-nav-id]').forEach(control => {
     const active = control.dataset.navId === item.id;
@@ -159,12 +159,13 @@ function initializeApplication() {
   if (typeof window !== 'undefined') {
     window.stateManager = stateManager;
     window.navigateTo = navigateTo;
+    window.getActiveView = () => activeViewInstance;
   }
 
   if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('./sw.js').catch(error => {
-        console.warn('[ClassPredict] Service worker registration unavailable:', error);
+        console.warn('[Gradivue] Service worker registration unavailable:', error);
       });
     });
   }

@@ -1,4 +1,4 @@
-# UI/UX Design Specification — ClassPredict
+# UI/UX Design Specification — Gradivue
 
 > **Document ID**: DOC-UI-001  
 > **Status**: Approved & Implemented (Phase 9 Verified)  
@@ -10,7 +10,7 @@
 
 ## 1. Visual Design Philosophy & Aesthetic Identity
 
-ClassPredict's interface is crafted to balance **academic precision** with **portfolio-grade visual excellence**. The aesthetic rejects generic bootstrap templates and blinding light themes in favor of an **Obsidian & Deep Crimson** dark design system.
+Gradivue's interface is crafted to balance **academic precision** with **portfolio-grade visual excellence**. The aesthetic rejects generic bootstrap templates and blinding light themes in favor of an **Obsidian & Deep Crimson** dark design system.
 
 Key aesthetic principles:
 1. **Academic Clarity Over Decoration**: Visual hierarchy directs the evaluator's eye to numerical metrics, sample sizes, and model parameters without visual clutter.

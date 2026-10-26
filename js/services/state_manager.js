@@ -1,6 +1,6 @@
 /**
  * @file state_manager.js
- * @description Centralized in-memory reactive state manager for ClassPredict.
+ * @description Centralized in-memory reactive state manager for Gradivue.
  * Enforces session ephemerality, staging workflows, and dataset integrity.
  * Document Reference: docs/ARCHITECTURE.md, docs/adr/ADR-005-persistence-vs-session-only-data.md
  */

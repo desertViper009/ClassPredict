@@ -1,6 +1,6 @@
 /**
  * @file numerical_lab.js
- * @description Educational Numerical Methods Laboratory calculation engine for ClassPredict.
+ * @description Educational Numerical Methods Laboratory calculation engine for Gradivue.
  * Implements step-by-step Gaussian elimination traces, linear vs. quadratic regression
  * comparison, Newton divided-difference term breakdown, and Runge's phenomenon demonstrations.
  * Pure mathematical core decoupled from the DOM.
@@ -654,8 +654,10 @@ export function runRungeExperiment(nodeCount = 7, distributionType = 'equally_sp
   // 2. Compute Newton divided differences
   const { coefficients, table } = computeDividedDifferences(xNodes, yNodes);
 
-  // 3. Evaluate over fine grid (101 points in [-1, 1]) to compute exact errors
-  const gridCount = 101;
+  // 3. Evaluate over fine grid (default 101 points in [-1, 1], configurable via options.gridCount)
+  const gridCount = typeof options.gridCount === 'number' && options.gridCount >= 11
+    ? Math.round(options.gridCount)
+    : 101;
   const grid = [];
   let maxAbsError = 0.0;
   let maxErrorLocation = 0.0;
@@ -754,14 +756,15 @@ export const NUMERICAL_STABILITY_TOPICS = [
     title: 'Normal Equations & Condition Squaring: κ₂(XᵀX) = (κ₂(X))²',
     badge: 'Least Squares',
     content: `
-      Solving linear least squares via Normal Equations (XᵀX)β = Xᵀy squares the 2-norm condition number:
+      Solving linear least squares via Normal Equations (XᵀX)β = Xᵀy inherently squares the 2-norm condition number:
       κ₂(XᵀX) = (κ₂(X))².
       
       If design matrix X has condition number 10⁴, the Normal Equations matrix XᵀX has condition number 10⁸!
       
-      **ClassPredict Mitigation**:
-      1. Predictor centering (x' = x - x̄) decouples slope and intercept, making off-diagonal covariance entries zero.
-      2. Scale-aware partial pivoting prevents multiplier blow-up during Gaussian elimination.
+      **Mathematical Trade-Offs**:
+      1. **Predictor Centering (x' = x - x̄)**: Substantially reduces the baseline condition number κ₂(X') by removing the large coordinate offset (which otherwise makes the column of ones and the grade predictor nearly collinear).
+      2. **Condition Squaring Persists**: Centering does NOT eliminate condition squaring. Solving (X'ᵀX') still squares the condition number of X'. For severely ill-conditioned matrices, normal equations lose up to half of the available floating-point digits, whereas orthogonal factorizations (Householder QR or SVD) avoid condition squaring entirely.
+      3. **Gradivue Architecture**: Because academic grade transitions are restricted to linear (d=1) and quadratic (d=2) models on centered coordinates, the system remains stable within IEEE-754 precision while providing direct pedagogical access to Gaussian elimination traces.
     `
   },
   {

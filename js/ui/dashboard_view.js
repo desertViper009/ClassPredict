@@ -138,14 +138,14 @@ export class DashboardView {
    */
   renderAcademicHero(overview = null) {
     return `
-      <section class="cp-academic-hero" aria-label="ClassPredict Overview Hero">
+      <section class="cp-academic-hero" aria-label="Gradivue Overview Hero">
         <div class="cp-academic-hero-content">
           <div>
             <span class="cp-hero-kicker">CSE NUMERICAL METHODS PROJECT</span>
-            <h1 class="cp-hero-title">Class<span>Predict</span></h1>
-            <p class="cp-hero-subtitle">Academic Performance Analytics &amp; SGPA Prediction</p>
+            <h1 class="cp-hero-title">Gradi<span>vue</span></h1>
+            <p class="cp-hero-subtitle">Academic Analytics Platform</p>
             <p class="cp-hero-desc">
-              Analyze academic trends, predict next-semester SGPA using numerical methods, ingest result sheets with OCR, and explore core numerical algorithms — all in your browser.
+              See performance. Understand progress. Analyze academic trends, predict next-semester SGPA using numerical methods, ingest result sheets with OCR, and explore core numerical algorithms — all in your browser.
             </p>
             <div class="cp-hero-actions">
               <button class="cp-button cp-button-primary" id="btn-hero-load-dataset" type="button">
@@ -1394,7 +1394,7 @@ export class DashboardView {
 
         <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: var(--space-md);">
           Rows represent the source semester (s<sub>t</sub>), and columns represent the target semester (s<sub>t+1</sub>).
-          Under ClassPredict's non-bridging rule, only consecutive 1-step pairs are valid; non-consecutive jumps (e.g. Sem 1 → Sem 3) are strictly excluded from regression models.
+          Under Gradivue's non-bridging rule, only consecutive 1-step pairs are valid; non-consecutive jumps (e.g. Sem 1 → Sem 3) are strictly excluded from regression models.
         </div>
 
         <div class="matrix-wrapper">

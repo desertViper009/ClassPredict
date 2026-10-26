@@ -1,6 +1,6 @@
 export function getPreviewModel() {
   return {
-    productName: 'ClassPredict',
+    productName: 'Gradivue',
     isSynthetic: true,
     sections: [
       { id: 'overview', label: 'Overview', description: 'Academic analytics command center' },
