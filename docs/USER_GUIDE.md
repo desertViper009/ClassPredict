@@ -1,4 +1,4 @@
-# User & Evaluator Guide — ClassPredict
+# User & Evaluator Guide — Gradivue
 
 > **Document ID**: DOC-USER-001  
 > **Status**: Approved & Verified (Phase 10 Production Deployment & Hardening Complete)  
@@ -9,7 +9,7 @@
 
 ## 1. Runtime Environment & Local Launch
 
-ClassPredict is a client-side web application built with vanilla JavaScript (ES6 Modules) and Vanilla CSS3.
+Gradivue is a client-side web application built with vanilla JavaScript (ES6 Modules) and Vanilla CSS3.
 
 ### 1.1 Requirements to Run the Application:
 * **Runtime**: Any standard modern web browser (Google Chrome, Mozilla Firefox, Microsoft Edge, Safari).

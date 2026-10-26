@@ -1,4 +1,4 @@
-# Privacy Architecture & Security Specification — ClassPredict
+# Privacy Architecture & Security Specification — Gradivue
 
 > **Document ID**: DOC-SEC-001  
 > **Status**: Approved & Implemented (Phase 10 Production Deployment & Hardening Verified)  
@@ -11,7 +11,7 @@
 
 Undergraduate academic transcripts, course evaluations, and semester grade point averages constitute **Personally Identifiable Information (PII)** and protected student educational records under global data protection frameworks (such as GDPR, FERPA, and institutional privacy policies).
 
-ClassPredict operates under five foundational security tenets:
+Gradivue operates under five foundational security tenets:
 1. **Zero Cloud Ingestion of Student Records**: The system does not transmit student marks, raw images, or dataset files to any remote server or cloud API. All data processing occurs locally within the user's browser memory.
 2. **Strict Data Minimization & Whitelist Filtering**: Only the numerical values required for transition modeling (`student_key`, `semester_no`, `sgpa`) are accepted. Identifiers like names, registration IDs, emails, and phone numbers are rejected at the parsing boundary with an explicit security notice.
 3. **Targeted Crop Boundary for OCR**: Scanned university mark sheets contain institutional headers, student names, and registration numbers. The user is required to crop strictly to the SGPA column before any OCR engine analysis occurs.

@@ -1,10 +1,11 @@
 {
-  "name": "classpredict",
+  "name": "gradivue",
   "version": "1.0.0",
-  "description": "Web-based academic performance analysis and next-semester SGPA prediction software for Numerical Methods capstone",
+  "description": "Gradivue — Academic analytics application for SGPA forecasting, dataset management, whole-class prediction, privacy-conscious result-sheet ingestion, and numerical methods education",
   "type": "module",
   "scripts": {
     "test": "node tests/test_runner.js",
+    "audit": "node tests/browser_ui_audit.mjs",
     "start": "python -m http.server 8000"
   },
   "keywords": [

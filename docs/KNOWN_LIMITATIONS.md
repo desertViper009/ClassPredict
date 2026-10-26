@@ -1,4 +1,4 @@
-# Known Limitations & Academic Risk Assessment — ClassPredict
+# Known Limitations & Academic Risk Assessment — Gradivue
 
 > **Document ID**: DOC-LIM-001  
 > **Status**: Approved & Implemented (Phase 10 Production Release Verified)  
@@ -9,7 +9,7 @@
 
 ## 1. Academic & Statistical Honesty Notice
 
-In academic software engineering and numerical analysis, acknowledging limitations is a hallmark of scientific rigor. **ClassPredict** does not claim to possess prophetic insight into human academic potential; rather, it provides a transparent mathematical baseline based on historical transition mechanics.
+In academic software engineering and numerical analysis, acknowledging limitations is a hallmark of scientific rigor. **Gradivue** does not claim to possess prophetic insight into human academic potential; rather, it provides a transparent mathematical baseline based on historical transition mechanics.
 
 The key limitations, assumptions, and mathematical constraints of the system are documented below.
 
@@ -119,7 +119,7 @@ The key limitations, assumptions, and mathematical constraints of the system are
 * **Runge Divergence**: On equally spaced nodes over $[-1, 1]$ for Runge's function $f(x) = \frac{1}{1 + 25x^2}$, the interpolation polynomial oscillates wildly near the boundaries with maximum error growing exponentially:
   $$\lim_{n \to \infty} \max_{x \in [-1, 1]} |f(x) - P_n(x)| = \infty$$
 * **Chebyshev Node Moderation**: Clustering nodes at Chebyshev zeros $x_k = \cos\left(\frac{2k+1}{2(n+1)}\pi\right)$ suppresses interior and edge oscillations within $[-1, 1]$, but forward extrapolation outside $[-1, 1]$ still diverges rapidly at rate $\mathcal{O}(x^{n+1})$.
-* **Pedagogical Rationale**: This controlled demonstration provides the definitive academic justification for why ClassPredict uses low-degree least-squares regression rather than high-order polynomial interpolation for semester SGPA forecasting.
+* **Pedagogical Rationale**: This controlled demonstration provides the definitive academic justification for why Gradivue uses low-degree least-squares regression rather than high-order polynomial interpolation for semester SGPA forecasting.
 
 ### 7.4 In-Sample RSS Overfitting Hazard in Small Samples
 * **Limitation**: In Experiment B, the quadratic model ($d = 2$, 3 parameters) mathematically yields a residual sum of squares that is less than or equal to the linear model ($d = 1$, 2 parameters) on the same training data: $\text{RSS}_{\text{quad}} \le \text{RSS}_{\text{lin}}$.
@@ -130,7 +130,8 @@ The key limitations, assumptions, and mathematical constraints of the system are
 
 ## 8. Scope & Pedagogical Boundaries
 
-1. **No CGPA or Credit Weighting**: ClassPredict intentionally restricts scope to SGPA. Calculating Cumulative GPA requires parsing individual course credit weights, grading policies, and repeat-course forgiveness rules, which vary by institution.
+1. **No CGPA or Credit Weighting**: Gradivue intentionally restricts scope to SGPA. Calculating Cumulative GPA requires parsing individual course credit weights, grading policies, and repeat-course forgiveness rules, which vary by institution.
 2. **No Persistent Cloud Database**: Academic records are held strictly in ephemeral browser memory. While optimal for privacy, this requires users to re-import CSV files when opening a new session.
 3. **Local HTTP Server Requirement**: Because the application utilizes native ES6 JavaScript modules, running locally requires a lightweight HTTP server (e.g., Python `http.server` or Node `npx serve`) to satisfy browser CORS security policies.
+4. **Brand-Name Clearance and Domain Availability**: The official product name "Gradivue" has not undergone formal multi-jurisdictional trademark registration clearance or commercial domain acquisition checks. This status is recorded as a documented limitation; local application rebranding, pre-deployment hardening, and static subpath hosting proceed safely without waiting for separate commercial or legal clearance.
 

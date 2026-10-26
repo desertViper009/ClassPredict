@@ -1,4 +1,4 @@
-# Development Guide & Change Management — ClassPredict
+# Development Guide & Change Management — Gradivue
 
 > **Document ID**: DOC-DEV-001  
 > **Status**: Approved & Verified (Phase 10 Production Deployment & Hardening Complete)  

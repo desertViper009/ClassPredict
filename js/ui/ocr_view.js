@@ -87,49 +87,78 @@ export class OCRView {
     const state = stateManager.getState();
     const hasAccepted = !!(state.acceptedDataset && state.acceptedDataset.length > 0);
 
-    this.container.innerHTML = `
-      <!-- Workspace Header -->
-      <div class="card" style="margin-bottom: var(--space-xl);">
-        <div class="card-header">
-          <div>
-            <h2 class="card-title">Privacy-Preserving OCR Ingestion & Key Reconciliation</h2>
-            <p class="card-subtitle">Local document rasterization, column-restricted cropping, Web Worker OCR, and stable student-key mapping (Phase 7)</p>
-          </div>
-          <div>
-            ${hasAccepted 
-              ? `<span class="badge badge-success">● Active Cohort: ${state.acceptedSummary.totalStudents} Students</span>` 
-              : '<span class="badge badge-synthetic">No Accepted Cohort (First Semester Import)</span>'}
-          </div>
-        </div>
+    let activeStepNumber = 1;
+    if (this.currentStep === 'UPLOAD') {
+      activeStepNumber = 1;
+    } else if (this.currentStep === 'CROP') {
+      activeStepNumber = 3;
+    } else if (this.currentStep === 'RECOGNIZING') {
+      activeStepNumber = 4;
+    } else if (this.currentStep === 'REVIEW') {
+      activeStepNumber = 5;
+    } else if (this.currentStep === 'COMMITTED') {
+      activeStepNumber = 7;
+    }
 
-        <!-- Privacy & Ethical Boundary Notice -->
-        <div style="background-color: var(--bg-primary); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: var(--space-md); margin-bottom: var(--space-md);">
-          <div style="display: flex; gap: var(--space-sm); align-items: flex-start;">
-            <div style="font-size: 20px; line-height: 1;">🛡️</div>
-            <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.5;">
-              <strong style="color: var(--text-primary);">Privacy Architecture Guarantee:</strong>
-              ClassPredict executes all PDF rasterization, image cropping, and optical character recognition locally inside your browser memory.
-              <strong>Zero document bytes, image crops, or grades are transmitted over the network.</strong>
-              You are required to crop <em>strictly</em> around the numeric SGPA column so student names and registration numbers are never passed to the OCR engine.
+    this.container.innerHTML = `
+      <div class="cp-page-stack">
+        <!-- Workspace Header -->
+        <div class="card cp-panel" style="margin-bottom: var(--space-xl);">
+          <div class="card-header cp-panel-header">
+            <div>
+              <span class="cp-kicker">Human-Reviewed Extraction</span>
+              <h2 class="card-title">Privacy-Preserving OCR Ingestion &amp; Key Reconciliation</h2>
+              <p class="card-subtitle">Local document rasterization, column-restricted cropping, Web Worker OCR, and stable student-key mapping (Phase 7)</p>
+            </div>
+            <div>
+              ${hasAccepted 
+                ? `<span class="badge badge-success cp-badge cp-badge-success">● Active Cohort: ${state.acceptedSummary.totalStudents} Students</span>` 
+                : '<span class="badge badge-synthetic cp-badge cp-badge-info">No Accepted Cohort (First Semester Import)</span>'}
             </div>
           </div>
+
+          <!-- Privacy & Ethical Boundary Notice -->
+          <div class="cp-alert cp-alert-info" style="margin-bottom: var(--space-md);">
+            <strong>Privacy Architecture &amp; Client-Side Safety Barrier:</strong>
+            <span>
+              Gradivue executes all PDF rasterization, image cropping, and optical character recognition locally inside your browser memory.
+              Zero document bytes, image crops, or grades are transmitted over the network.
+              You are required to crop strictly around the numeric SGPA column so student names and registration numbers are never passed to the OCR engine.
+              Note: Library assets (e.g. PDF.js and Tesseract.js workers) may require network access on first use.
+              Safety barrier active: Nothing enters the accepted dataset until step 7 commitment is confirmed.
+            </span>
+          </div>
+
+          <!-- Seven-Stage Workflow Stepper -->
+          <ol class="cp-stepper" aria-label="OCR workflow" style="margin-top: var(--space-md);">
+            <li class="${activeStepNumber === 1 ? 'is-active' : (activeStepNumber > 1 ? 'is-complete' : '')}">
+              <b>1</b><span>Upload</span>
+            </li>
+            <li class="${activeStepNumber === 2 ? 'is-active' : (activeStepNumber > 2 ? 'is-complete' : '')}">
+              <b>2</b><span>Page</span>
+            </li>
+            <li class="${activeStepNumber === 3 ? 'is-active' : (activeStepNumber > 3 ? 'is-complete' : '')}">
+              <b>3</b><span>Crop</span>
+            </li>
+            <li class="${activeStepNumber === 4 ? 'is-active' : (activeStepNumber > 4 ? 'is-complete' : '')}">
+              <b>4</b><span>Extract</span>
+            </li>
+            <li class="${activeStepNumber === 5 ? 'is-active' : (activeStepNumber > 5 ? 'is-complete' : '')}">
+              <b>5</b><span>Review</span>
+            </li>
+            <li class="${activeStepNumber === 6 ? 'is-active' : (activeStepNumber > 6 ? 'is-complete' : '')}">
+              <b>6</b><span>Keys</span>
+            </li>
+            <li class="${activeStepNumber === 7 ? 'is-active' : ''}">
+              <b>7</b><span>Confirm</span>
+            </li>
+          </ol>
         </div>
 
-        <!-- Workflow Step Indicator -->
-        <div style="display: flex; gap: var(--space-xs); border-top: 1px solid var(--border-subtle); padding-top: var(--space-md); flex-wrap: wrap;">
-          <span class="badge ${this.currentStep === 'UPLOAD' ? 'badge-crimson' : 'badge-gray'}">1. Upload Document</span>
-          <span style="color: var(--text-tertiary);">→</span>
-          <span class="badge ${this.currentStep === 'CROP' || this.currentStep === 'RECOGNIZING' ? 'badge-crimson' : 'badge-gray'}">2. Isolate SGPA Column</span>
-          <span style="color: var(--text-tertiary);">→</span>
-          <span class="badge ${this.currentStep === 'REVIEW' ? 'badge-crimson' : 'badge-gray'}">3. Review & Reconcile Keys</span>
-          <span style="color: var(--text-tertiary);">→</span>
-          <span class="badge ${this.currentStep === 'COMMITTED' ? 'badge-success' : 'badge-gray'}">4. Atomic Commitment</span>
+        <!-- Active Stage Container -->
+        <div id="ocr-stage-container">
+          ${this._renderCurrentStage(state)}
         </div>
-      </div>
-
-      <!-- Active Stage Container -->
-      <div id="ocr-stage-container">
-        ${this._renderCurrentStage(state)}
       </div>
     `;
 
@@ -332,8 +361,8 @@ export class OCRView {
         ` : ''}
 
         <!-- Candidate Rows Review Table -->
-        <div class="table-wrapper">
-          <table class="data-table">
+        <div class="table-wrapper cp-table-scroll">
+          <table class="data-table cp-table">
             <thead>
               <tr>
                 <th style="width: 50px;">Crop #</th>
@@ -1046,15 +1075,17 @@ export class OCRView {
 
     if (btnPred) {
       btnPred.addEventListener('click', () => {
-        const tab = document.getElementById('tab-btn-predictions');
+        const tab = document.querySelector('[data-nav-id="individual"]');
         if (tab) tab.click();
+        else if (typeof window.navigateTo === 'function') window.navigateTo('individual');
       });
     }
 
     if (btnDataset) {
       btnDataset.addEventListener('click', () => {
-        const tab = document.getElementById('tab-btn-dashboard');
+        const tab = document.querySelector('[data-nav-id="dataset"]');
         if (tab) tab.click();
+        else if (typeof window.navigateTo === 'function') window.navigateTo('dataset');
       });
     }
 

@@ -17,6 +17,7 @@ import {
   predictWholeClass, 
   exportWholeClassCSV, 
   exportIndividualCSV,
+  sanitizeCsvCell,
   PREDICTION_MODELS, 
   PREDICTION_STATUS 
 } from '../js/core/prediction_service.js';
@@ -431,12 +432,160 @@ export function loadPredictionTests() {
         ]
       };
       const csv = exportIndividualCSV(individualRes);
-      assert(csv.includes("# ClassPredict Individual Prediction Result"));
+      assert(csv.includes("# Gradivue Individual Prediction Result"));
       assert(csv.includes("4,3.6500,\"Individual Least-Squares Trend\",3,3.5000,FALSE"));
       assert(csv.includes("semester_no,sgpa"));
       assert(csv.includes("1,3.2000"));
       assert(csv.includes("2,3.3500"));
       assert(csv.includes("3,3.5000"));
+    });
+
+    it("Case 27: should sanitize potential formula injection characters (=, +, -, @) in exported CSV keys", () => {
+      const maliciousPredictions = [
+        { student_key: "=SUM(A1:A10)", latest_semester: 3, latest_sgpa: 3.50, target_semester: 4, predicted_sgpa: 3.60, baseline_prediction: 3.50, model_name: "Trend", prediction_status: "PREDICTED", out_of_range: false },
+        { student_key: "+cmd|' /C calc'!A0", latest_semester: 3, latest_sgpa: 3.20, target_semester: 4, predicted_sgpa: 3.40, baseline_prediction: 3.20, model_name: "Trend", prediction_status: "PREDICTED", out_of_range: false },
+        { student_key: "-1+2", latest_semester: 3, latest_sgpa: 3.10, target_semester: 4, predicted_sgpa: 3.30, baseline_prediction: 3.10, model_name: "Trend", prediction_status: "PREDICTED", out_of_range: false },
+        { student_key: "@dangerous", latest_semester: 3, latest_sgpa: 3.00, target_semester: 4, predicted_sgpa: 3.20, baseline_prediction: 3.00, model_name: "Trend", prediction_status: "PREDICTED", out_of_range: false }
+      ];
+
+      const csv = exportWholeClassCSV(maliciousPredictions);
+      assert(csv.includes("\"'=SUM(A1:A10)\""), "Must prepend single quote to escape =");
+      assert(csv.includes("\"'+cmd|' /C calc'!A0\""), "Must prepend single quote to escape +");
+      assert(csv.includes("\"'-1+2\""), "Must prepend single quote to escape -");
+      assert(csv.includes("\"'@dangerous\""), "Must prepend single quote to escape @");
+    });
+
+    it("Case 28: should execute individual prediction across all supported history lengths (3, 4, 5, 6, 7)", () => {
+      // 3 semesters (nu = 1, extreme volatility)
+      const h3 = [
+        { semester_no: 1, sgpa: 3.00 },
+        { semester_no: 2, sgpa: 3.20 },
+        { semester_no: 3, sgpa: 3.40 }
+      ];
+      const r3 = predictIndividualStudent(h3, { model: PREDICTION_MODELS.INDIVIDUAL_TREND });
+      assertEqual(r3.observationCount, 3);
+      assertEqual(r3.degreesOfFreedom, 1);
+      assert(r3.volatilityWarning.includes("Extreme Volatility"));
+      assertClose(r3.rawPrediction, 3.60, 1e-10);
+
+      // 4 semesters (nu = 2, high volatility)
+      const h4 = [...h3, { semester_no: 4, sgpa: 3.60 }];
+      const r4 = predictIndividualStudent(h4, { model: PREDICTION_MODELS.INDIVIDUAL_TREND });
+      assertEqual(r4.observationCount, 4);
+      assertEqual(r4.degreesOfFreedom, 2);
+      assert(r4.volatilityWarning.includes("High Volatility"));
+      assertClose(r4.rawPrediction, 3.80, 1e-10);
+
+      // 5 semesters (nu = 3, moderate volatility)
+      const h5 = [...h4, { semester_no: 5, sgpa: 3.70 }];
+      const r5 = predictIndividualStudent(h5, { model: PREDICTION_MODELS.INDIVIDUAL_TREND });
+      assertEqual(r5.observationCount, 5);
+      assertEqual(r5.degreesOfFreedom, 3);
+      assert(r5.volatilityWarning.includes("Moderate Volatility"));
+      assert(r5.rawPrediction > 3.70);
+
+      // 6 semesters (nu = 4, adequate horizon)
+      const h6 = [...h5, { semester_no: 6, sgpa: 3.80 }];
+      const r6 = predictIndividualStudent(h6, { model: PREDICTION_MODELS.INDIVIDUAL_TREND });
+      assertEqual(r6.observationCount, 6);
+      assertEqual(r6.degreesOfFreedom, 4);
+      assertEqual(r6.volatilityWarning, null);
+
+      // 7 semesters (nu = 5, adequate horizon)
+      const h7 = [...h6, { semester_no: 7, sgpa: 3.90 }];
+      const r7 = predictIndividualStudent(h7, { model: PREDICTION_MODELS.INDIVIDUAL_TREND });
+      assertEqual(r7.observationCount, 7);
+      assertEqual(r7.degreesOfFreedom, 5);
+      assertEqual(r7.volatilityWarning, null);
+    });
+
+    it("Case 29: should handle scale boundaries (0.00 and 4.00) and steep trajectories out-of-range", () => {
+      // Scale boundaries valid
+      const hMin = [
+        { semester_no: 1, sgpa: 0.00 },
+        { semester_no: 2, sgpa: 0.00 },
+        { semester_no: 3, sgpa: 0.00 }
+      ];
+      const rMin = predictIndividualStudent(hMin, { model: PREDICTION_MODELS.INDIVIDUAL_TREND });
+      assertClose(rMin.rawPrediction, 0.00, 1e-10);
+      assertFalse(rMin.isOutOfRange);
+
+      const hMax = [
+        { semester_no: 1, sgpa: 4.00 },
+        { semester_no: 2, sgpa: 4.00 },
+        { semester_no: 3, sgpa: 4.00 }
+      ];
+      const rMax = predictIndividualStudent(hMax, { model: PREDICTION_MODELS.INDIVIDUAL_TREND });
+      assertClose(rMax.rawPrediction, 4.00, 1e-10);
+      assertFalse(rMax.isOutOfRange);
+
+      // Steep drop predicting negative (< 0.00)
+      const hDrop = [
+        { semester_no: 1, sgpa: 3.50 },
+        { semester_no: 2, sgpa: 2.00 },
+        { semester_no: 3, sgpa: 0.50 }
+      ];
+      const rDrop = predictIndividualStudent(hDrop, { model: PREDICTION_MODELS.INDIVIDUAL_TREND });
+      assert(rDrop.rawPrediction < 0.00, "Raw prediction must be negative (-1.00)");
+      assertClose(rDrop.rawPrediction, -1.00, 1e-10);
+      assertEqual(rDrop.isOutOfRange, true, "Must flag out_of_range without clipping raw prediction");
+
+      // Steep rise predicting above 4.00
+      const hRise = [
+        { semester_no: 1, sgpa: 2.00 },
+        { semester_no: 2, sgpa: 3.20 },
+        { semester_no: 3, sgpa: 3.90 }
+      ];
+      const rRise = predictIndividualStudent(hRise, { model: PREDICTION_MODELS.INDIVIDUAL_TREND });
+      assert(rRise.rawPrediction > 4.00, "Raw prediction must exceed 4.00");
+      assertEqual(rRise.isOutOfRange, true, "Must flag out_of_range without clipping raw prediction");
+    });
+
+    it("Case 30: should support non-consecutive semesters and constant flat trajectory", () => {
+      // Non-consecutive semesters (e.g., student took leave in semester 3)
+      const hGap = [
+        { semester_no: 1, sgpa: 3.00 },
+        { semester_no: 2, sgpa: 3.20 },
+        { semester_no: 4, sgpa: 3.60 }
+      ];
+      const rGap = predictIndividualStudent(hGap, { model: PREDICTION_MODELS.INDIVIDUAL_TREND });
+      assertEqual(rGap.latestSemester, 4);
+      assertEqual(rGap.targetSemester, 5);
+      assertClose(rGap.rawPrediction, 3.80, 1e-10);
+
+      // Constant flat trajectory (slope b = 0)
+      const hFlat = [
+        { semester_no: 1, sgpa: 3.50 },
+        { semester_no: 2, sgpa: 3.50 },
+        { semester_no: 3, sgpa: 3.50 }
+      ];
+      const rFlat = predictIndividualStudent(hFlat, { model: PREDICTION_MODELS.INDIVIDUAL_TREND });
+      assertClose(rFlat.rawPrediction, 3.50, 1e-10);
+      assertClose(rFlat.coefficients.b, 0.00, 1e-10);
+    });
+
+    it("Case 31: should sanitize all formula triggers, RFC-4180 quotes, commas, newlines, and Unicode", () => {
+      // 1. Formula triggers
+      assertEqual(sanitizeCsvCell("=1+1"), "\"'=1+1\"");
+      assertEqual(sanitizeCsvCell("+1234"), "\"'+1234\"");
+      assertEqual(sanitizeCsvCell("-test"), "\"'-test\"");
+      assertEqual(sanitizeCsvCell("@example"), "\"'@example\"");
+      assertEqual(sanitizeCsvCell("\tcmd"), "\"'	cmd\"");
+      assertEqual(sanitizeCsvCell("\rcmd"), "\"'\\rcmd\"".replace("\\r", "\r"));
+
+      // 2. RFC-4180 Quotes escaping
+      assertEqual(sanitizeCsvCell('He said "Hello"'), '"He said ""Hello"""');
+
+      // 3. Commas and newlines enclosed in quotes
+      assertEqual(sanitizeCsvCell("Doe, Jane"), '"Doe, Jane"');
+      assertEqual(sanitizeCsvCell("Line 1\nLine 2"), '"Line 1\nLine 2"');
+
+      // 4. Unicode handling
+      assertEqual(sanitizeCsvCell("Student é, ña"), '"Student é, ña"');
+
+      // 5. Null and undefined
+      assertEqual(sanitizeCsvCell(null), '""');
+      assertEqual(sanitizeCsvCell(undefined), '""');
     });
   });
 }

@@ -1,7 +1,9 @@
-# ClassPredict
+# Gradivue
 
+> **See performance. Understand progress.**  
+> **Product Category**: Academic Analytics Platform  
 > **Academic Context**: University Computer Science & Engineering (CSE) Undergraduate Final Project for **Numerical Methods**.  
-> **Status**: **Phase 10 Production Release & Deployment Complete (226/226 Tests Passing)**.  
+> **Status**: **Phase 10 Production Release & Data-First Premium Redesign Complete (246/246 Tests Passing)**.  
 > **Repository**: [https://github.com/desertViper009/ClassPredict](https://github.com/desertViper009/ClassPredict)  
 > **Live Web Application**: [https://desertviper009.github.io/ClassPredict/](https://desertviper009.github.io/ClassPredict/)
 
@@ -9,7 +11,7 @@
 
 ## 1. Executive Summary
 
-**ClassPredict** is a client-side, privacy-first web application designed for academic performance analysis, next-semester Semester Grade Point Average (**SGPA**) prediction, and interactive numerical methods exploration. Developed as an academic capstone for a Numerical Methods course, the software demonstrates the practical application of numerical linear algebra, predictor centering, least-squares curve fitting, polynomial approximation, interpolation, and temporal validation on empirical academic transitions.
+**Gradivue** is a web-based academic analytics application for SGPA forecasting, dataset management, whole-class prediction, privacy-conscious result-sheet ingestion, and numerical methods education. Developed as an academic capstone for a Numerical Methods course, the software demonstrates the practical application of numerical linear algebra, predictor centering, least-squares curve fitting, polynomial approximation, interpolation, and temporal validation on empirical academic transitions.
 
 The application addresses five primary operational workflows:
 1. **Interactive Numerical Methods Laboratory**: Step-by-step augmented matrix Gaussian elimination with scale-aware partial pivoting, linear vs. centered quadratic regression comparison on identical data with condition squaring analysis, Newton divided-difference interpolation tables with extrapolation boundary alerts, Runge's phenomenon simulation contrasting equally spaced vs. Chebyshev nodes, and comprehensive numerical stability topics.
@@ -26,18 +28,18 @@ To maintain academic rigor and transparency, features and components are explici
 
 | Lifecycle State | Description | Current Project Status |
 | :--- | :--- | :--- |
-| **Planned** | Requirements documented, scoped, and prioritized | Completed (All 10 Phases Implemented & Verified) |
+| **Planned** | Requirements documented, scoped, and prioritized | Completed (All 10 Phases & Redesign Implemented & Verified) |
 | **Designed** | Mathematical formulation, data schemas, and UI specs complete | All Modules (Complete in `/docs`) |
 | **Implemented** | Source code written and operational in workspace | Phase 2 Foundation, Phase 3 Dataset Layer, Phase 4 Numerical Engine, Phase 5 Evaluation Engine, Phase 6 Prediction Workflows, Phase 7 Privacy-Preserving OCR, Phase 8 Analytical Dashboard, Phase 9 Educational Laboratory, & Phase 10 Production Hardening (`FR-01` through `FR-08`, `NFR-01` through `NFR-05`) |
-| **Tested** | Automated unit, numerical, integration, and UI tests passing | **226 Automated Tests Passing** across 40 suites (`test_foundation.js`, `test_csv_parser.js`, `test_linear_algebra.js`, `test_regression.js`, `test_interpolation.js`, `test_validation.js`, `test_prediction.js`, `test_ocr.js`, `test_dashboard.js`, `test_numerical_lab.js`, `test_release_hardening.js`) |
-| **Verified** | Evaluated against baseline benchmarks on temporal test splits | **`Verified` (Phase 10 Complete: Production Hardening, Service Worker Offline Shell, GitHub Actions CI/CD, Synthetic Demo Edge Cases, Educational Lab, & Analytics Operational)** |
+| **Tested** | Automated unit, numerical, integration, UI contract, and browser tests passing | **246 Automated Tests Passing** across 47 suites (`test_foundation.js`, `test_csv_parser.js`, `test_linear_algebra.js`, `test_regression.js`, `test_interpolation.js`, `test_validation.js`, `test_prediction.js`, `test_ocr.js`, `test_dashboard.js`, `test_numerical_lab.js`, `test_release_hardening.js`, `test_ui_contract.js`, `browser_ui_audit.mjs`) |
+| **Verified** | Evaluated against baseline benchmarks on temporal test splits & 5 responsive viewports | **`Verified` (Phase 10 & Data-First Redesign Complete: Multi-Viewport CDP Audit Clear, 0 Horizontal Overflow, 0 Console Errors)** |
 | **Deployed** | Packaged and accessible in production environment | **`Deployed & Live`**: Deployed to GitHub Pages via automated GitHub Actions at [https://desertviper009.github.io/ClassPredict/](https://desertviper009.github.io/ClassPredict/) |
 
 ---
 
 ## 3. Core Numerical Capabilities & Academic Foundation
 
-ClassPredict avoids opaque black-box machine learning libraries, implementing core numerical algorithms from first principles:
+Gradivue avoids opaque black-box machine learning libraries, implementing core numerical algorithms from first principles:
 
 * **Model A: Persistence Baseline**: $\hat{s}_{t+1} = s_t$. The non-trivial null hypothesis against which all statistical models are evaluated. Deployed as a fallback under explicitly documented conditions (near-zero input variance, scale-aware pivot failure, non-finite values, or $M < 2$).
 * **Model B: Class-Wide Linear Regression**: Consecutive transition model $s_{t+1} = a + b\,s_t + \epsilon$ solved via Normal Equations $(X^T X)\mathbf{\beta} = X^T \mathbf{y}$ with **predictor centering** ($x - \bar{x}$) to decouple off-diagonal covariance and **Gaussian Elimination with scale-aware row partial pivoting**.
@@ -52,7 +54,7 @@ ClassPredict avoids opaque black-box machine learning libraries, implementing co
 
 ## 4. Privacy & Ethical Guardrails
 
-Academic records constitute sensitive personal data. ClassPredict implements strict architectural privacy constraints:
+Academic records constitute sensitive personal data. Gradivue implements strict architectural privacy constraints:
 * **Zero PII Ingestion & Whitelist Schema**: Datasets strictly require only `student_key`, `semester_no`, and `sgpa`. Unexpected columns (names, roll numbers, emails) are immediately rejected with actionable guidance.
 * **Diagnostic Anonymity**: Error diagnostics cite row numbers and issue categories without printing raw student names or marks into logs or UI banners.
 * **Stable Pseudonymous Keys & Key Reconciliation**: Students retain the same pseudonymous key across semesters. Student identity is **never** inferred from OCR row position.

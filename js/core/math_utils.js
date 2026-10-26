@@ -1,6 +1,6 @@
 /**
  * @file math_utils.js
- * @description Foundational numerical linear algebra and statistical utilities for ClassPredict.
+ * @description Foundational numerical linear algebra and statistical utilities for Gradivue.
  * Pure mathematical functions decoupled from DOM and browser APIs.
  * Document Reference: docs/NUMERICAL_MODEL.md
  */

@@ -1,7 +1,6 @@
 /**
  * @file app.js
- * @description Application initialization and client-side view router for ClassPredict.
- * Premium Dark Cinematic SaaS Layout with Persistent Sidebar & Responsive Drawer.
+ * @description Application shell, navigation, and view lifecycle for Gradivue.
  */
 
 import { stateManager } from './services/state_manager.js';
@@ -11,223 +10,167 @@ import { PredictionView } from './ui/prediction_view.js';
 import { OCRView } from './ui/ocr_view.js';
 import { NumericalLabView } from './ui/numerical_lab_view.js';
 
+const NAVIGATION_ITEMS = Object.freeze([
+  { id: 'dashboard', label: 'Overview', tab: 'dashboard' },
+  { id: 'dataset', label: 'Dataset Management', tab: 'dataset' },
+  { id: 'individual', label: 'Individual Prediction', tab: 'predictions', predictionMode: 'individual' },
+  { id: 'class', label: 'Whole-Class Prediction', tab: 'predictions', predictionMode: 'class' },
+  { id: 'ocr', label: 'OCR Review', tab: 'ocr' },
+  { id: 'lab', label: 'Numerical Methods Lab', tab: 'lab' }
+]);
+
 let activeViewInstance = null;
+let shell = null;
 
-const TAB_TITLES = {
-  dashboard: 'Overview Dashboard',
-  dataset: 'Dataset Management',
-  predictions: 'SGPA Predictions',
-  ocr: 'OCR Review & Reconciliation',
-  lab: 'Numerical Methods Lab'
-};
+export function getNavigationModel() {
+  return NAVIGATION_ITEMS.map(item => ({ ...item }));
+}
 
-document.addEventListener('DOMContentLoaded', () => {
-  console.log('[ClassPredict] Initializing Premium SaaS UI...');
+function resolveNavigationItem(target, options = {}) {
+  const direct = NAVIGATION_ITEMS.find(item => item.id === target);
+  if (direct) return direct;
+  if (target === 'predictions') {
+    return NAVIGATION_ITEMS.find(item => item.id === (options.predictionMode === 'class' ? 'class' : 'individual'));
+  }
+  return NAVIGATION_ITEMS.find(item => item.tab === target) || NAVIGATION_ITEMS[0];
+}
 
-  const tabButtons = document.querySelectorAll('.nav-link[data-tab]');
-  const viewContainer = document.getElementById('view-container');
-  const breadcrumbTitle = document.getElementById('page-breadcrumb-title');
-  const sidebar = document.getElementById('app-sidebar');
-  const sidebarToggleBtn = document.getElementById('sidebar-toggle-btn');
-  const sidebarToggleClose = document.getElementById('sidebar-toggle-close');
-  const sidebarBackdrop = document.getElementById('sidebar-backdrop');
+function closeSidebar() {
+  shell?.sidebar?.classList.remove('open', 'is-open', 'active');
+  shell?.backdrop?.classList.remove('active', 'is-visible');
+  shell?.toggle?.setAttribute('aria-expanded', 'false');
+}
 
-  // Register Production Service Worker
-  if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js').then((reg) => {
-        console.log('[ClassPredict] Service Worker registered with scope:', reg.scope);
-      }).catch((err) => {
-        console.warn('[ClassPredict] Service Worker registration failed:', err);
-      });
-    });
+function createView(item) {
+  if (item.tab === 'dashboard') return new DashboardView(shell.viewContainer);
+  if (item.tab === 'dataset') return new DatasetView(shell.viewContainer);
+  if (item.tab === 'predictions') {
+    const view = new PredictionView(shell.viewContainer);
+    view.activeSubtab = item.predictionMode === 'class' ? 'wholeClass' : 'individual';
+    return view;
+  }
+  if (item.tab === 'ocr') return new OCRView(shell.viewContainer);
+  if (item.tab === 'lab') return new NumericalLabView(shell.viewContainer);
+  return null;
+}
+
+export function navigateTo(target, options = {}) {
+  if (!shell) return false;
+  const item = resolveNavigationItem(target, options);
+
+  if (activeViewInstance && typeof activeViewInstance.destroy === 'function') {
+    activeViewInstance.destroy();
   }
 
-  // Monitor network connectivity for offline shell indicator
-  const netBadge = document.getElementById('net-status-badge');
-  function updateNetworkStatus() {
-    if (!netBadge) return;
-    if (navigator.onLine) {
-      netBadge.textContent = 'Online';
-      netBadge.className = 'badge badge-emerald';
-      netBadge.title = 'Network status: connected; all computation remains strictly local.';
-    } else {
-      netBadge.textContent = 'Offline Shell';
-      netBadge.className = 'badge badge-warning';
-      netBadge.title = 'Network status: offline; cached application shell active.';
+  shell.title.textContent = item.label;
+  document.title = `${item.label} — Gradivue`;
+
+  document.querySelectorAll('[data-nav-id]').forEach(control => {
+    const active = control.dataset.navId === item.id;
+    control.classList.toggle('is-active', active);
+    control.classList.toggle('active', active);
+    if (control.matches('.nav-link')) {
+      control.setAttribute('aria-current', active ? 'page' : 'false');
     }
+  });
+
+  activeViewInstance = createView(item);
+  activeViewInstance?.init();
+  closeSidebar();
+  shell.mainContent?.focus({ preventScroll: true });
+  return true;
+}
+
+function updateDatasetStatus() {
+  if (!shell) return;
+  const dataset = stateManager.getState().acceptedDataset || [];
+  const active = dataset.length > 0;
+  const sidebarStatus = document.querySelector('#sidebar-dataset-widget');
+  const topbarStatus = document.querySelector('#topbar-dataset-status');
+
+  if (sidebarStatus) {
+    sidebarStatus.innerHTML = `
+      <span class="cp-status-dot ${active ? '' : 'is-empty'}"></span>
+      <span><strong>${active ? 'Dataset active' : 'Session memory'}</strong><small>${active ? `${dataset.length} accepted records` : 'No dataset loaded'}</small></span>
+    `;
   }
-  window.addEventListener('online', updateNetworkStatus);
-  window.addEventListener('offline', updateNetworkStatus);
-  updateNetworkStatus();
-
-  // Mobile Sidebar Drawer Controls
-  function openSidebar() {
-    if (sidebar) sidebar.classList.add('open');
-    if (sidebarBackdrop) sidebarBackdrop.classList.add('active');
+  if (topbarStatus) {
+    topbarStatus.innerHTML = `<span class="cp-status-dot ${active ? '' : 'is-empty'}"></span><span>${active ? `${dataset.length} records` : 'No dataset'}</span>`;
   }
-
-  function closeSidebar() {
-    if (sidebar) sidebar.classList.remove('open');
-    if (sidebarBackdrop) sidebarBackdrop.classList.remove('active');
+  const btnDemo = document.querySelector('#btn-header-demo');
+  if (btnDemo) {
+    const isSynthetic = active && dataset.every(r => typeof r.student_key === 'string' && r.student_key.startsWith('SYN_'));
+    btnDemo.textContent = isSynthetic ? 'Exit demo' : 'Synthetic demo';
   }
+}
 
-  if (sidebarToggleBtn) sidebarToggleBtn.addEventListener('click', openSidebar);
-  if (sidebarToggleClose) sidebarToggleClose.addEventListener('click', closeSidebar);
-  if (sidebarBackdrop) sidebarBackdrop.addEventListener('click', closeSidebar);
+function initializeApplication() {
+  shell = {
+    viewContainer: document.querySelector('#view-container'),
+    title: document.querySelector('#page-breadcrumb-title'),
+    sidebar: document.querySelector('#app-sidebar'),
+    backdrop: document.querySelector('#sidebar-backdrop'),
+    toggle: document.querySelector('#sidebar-toggle-btn'),
+    mainContent: document.querySelector('#main-content')
+  };
 
-  // Reactive Sidebar Dataset Widget
-  function updateSidebarWidget() {
-    const widget = document.getElementById('sidebar-dataset-widget');
-    if (!widget) return;
-    const state = stateManager.getState();
-    const hasData = state.acceptedDataset && state.acceptedDataset.length > 0;
-    if (hasData) {
-      widget.innerHTML = `
-        <div class="status-title">Session State</div>
-        <div class="status-body">
-          <span>Active Dataset</span>
-          <span class="badge badge-success" style="font-size: 10px;">${state.acceptedDataset.length} rows</span>
-        </div>
-      `;
-    } else {
-      widget.innerHTML = `
-        <div class="status-title">Session State</div>
-        <div class="status-body">
-          <span>Session Memory</span>
-          <span class="badge badge-neutral" style="font-size: 10px;">Empty</span>
-        </div>
-      `;
-    }
-  }
-  stateManager.subscribe(updateSidebarWidget);
-  updateSidebarWidget();
+  shell.mainContent?.setAttribute('tabindex', '-1');
+  shell.toggle?.setAttribute('aria-expanded', 'false');
 
-  // Synthetic Demonstration Mode Header Button
-  const btnHeaderDemo = document.getElementById('btn-header-demo');
-  if (btnHeaderDemo) {
-    btnHeaderDemo.addEventListener('click', (e) => {
-      e.preventDefault();
-      const msg = "Synthetic Demonstration Mode\n\n" +
-        "• All demonstration data uses synthetic pseudonymous identifiers (SYN_001 to SYN_013).\n" +
-        "• Zero real student records, roll numbers, or personal details are ever stored or transmitted.\n" +
-        "• Real mark sheets processed via OCR must be human-reviewed and key-reconciled.\n\n" +
-        "Would you like to navigate to Dataset Management to review or load the synthetic sample?";
-      if (confirm(msg)) {
-        const datasetTab = document.getElementById('tab-btn-dataset');
-        if (datasetTab) datasetTab.click();
-      }
-    });
-  }
-
-  // Brand Home link
-  const brandHome = document.getElementById('brand-home');
-  if (brandHome) {
-    brandHome.addEventListener('click', (e) => {
-      e.preventDefault();
-      const dashTab = document.getElementById('tab-btn-dashboard');
-      if (dashTab) dashTab.click();
-    });
-  }
-
-  // Switch view helper
-  function switchTab(tabName) {
-    if (activeViewInstance && typeof activeViewInstance.destroy === 'function') {
-      activeViewInstance.destroy();
-      activeViewInstance = null;
-    }
-
-    if (breadcrumbTitle) {
-      breadcrumbTitle.textContent = TAB_TITLES[tabName] || 'Overview Dashboard';
-    }
-
-    if (tabName === 'dashboard') {
-      activeViewInstance = new DashboardView(viewContainer);
-      activeViewInstance.init();
-    } else if (tabName === 'dataset') {
-      activeViewInstance = new DatasetView(viewContainer);
-      activeViewInstance.init();
-    } else if (tabName === 'predictions') {
-      activeViewInstance = new PredictionView(viewContainer);
-      activeViewInstance.init();
-    } else if (tabName === 'ocr') {
-      activeViewInstance = new OCRView(viewContainer);
-      activeViewInstance.init();
-    } else if (tabName === 'lab') {
-      activeViewInstance = new NumericalLabView(viewContainer);
-      activeViewInstance.init();
-    } else {
-      renderTabPlaceholder(tabName, viewContainer);
-    }
-
-    closeSidebar();
-
-    // Synchronize active classes on all nav buttons (top pill nav and drawer)
-    document.querySelectorAll('[data-tab]').forEach(b => {
-      const isTarget = b.getAttribute('data-tab') === tabName;
-      b.classList.toggle('active', isTarget);
-      b.setAttribute('aria-selected', isTarget ? 'true' : 'false');
-    });
-  }
-
-  // Bind Tab Click Listeners on all [data-tab] elements
-  document.querySelectorAll('[data-tab]').forEach(button => {
-    button.addEventListener('click', (e) => {
-      e.preventDefault();
-      const targetTab = button.getAttribute('data-tab');
-      switchTab(targetTab);
+  document.querySelectorAll('[data-nav-id]').forEach(control => {
+    control.addEventListener('click', event => {
+      event.preventDefault();
+      navigateTo(control.dataset.navId);
     });
   });
 
-  // Mount default view (Dashboard view)
-  switchTab('dashboard');
+  shell.toggle?.addEventListener('click', () => {
+    shell.sidebar?.classList.add('open', 'is-open', 'active');
+    shell.backdrop?.classList.add('active', 'is-visible');
+    shell.toggle?.setAttribute('aria-expanded', 'true');
+  });
+  document.querySelector('#sidebar-toggle-close')?.addEventListener('click', closeSidebar);
+  shell.backdrop?.addEventListener('click', closeSidebar);
 
-  console.log('[ClassPredict] UI successfully initialized.');
-});
+  document.querySelector('#btn-header-demo')?.addEventListener('click', async () => {
+    const state = stateManager.getState();
+    const dataset = state.acceptedDataset;
+    const isSynthetic = dataset && dataset.length > 0 && dataset.every(r => typeof r.student_key === 'string' && r.student_key.startsWith('SYN_'));
+    if (isSynthetic) {
+      stateManager.clearAcceptedDataset();
+    } else {
+      try {
+        const res = await fetch('samples/sample_class_sgpa.csv');
+        const text = await res.text();
+        stateManager.loadCSV(text);
+        stateManager.acceptStagedDataset();
+      } catch {
+        const fallback = "student_key,semester_no,sgpa\nSYN_001,1,3.45\nSYN_001,2,3.52\nSYN_001,3,3.60\nSYN_001,4,3.58\nSYN_002,1,2.80\nSYN_002,2,2.95\nSYN_002,3,3.10\nSYN_002,4,3.25\nSYN_002,5,3.30";
+        stateManager.loadCSV(fallback);
+        stateManager.acceptStagedDataset();
+      }
+    }
+  });
 
-/**
- * Renders tab placeholder view.
- * @param {string} tabName 
- * @param {HTMLElement} container 
- */
-function renderTabPlaceholder(tabName, container) {
-  const titles = {
-    predictions: 'SGPA Trajectory Predictions',
-    ocr: 'Privacy-Preserving OCR Ingestion',
-    lab: 'Numerical Methods Educational Lab'
-  };
+  stateManager.subscribe(updateDatasetStatus);
+  updateDatasetStatus();
+  navigateTo('dashboard');
 
-  const descriptions = {
-    predictions: 'Individual student trajectory forecasting and whole-class batch transition modeling.',
-    ocr: 'Client-side PDF canvas cropping, WebAssembly OCR extraction, and key reconciliation.',
-    lab: 'Interactive linear least squares with centering, degree-2 polynomial fitting, and Newton divided differences.'
-  };
+  if (typeof window !== 'undefined') {
+    window.stateManager = stateManager;
+    window.navigateTo = navigateTo;
+    window.getActiveView = () => activeViewInstance;
+  }
 
-  const title = titles[tabName] || 'Workspace';
-  const desc = descriptions[tabName] || 'Active workspace.';
+  if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch(error => {
+        console.warn('[Gradivue] Service worker registration unavailable:', error);
+      });
+    });
+  }
+}
 
-  container.innerHTML = `
-    <div class="card" style="margin-bottom: var(--space-xl);">
-      <div class="card-header">
-        <div>
-          <h2 class="card-title">${title}</h2>
-          <p class="card-subtitle">${desc}</p>
-        </div>
-        <span class="badge badge-crimson">Module Active</span>
-      </div>
-      <div style="padding: var(--space-xl) 0; text-align: center; color: var(--color-muted); border: 1px dashed var(--color-border); border-radius: var(--radius-md);">
-        <p style="font-size: 16px; font-weight: 500; color: var(--color-text); margin-bottom: 8px;">
-          Workspace View
-        </p>
-        <p style="font-size: 13px; max-width: 600px; margin: 0 auto; color: var(--color-muted);">
-          Module available and active.
-        </p>
-        <div style="margin-top: 16px;">
-          <a href="#" class="btn btn-secondary" onclick="document.getElementById('tab-btn-dashboard').click(); return false;" style="font-size: 13px;">
-            ← Return to Dashboard
-          </a>
-        </div>
-      </div>
-    </div>
-  `;
+if (typeof document !== 'undefined') {
+  document.addEventListener('DOMContentLoaded', initializeApplication);
 }

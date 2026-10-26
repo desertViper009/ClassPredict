@@ -24,7 +24,7 @@ export function loadReleaseHardeningTests() {
       const pkgPath = path.resolve(process.cwd(), 'package.json');
       assert(fs.existsSync(pkgPath), "package.json must exist in root");
       const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
-      assertEqual(pkg.name, 'classpredict');
+      assertEqual(pkg.name, 'gradivue');
       assertEqual(pkg.type, 'module', "Must be native ES6 module");
       assert(pkg.scripts && pkg.scripts.test, "Must contain test script");
     });

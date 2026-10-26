@@ -3,18 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ClassPredict — Academic Performance Analytics & SGPA Prediction</title>
-  <meta name="description" content="CSE Undergraduate Numerical Methods Capstone: Academic performance analytics, consecutive-semester transition modeling, and SGPA forecasting.">
-  
-  <!-- Modern Typography Fonts -->
+  <title>Gradivue — Academic Analytics Platform</title>
+  <meta name="description" content="Gradivue is a web-based academic analytics application for SGPA forecasting, dataset management, whole-class prediction, privacy-conscious result-sheet ingestion, and numerical methods education.">
+  <meta property="og:title" content="Gradivue — Academic Analytics Platform">
+  <meta property="og:description" content="See performance. Understand progress. Academic analytics application for SGPA forecasting, dataset management, whole-class prediction, and numerical methods education.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Gradivue — Academic Analytics Platform">
+  <meta name="twitter:description" content="See performance. Understand progress. Academic analytics application for SGPA forecasting, dataset management, whole-class prediction, and numerical methods education.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/components.css">
-
-  <!-- Client-side Document Rasterization & OCR Libraries (Inbound Only, Zero Server Upload) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
   <script>
@@ -23,152 +24,47 @@
     }
   </script>
 </head>
-<body>
+<body data-app-shell>
   <div class="app-shell">
-    <!-- Persistent Left Sidebar -->
-    <aside class="app-sidebar" id="app-sidebar">
-      <!-- Sidebar Header / Brand -->
-      <div class="sidebar-header">
-        <a href="#" class="brand" id="brand-home" title="ClassPredict Home">
-          <span class="brand-badge">CP</span>
-          <span class="brand-name">ClassPredict</span>
-          <span class="brand-tag">Analytics</span>
+    <aside class="app-sidebar" id="app-sidebar" aria-label="Application navigation">
+      <div class="app-sidebar-brand-row">
+        <a href="#" class="cp-brand" id="brand-home-sidebar" data-nav-id="dashboard" aria-label="Gradivue overview">
+          <span class="cp-brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span><strong>Gradivue</strong><small>Academic Analytics</small></span>
         </a>
-        <button class="sidebar-toggle-close" id="sidebar-toggle-close" aria-label="Close Navigation">
-          ✕
-        </button>
+        <button class="cp-icon-button sidebar-toggle-close" id="sidebar-toggle-close" aria-label="Close navigation">×</button>
       </div>
-
-      <!-- Sidebar Navigation Menu -->
-      <nav class="sidebar-nav" aria-label="Main Navigation">
-        <div class="nav-section-title">Core Navigation</div>
-        <ul class="nav-tabs" role="tablist">
-          <li role="presentation">
-            <button class="nav-link active" id="drawer-tab-btn-dashboard" role="tab" aria-selected="true" data-tab="dashboard">
-              <span class="nav-icon">📊</span>
-              <span class="nav-label">Overview</span>
-            </button>
-          </li>
-          <li role="presentation">
-            <button class="nav-link" id="drawer-tab-btn-dataset" role="tab" aria-selected="false" data-tab="dataset">
-              <span class="nav-icon">📁</span>
-              <span class="nav-label">Dataset Management</span>
-            </button>
-          </li>
-          <li role="presentation">
-            <button class="nav-link" id="drawer-tab-btn-predictions" role="tab" aria-selected="false" data-tab="predictions">
-              <span class="nav-icon">🔮</span>
-              <span class="nav-label">Predictions</span>
-            </button>
-          </li>
-          <li role="presentation">
-            <button class="nav-link" id="drawer-tab-btn-ocr" role="tab" aria-selected="false" data-tab="ocr">
-              <span class="nav-icon">📄</span>
-              <span class="nav-label">OCR Review</span>
-            </button>
-          </li>
-          <li role="presentation">
-            <button class="nav-link" id="drawer-tab-btn-lab" role="tab" aria-selected="false" data-tab="lab">
-              <span class="nav-icon">🧪</span>
-              <span class="nav-label">Numerical Lab</span>
-            </button>
-          </li>
-        </ul>
+      <nav class="cp-sidebar-nav" aria-label="Main navigation">
+        <p class="cp-nav-eyebrow">Workspace</p>
+        <button class="cp-nav-item nav-link is-active" id="tab-btn-dashboard" data-nav-id="dashboard" data-tab="dashboard" aria-current="page"><span class="cp-nav-symbol">01</span>Overview</button>
+        <button class="cp-nav-item nav-link" id="tab-btn-dataset" data-nav-id="dataset" data-tab="dataset"><span class="cp-nav-symbol">02</span>Dataset Management</button>
+        <button class="cp-nav-item nav-link" id="tab-btn-predictions" data-nav-id="individual" data-tab="predictions" data-prediction-mode="individual"><span class="cp-nav-symbol">03</span>Individual Prediction</button>
+        <button class="cp-nav-item nav-link" data-nav-id="class" data-tab="predictions" data-prediction-mode="class"><span class="cp-nav-symbol">04</span>Whole-Class Prediction</button>
+        <button class="cp-nav-item nav-link" id="tab-btn-ocr" data-nav-id="ocr" data-tab="ocr"><span class="cp-nav-symbol">05</span>OCR Review</button>
+        <button class="cp-nav-item nav-link" data-nav-id="lab" data-tab="lab"><span class="cp-nav-symbol">06</span>Numerical Methods Lab</button>
       </nav>
-
-      <!-- Sidebar Footer / Session Widget -->
-      <div class="sidebar-footer">
-        <div class="sidebar-status-widget" id="sidebar-dataset-widget">
-          <div class="status-title">Session State</div>
-          <div class="status-body">
-            <span>Session Memory</span>
-            <span class="badge badge-neutral" style="font-size: 10px;">Empty</span>
-          </div>
-        </div>
-        <div class="sidebar-privacy-note">
-          <span class="privacy-dot"></span>
-          <span>Zero Server Uploads • Volatile RAM</span>
-        </div>
+      <div class="app-sidebar-footer">
+        <button class="app-dataset-status" id="sidebar-dataset-widget" data-nav-id="dataset" type="button">
+          <span class="cp-status-dot is-empty"></span>
+          <span><strong>Session memory</strong><small>No dataset loaded</small></span>
+        </button>
+        <p class="cp-privacy-note"><span aria-hidden="true">▣</span><span><strong>Privacy first</strong><small>Academic records remain in this browser session.</small></span></p>
       </div>
     </aside>
-
-    <!-- Mobile Drawer Overlay Backdrop -->
-    <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
-
-    <!-- Main Content Area -->
+    <button class="sidebar-backdrop" id="sidebar-backdrop" aria-label="Close navigation"></button>
     <div class="app-main">
-      <!-- Top Control Bar with Image 1 Floating Pill Navbar -->
-      <header class="topbar">
-        <div class="topbar-left">
-          <button class="sidebar-toggle-btn" id="sidebar-toggle-btn" aria-label="Toggle Navigation Drawer">
-            ☰
-          </button>
-          <a href="#" class="brand" id="brand-home" title="ClassPredict Home">
-            <span class="brand-badge" style="font-family: var(--font-mono); font-weight: 800; font-size: 14px;">&gt;&lt;</span>
-            <span class="brand-name">ClassPredict</span>
-          </a>
-        </div>
-
-        <!-- Center: Floating Glassmorphic Pill Navbar (Image 1 Style) -->
-        <nav class="pill-nav-bar" id="pill-nav-bar" aria-label="Primary Navigation">
-          <button class="pill-nav-btn active" data-tab="dashboard" id="tab-btn-dashboard" role="tab" aria-selected="true">
-            Overview
-          </button>
-          <button class="pill-nav-btn" data-tab="dataset" id="tab-btn-dataset" role="tab" aria-selected="false">
-            Dataset Mgmt
-          </button>
-          <button class="pill-nav-btn" data-tab="predictions" id="tab-btn-predictions" role="tab" aria-selected="false">
-            Predictions
-          </button>
-          <button class="pill-nav-btn" data-tab="ocr" id="tab-btn-ocr" role="tab" aria-selected="false">
-            OCR Review
-          </button>
-          <button class="pill-nav-btn" data-tab="lab" id="tab-btn-lab" role="tab" aria-selected="false">
-            Numerical Lab
-          </button>
-        </nav>
-
-        <div class="topbar-controls">
-          <span class="header-tagline">Your trusted partner for academic analytics</span>
-          <button class="btn btn-pill-crimson" id="btn-header-demo" style="padding: 6px 14px; font-size: 11.5px;" title="Inspect or Toggle Synthetic Demonstration Mode">
-            ⚡ Demo Mode
-          </button>
-          <span class="scale-tag">0.00 – 4.00 SGPA</span>
-          <span class="badge badge-emerald" id="net-status-badge" title="Network status: client-side processing">Online</span>
+      <header class="app-topbar">
+        <button class="cp-icon-button sidebar-toggle-btn" id="sidebar-toggle-btn" aria-label="Open navigation">☰</button>
+        <div class="app-page-context"><span class="cp-kicker">Gradivue workspace</span><strong id="page-breadcrumb-title">Overview</strong></div>
+        <div class="app-topbar-actions">
+          <button class="cp-button cp-button-ghost cp-button-sm" id="btn-header-demo" type="button">Synthetic demo</button>
+          <button class="app-topbar-status" id="topbar-dataset-status" data-nav-id="dataset" type="button"><span class="cp-status-dot is-empty"></span><span>No dataset</span></button>
         </div>
       </header>
-
-      <!-- Subtitle & Context Banner -->
-      <div class="status-banner">
-        <div class="banner-content">
-          <span>
-            <strong>ClassPredict</strong> — Academic Performance Analytics & SGPA Transition Modeling • CSE Numerical Methods Capstone
-          </span>
-          <span style="font-size: 11.5px; opacity: 0.85;">
-            Local Ephemeral Memory • Scale-Aware Partial Pivoting • Predictor Centering
-          </span>
-        </div>
-      </div>
-
-      <!-- Main Dynamic View Container -->
-      <main class="content-canvas" id="main-content">
-        <div class="container">
-          <div id="view-container">
-            <!-- Mounted dynamically by js/app.js -->
-          </div>
-        </div>
-      </main>
-
-      <!-- App Footer -->
-      <footer class="app-footer">
-        <div class="footer-inner">
-          <span>ClassPredict • CSE Numerical Methods Final Project & Portfolio Release</span>
-          <span>Strict Privacy by Design • Zero Cloud Data Retention</span>
-        </div>
-      </footer>
+      <main class="content-canvas" id="main-content"><div class="container"><div id="view-container" aria-live="polite"></div></div></main>
+      <footer class="app-footer"><div class="footer-inner"><span>Gradivue · Academic Analytics Platform</span><span>Client-side processing · Ephemeral session data</span></div></footer>
     </div>
   </div>
-
   <script type="module" src="js/app.js"></script>
 </body>
 </html>

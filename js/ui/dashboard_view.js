@@ -18,6 +18,7 @@ import {
   computeDashboardTemporalEvaluation,
   GPA_SCALE_MAX
 } from '../core/dashboard_analytics.js';
+import { predictWholeClass, PREDICTION_STATUS } from '../core/prediction_service.js';
 
 export class DashboardView {
   /**
@@ -29,7 +30,7 @@ export class DashboardView {
 
     // View state
     this.activeSubtab = 'transitions'; // 'transitions' | 'distributions' | 'evaluation' | 'matrix' | 'candidates'
-    this.selectedSemester = 1;
+    this.selectedSemester = 'all';
     this.showPersistenceLine = true;
     this.showTableView = false;
   }
@@ -71,148 +72,106 @@ export class DashboardView {
       return;
     }
 
-    // Default to the first observed semester if current selection is not observed
-    if (!overview.observedSemesters.includes(this.selectedSemester)) {
-      this.selectedSemester = overview.observedSemesters[0] || 1;
+    // Default to 'all' or first observed semester
+    if (this.selectedSemester !== 'all' && !overview.observedSemesters.includes(Number(this.selectedSemester))) {
+      this.selectedSemester = 'all';
     }
 
     this.container.innerHTML = `
-      <!-- Studio Hero Showcase (Image 1 & Image 2 Hybrid Inspiration) -->
-      ${this.renderStudioHero(overview)}
+      <div class="cp-page-stack">
+        <!-- Academic Hero Header -->
+        ${this.renderAcademicHero(overview)}
 
-      <!-- Cohort Overview Header & KPI Grid -->
-      <div class="card" style="margin-bottom: var(--space-xl);">
-        <div class="card-header">
-          <div>
-            <h2 class="card-title" style="font-size: 19px; font-weight: 700;">Cohort Performance Telemetry</h2>
-            <p class="card-subtitle">Empirical validation metrics across accepted semester records</p>
-          </div>
-          <div style="display: flex; align-items: center; gap: 8px;">
-            ${overview.isSynthetic ? '<span class="badge badge-synthetic">Synthetic Demo Mode</span>' : ''}
-            <span class="badge badge-success">● Dataset Active (${overview.totalRecords} Records)</span>
-          </div>
-        </div>
-
+        <!-- 4 Primary Calculated KPI Cards -->
         ${this.renderOverviewKPIs(overview)}
 
-        <!-- Sub-Tab Navigation -->
-        <div class="subtab-nav" style="margin-top: var(--space-lg);" role="tablist">
-          <button class="subtab-btn ${this.activeSubtab === 'transitions' ? 'active' : ''}" data-subtab="transitions" role="tab">
-            📈 Transitions & Regression
-          </button>
-          <button class="subtab-btn ${this.activeSubtab === 'distributions' ? 'active' : ''}" data-subtab="distributions" role="tab">
-            📊 Semester Distributions
-          </button>
-          <button class="subtab-btn ${this.activeSubtab === 'evaluation' ? 'active' : ''}" data-subtab="evaluation" role="tab">
-            🛡️ Temporal Evaluation
-          </button>
-          <button class="subtab-btn ${this.activeSubtab === 'matrix' ? 'active' : ''}" data-subtab="matrix" role="tab">
-            🔲 Transition Matrix
-          </button>
-          <button class="subtab-btn ${this.activeSubtab === 'candidates' ? 'active' : ''}" data-subtab="candidates" role="tab">
-            🔍 Review Candidates
-          </button>
+        <!-- 4-Panel Analytical Overview Grid -->
+        ${this.renderAnalyticsGrid(dataset, overview)}
+
+        <!-- Detailed Analytical Deep-Dive Section -->
+        <div class="card" style="margin-top: var(--space-xl); margin-bottom: var(--space-xl);">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title" style="font-size: 19px; font-weight: 700;">Detailed Analytical Deep-Dive</h2>
+              <p class="card-subtitle">Examine underlying transition pairs, distribution statistics, holdout folds, and outlier diagnostics</p>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              ${overview.isSynthetic ? '<span class="badge badge-synthetic">Synthetic Demo Mode</span>' : ''}
+              <span class="badge badge-success">● Dataset Active (${overview.totalRecords} Records)</span>
+            </div>
+          </div>
+
+          <!-- Sub-Tab Navigation -->
+          <div class="subtab-nav" style="margin-top: var(--space-lg);" role="tablist">
+            <button class="subtab-btn ${this.activeSubtab === 'transitions' ? 'active' : ''}" data-subtab="transitions" role="tab">
+              📈 Transitions &amp; Regression
+            </button>
+            <button class="subtab-btn ${this.activeSubtab === 'distributions' ? 'active' : ''}" data-subtab="distributions" role="tab">
+              📊 Semester Distributions
+            </button>
+            <button class="subtab-btn ${this.activeSubtab === 'evaluation' ? 'active' : ''}" data-subtab="evaluation" role="tab">
+              🛡️ Temporal Evaluation
+            </button>
+            <button class="subtab-btn ${this.activeSubtab === 'matrix' ? 'active' : ''}" data-subtab="matrix" role="tab">
+              🔲 Transition Matrix
+            </button>
+            <button class="subtab-btn ${this.activeSubtab === 'candidates' ? 'active' : ''}" data-subtab="candidates" role="tab">
+              🔍 Review Candidates
+            </button>
+          </div>
         </div>
-      </div>
 
-      <!-- Active Sub-tab View Container -->
-      <div id="subtab-content">
-        ${this.renderActiveSubtab(dataset, overview)}
-      </div>
+        <!-- Active Sub-tab View Container -->
+        <div id="subtab-content">
+          ${this.renderActiveSubtab(dataset, overview)}
+        </div>
 
-      <!-- Floating Chart Tooltip -->
-      <div id="chart-tooltip" class="chart-tooltip"></div>
+        <!-- Floating Chart Tooltip -->
+        <div id="chart-tooltip" class="chart-tooltip"></div>
+      </div>
     `;
   }
 
   /**
-   * Renders the cinematic Studio Hero Showcase inspired by reference design.
+   * Renders the academic analytics hero header inspired by reference design.
+   * Excludes all editorial photography, fictional ratings, and hardcoded MAE values.
    */
-  renderStudioHero(overview = null) {
-    const hasData = overview && overview.hasDataset;
-    const recordsCount = hasData ? overview.totalRecords : 13;
-    const transitionRate = hasData && overview.totalRecords > 0 
-      ? Math.round((overview.validTransitionsCount / Math.max(1, overview.totalRecords - overview.totalStudents)) * 100) || 98
-      : 98;
-
+  renderAcademicHero(overview = null) {
     return `
-      <section class="studio-hero" aria-label="ClassPredict Studio Showcase">
-        <div class="studio-hero-top">
-          <div class="studio-hero-badge">
-            <span style="color: var(--color-primary);">●</span> Deterministic Academic Analytics
-          </div>
-          <div style="display: flex; align-items: center; gap: 8px;">
-            ${hasData && overview.isSynthetic ? '<span class="badge badge-synthetic">Synthetic Demo Mode</span>' : ''}
-            <span class="badge ${hasData ? 'badge-success' : 'badge-neutral'}">
-              ${hasData ? `● Dataset Active (${recordsCount} Records)` : 'Session Memory: Ready'}
-            </span>
-          </div>
-        </div>
-
-        <div class="studio-hero-main">
-          <!-- Left Column: Copy, Dual-Pill & White Pill Buttons, Feature Pills -->
+      <section class="cp-academic-hero" aria-label="Gradivue Overview Hero">
+        <div class="cp-academic-hero-content">
           <div>
-            <h1 class="studio-hero-title">
-              Class<br><span style="color: var(--color-primary);">Predict</span>
-            </h1>
-            <p class="studio-hero-desc">
-              A deterministic numerical computing platform modeling student academic trajectories through linear least squares, Gaussian reduction, and privacy-preserving document OCR.
+            <span class="cp-hero-kicker">CSE NUMERICAL METHODS PROJECT</span>
+            <h1 class="cp-hero-title">Gradi<span>vue</span></h1>
+            <p class="cp-hero-subtitle">Academic Analytics Platform</p>
+            <p class="cp-hero-desc">
+              See performance. Understand progress. Analyze academic trends, predict next-semester SGPA using numerical methods, ingest result sheets with OCR, and explore core numerical algorithms — all in your browser.
             </p>
-
-            <!-- Action Buttons: Dual-Pill (Image 1) & High-Contrast White Pill (Image 2) -->
-            <div class="hero-actions-container">
-              <div class="dual-pill-group">
-                <button class="btn-pill-crimson" id="btn-hero-explore-pred">
-                  Explore Forecasts
-                </button>
-                <button class="btn-circle-arrow" id="btn-hero-explore-pred-arrow" aria-label="Explore Forecasts">
-                  ↗
-                </button>
-              </div>
-
-              <div class="white-pill-card">
-                <button class="btn-pill-white" id="btn-hero-demo-load">
-                  <span class="btn-arrow-icon">↘</span> LOAD DEMO DATASET
-                </button>
-                <span class="btn-subtext">Instant synthetic cohort (13 students)</span>
-              </div>
-            </div>
-
-            <!-- Feature Capsule Tags with Glowing Dots (Image 1 Style) -->
-            <div class="hero-feature-pills">
-              <span class="feature-pill"><span class="pill-dot"></span> Linear Regression</span>
-              <span class="feature-pill"><span class="pill-dot"></span> Gaussian Solver</span>
-              <span class="feature-pill"><span class="pill-dot"></span> Newton Interpolation</span>
-              <span class="feature-pill"><span class="pill-dot"></span> Local OCR Engine</span>
+            <div class="cp-hero-actions">
+              <button class="cp-button cp-button-primary" id="btn-hero-load-dataset" type="button">
+                📤 Load Dataset
+              </button>
+              <button class="cp-button cp-button-secondary" id="btn-hero-demo-load" type="button">
+                ▶ Try Synthetic Demo
+              </button>
             </div>
           </div>
-
-          <!-- Right Column: Visual Model Subject & Floating Glassmorphic Cards -->
-          <div class="studio-hero-visual">
-            <div class="hero-model-container">
-              <img src="assets/hero_model.jpg" alt="ClassPredict Studio Aesthetic Model" class="hero-model-img">
+          <div class="cp-hero-features">
+            <div class="cp-hero-feature-item">
+              <span class="cp-feat-icon">📊</span>
+              <span>Data-Driven Analytics</span>
             </div>
-
-            <!-- Floating Card 1: Left Thumbnail (Image 1 Style) -->
-            <div class="floating-glass-card card-thumb-left">
-              <img src="assets/hero_thumb.jpg" alt="Model Portrait Thumbnail">
+            <div class="cp-hero-feature-item">
+              <span class="cp-feat-icon">📈</span>
+              <span>SGPA Prediction</span>
             </div>
-
-            <!-- Floating Card 2: Center Stat Card ("Top-Rated by 99% Happy Clients" Style) -->
-            <div class="floating-glass-card card-stat-center">
-              <div class="card-stat-label">Top-Validated by</div>
-              <div class="card-stat-val">${transitionRate}%</div>
-              <div class="card-stat-sub">Valid Transitions</div>
+            <div class="cp-hero-feature-item">
+              <span class="cp-feat-icon">📄</span>
+              <span>OCR-based Import</span>
             </div>
-
-            <!-- Floating Card 3: Right Rating Card ("★★★★★ 4.8/5, 5,000+ Happy Client Worldwide" Style) -->
-            <div class="floating-glass-card card-rating-right">
-              <div class="rating-stars">★★★★★</div>
-              <div class="rating-score">0.082 <span style="font-size: 13px; font-weight: 500; color: var(--color-muted);">MAE</span></div>
-              <div class="rating-sub">
-                <span class="rating-badge-pill">226</span>
-                <span>Automated Tests Verified</span>
-              </div>
+            <div class="cp-hero-feature-item">
+              <span class="cp-feat-icon">🔬</span>
+              <span>Numerical Methods Lab</span>
             </div>
           </div>
         </div>
@@ -225,91 +184,388 @@ export class DashboardView {
    */
   renderEmptyState() {
     return `
-      ${this.renderStudioHero(null)}
+      <div class="cp-page-stack">
+        ${this.renderAcademicHero(null)}
 
-      <div class="card" style="margin-bottom: var(--space-xl); text-align: center; padding: var(--space-2xl) var(--space-lg);">
-        <div style="font-size: 48px; margin-bottom: var(--space-md);">📊</div>
-        <h2 style="font-size: 20px; font-weight: 700; color: var(--color-text); margin-bottom: 8px;">
-          No Cohort Dataset Loaded in Session Memory
-        </h2>
-        <p style="font-size: 14px; max-width: 620px; margin: 0 auto var(--space-xl) auto; color: var(--color-muted); line-height: 1.6;">
-          The Analytical Dashboard computes empirical transition dynamics, semester histograms, boxplots, in-sample residuals, and rolling-origin backtesting. Import a long-format CSV or scan marksheet PDFs via client-side OCR to begin.
-        </p>
+        <div class="card" style="margin-bottom: var(--space-xl); text-align: center; padding: var(--space-2xl) var(--space-lg);">
+          <div style="font-size: 48px; margin-bottom: var(--space-md);">📊</div>
+          <h2 style="font-size: 20px; font-weight: 700; color: var(--color-text); margin-bottom: 8px;">
+            No Cohort Dataset Loaded in Session Memory
+          </h2>
+          <p style="font-size: 14px; max-width: 620px; margin: 0 auto var(--space-xl) auto; color: var(--color-muted); line-height: 1.6;">
+            The Analytical Dashboard computes empirical transition dynamics, semester histograms, boxplots, in-sample residuals, and rolling-origin backtesting. Import a long-format CSV or scan marksheet PDFs via client-side OCR to begin.
+          </p>
 
-        <div style="display: flex; justify-content: center; gap: var(--space-md); flex-wrap: wrap;">
-          <button class="btn btn-primary" id="btn-demo-load">
-            ⚡ Load Synthetic Sample Dataset (13 Students)
-          </button>
-          <button class="btn btn-secondary" id="btn-goto-dataset">
-            📥 Import Long-Format CSV
-          </button>
-          <button class="btn btn-secondary" id="btn-goto-ocr">
-            📷 Scan Document via OCR
-          </button>
+          <div style="display: flex; justify-content: center; gap: var(--space-md); flex-wrap: wrap;">
+            <button class="cp-button cp-button-primary" id="btn-demo-load" type="button">
+              ⚡ Load Synthetic Sample Dataset (13 Students)
+            </button>
+            <button class="cp-button cp-button-secondary" id="btn-goto-dataset" type="button">
+              📥 Import Long-Format CSV
+            </button>
+            <button class="cp-button cp-button-secondary" id="btn-goto-ocr" type="button">
+              📷 Scan Document via OCR
+            </button>
+          </div>
         </div>
       </div>
     `;
   }
 
   /**
-   * Renders high-level dataset metrics.
+   * Renders high-level dataset metrics in data-first cards.
    */
   renderOverviewKPIs(overview) {
     const gapsNotice = overview.studentsWithGapsCount > 0
-      ? `<div style="margin-top: 14px; padding: 10px 14px; background-color: var(--color-warning-bg); border: 1px solid var(--color-warning-border); border-radius: var(--radius-sm); font-size: 12.5px; color: var(--color-warning); display: flex; align-items: center; gap: 8px;">
-           <span>⚠️</span>
-           <span><strong>Notice</strong>: ${overview.studentsWithGapsCount} student(s) contain non-consecutive semester gaps. Non-bridging policy strictly excludes artificial transition jumps.</span>
+      ? `<div class="cp-alert cp-alert-warning" style="margin-top: 14px;">
+           <strong>Notice</strong>: ${overview.studentsWithGapsCount} student(s) contain non-consecutive semester gaps. Non-bridging policy strictly excludes artificial transition jumps.
          </div>`
       : '';
 
     return `
-      <div class="kpi-grid">
-        <div class="kpi-card">
-          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-            <div class="kpi-label">Unique Students</div>
-            <span style="font-size: 16px; opacity: 0.8;">👥</span>
+      <div class="cp-kpi-grid">
+        <article class="cp-kpi">
+          <span class="cp-kpi-icon">👥</span>
+          <div>
+            <small>Unique Students</small>
+            <strong id="kpi-unique-students">${overview.totalStudents}</strong>
+            <span>Pseudonymous records</span>
           </div>
-          <div class="kpi-value">${overview.totalStudents}</div>
-          <div class="kpi-meta">Pseudonymous keys</div>
-        </div>
-        <div class="kpi-card">
-          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-            <div class="kpi-label">Accepted Records</div>
-            <span style="font-size: 16px; opacity: 0.8;">📑</span>
+        </article>
+        <article class="cp-kpi">
+          <span class="cp-kpi-icon">📑</span>
+          <div>
+            <small>Accepted Records</small>
+            <strong id="kpi-accepted-records">${overview.totalRecords}</strong>
+            <span>Valid semester entries (Sem ${overview.minSemester}–${overview.maxSemester})</span>
           </div>
-          <div class="kpi-value">${overview.totalRecords}</div>
-          <div class="kpi-meta">Across Semesters ${overview.minSemester}–${overview.maxSemester}</div>
-        </div>
-        <div class="kpi-card">
-          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-            <div class="kpi-label">Observed Span</div>
-            <span style="font-size: 16px; opacity: 0.8;">📅</span>
+        </article>
+        <article class="cp-kpi">
+          <span class="cp-kpi-icon">🔗</span>
+          <div>
+            <small>Valid Transitions</small>
+            <strong id="kpi-valid-transitions">${overview.validTransitionsCount}</strong>
+            <span>Consecutive semesters</span>
           </div>
-          <div class="kpi-value" style="font-size: 22px; margin-top: 5px;">Sem ${overview.minSemester} – Sem ${overview.maxSemester}</div>
-          <div class="kpi-meta">${overview.observedSemesters.length} active semesters</div>
-        </div>
-        <div class="kpi-card">
-          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-            <div class="kpi-label">Valid Transitions</div>
-            <span style="font-size: 16px; opacity: 0.8;">⚡</span>
+        </article>
+        <article class="cp-kpi">
+          <span class="cp-kpi-icon">📈</span>
+          <div>
+            <small>Shared Model</small>
+            <strong class="cp-kpi-text">${overview.canFitRegression ? 'Linear Regression' : 'Persistence Baseline'}</strong>
+            <span>
+              <i class="cp-status-dot ${overview.canFitRegression ? '' : 'is-empty'}"></i>
+              ${overview.canFitRegression ? 'Trained on historical data' : (overview.regressionStatus || 'Model Fallback')}
+            </span>
           </div>
-          <div class="kpi-value">${overview.validTransitionsCount}</div>
-          <div class="kpi-meta">1-step consecutive pairs</div>
-        </div>
-        <div class="kpi-card">
-          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-            <div class="kpi-label">Shared Regression</div>
-            <span style="font-size: 16px; opacity: 0.8;">📐</span>
-          </div>
-          <div class="kpi-value" style="font-size: 17px; margin-top: 6px; color: ${overview.canFitRegression ? 'var(--color-success)' : 'var(--color-warning)'};">
-            ${overview.canFitRegression ? 'Model B Active' : 'Fallback (Model A)'}
-          </div>
-          <div class="kpi-meta">${overview.canFitRegression ? 'Least-squares confirmed' : overview.regressionStatus}</div>
-        </div>
+        </article>
       </div>
       ${gapsNotice}
     `;
   }
+
+  /**
+   * Renders the 4-panel analytical grid inspired by the reference design:
+   * 1. Semester SGPA Distribution Histogram
+   * 2. Historical vs Predicted SGPA Transition Scatter Plot
+   * 3. Next-Semester Prediction Preview Table
+   * 4. Model Performance (Temporal Validation) Comparison Bars
+   */
+  renderAnalyticsGrid(dataset, overview) {
+    return `
+      <div class="cp-dashboard-grid" style="margin-top: var(--space-xl);">
+        ${this.renderDistributionPanel(dataset, overview)}
+        ${this.renderScatterPanel(dataset, overview)}
+        ${this.renderPredictionPreviewPanel(dataset)}
+        ${this.renderTemporalEvaluationPanel(dataset)}
+      </div>
+    `;
+  }
+
+  /**
+   * Panel 1: Semester SGPA Distribution Histogram
+   */
+  renderDistributionPanel(dataset, overview) {
+    const isAll = this.selectedSemester === 'all';
+    const activeSem = isAll ? null : Number(this.selectedSemester);
+
+    let binCounts = [0, 0, 0, 0, 0, 0, 0, 0];
+    let totalCount = 0;
+
+    if (isAll) {
+      for (const r of dataset) {
+        let idx = Math.floor(r.sgpa / 0.5);
+        if (idx >= 8) idx = 7;
+        if (idx < 0) idx = 0;
+        binCounts[idx]++;
+        totalCount++;
+      }
+    } else {
+      const dist = computeSemesterDistribution(dataset, activeSem);
+      if (dist && dist.histogram && dist.histogram.bins) {
+        binCounts = dist.histogram.bins.map(b => b.count);
+        totalCount = dist.histogram.totalObservations;
+      }
+    }
+
+    const maxCount = Math.max(1, ...binCounts);
+    const maxBarHeight = 110;
+    const barsSvg = binCounts.map((count, i) => {
+      const h = (count / maxCount) * maxBarHeight;
+      const x = 35 + i * 54;
+      const y = 145 - h;
+      return `
+        <rect x="${x}" y="${y.toFixed(1)}" width="38" height="${Math.max(2, h).toFixed(1)}" rx="3" fill="#ff3038" opacity="0.9" />
+        ${count > 0 ? `<text x="${x + 19}" y="${Math.max(14, y - 5).toFixed(1)}" text-anchor="middle" fill="#94a3b8" font-size="11" font-family="var(--font-mono)" font-weight="600">${count}</text>` : ''}
+      `;
+    }).join('');
+
+    const optionsHtml = `
+      <option value="all" ${isAll ? 'selected' : ''}>All Semesters</option>
+      ${overview.observedSemesters.map(s => `
+        <option value="${s}" ${!isAll && activeSem === s ? 'selected' : ''}>Semester ${s}</option>
+      `).join('')}
+    `;
+
+    return `
+      <article class="cp-panel cp-panel-span-7">
+        <header class="cp-panel-header">
+          <div>
+            <span class="cp-kicker">Distribution</span>
+            <h2>Semester SGPA Distribution</h2>
+          </div>
+          <select class="cp-select cp-select-sm" id="dashboard-semester-select" aria-label="Select Semester">
+            ${optionsHtml}
+          </select>
+        </header>
+        <svg class="cp-preview-chart" viewBox="0 0 490 190" role="img" aria-label="SGPA Distribution Histogram">
+          <g class="chart-grid">
+            <line x1="30" y1="145" x2="475" y2="145" stroke="var(--cp-line-strong)" stroke-width="1" />
+            <line x1="30" y1="90" x2="475" y2="90" stroke="var(--cp-line)" stroke-dasharray="3,3" />
+            <line x1="30" y1="35" x2="475" y2="35" stroke="var(--cp-line)" stroke-dasharray="3,3" />
+          </g>
+          ${barsSvg}
+          <g font-size="10" font-family="var(--font-mono)" fill="var(--cp-text-muted)" text-anchor="middle">
+            <text x="35" y="165">0.0</text>
+            <text x="89" y="165">0.5</text>
+            <text x="143" y="165">1.0</text>
+            <text x="197" y="165">1.5</text>
+            <text x="251" y="165">2.0</text>
+            <text x="305" y="165">2.5</text>
+            <text x="359" y="165">3.0</text>
+            <text x="413" y="165">3.5</text>
+            <text x="467" y="165">4.0</text>
+          </g>
+        </svg>
+        <p class="cp-panel-note">Showing distribution of ${totalCount} recorded SGPA entries across 0.5-width bins.</p>
+      </article>
+    `;
+  }
+
+  /**
+   * Panel 2: Historical vs Predicted SGPA Transition Scatter Plot
+   */
+  renderScatterPanel(dataset, overview) {
+    const scatter = computeTransitionScatter(dataset);
+    const hasPoints = scatter.points && scatter.points.length > 0;
+
+    const scaleX = v => 45 + (v / 4.0) * 420;
+    const scaleY = v => 165 - (v / 4.0) * 135;
+
+    const pointsSvg = hasPoints ? scatter.points.map(pt => {
+      const cx = scaleX(pt.x).toFixed(1);
+      const cy = scaleY(pt.y).toFixed(1);
+      return `<circle cx="${cx}" cy="${cy}" r="4.5" fill="#ff3038" opacity="0.85" />`;
+    }).join('') : '';
+
+    let regressionLineSvg = '';
+    if (scatter.regressionLine) {
+      const rl = scatter.regressionLine;
+      const y0 = Math.max(0, Math.min(4, rl.y1));
+      const y4 = Math.max(0, Math.min(4, rl.y2));
+      regressionLineSvg = `
+        <line x1="${scaleX(0).toFixed(1)}" y1="${scaleY(y0).toFixed(1)}" x2="${scaleX(4).toFixed(1)}" y2="${scaleY(y4).toFixed(1)}" stroke="#ff3038" stroke-width="2.5" />
+      `;
+    }
+
+    const persistenceLineSvg = `
+      <line x1="${scaleX(0).toFixed(1)}" y1="${scaleY(0).toFixed(1)}" x2="${scaleX(4).toFixed(1)}" y2="${scaleY(4).toFixed(1)}" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4,4" />
+    `;
+
+    return `
+      <article class="cp-panel cp-panel-span-5">
+        <header class="cp-panel-header">
+          <div>
+            <span class="cp-kicker">Model Evidence</span>
+            <h2>Historical vs Predicted SGPA</h2>
+          </div>
+          <span class="cp-badge cp-badge-success">${scatter.totalTransitions} transitions</span>
+        </header>
+        <svg class="cp-preview-chart" viewBox="0 0 490 190" role="img" aria-label="Historical vs Predicted SGPA Scatter Plot">
+          <g class="chart-grid">
+            <line x1="45" y1="165" x2="465" y2="165" stroke="var(--cp-line-strong)" />
+            <line x1="45" y1="30" x2="45" y2="165" stroke="var(--cp-line-strong)" />
+            <line x1="45" y1="131" x2="465" y2="131" stroke="var(--cp-line)" stroke-dasharray="2,2" />
+            <line x1="45" y1="97" x2="465" y2="97" stroke="var(--cp-line)" stroke-dasharray="2,2" />
+            <line x1="45" y1="63" x2="465" y2="63" stroke="var(--cp-line)" stroke-dasharray="2,2" />
+          </g>
+          ${persistenceLineSvg}
+          ${regressionLineSvg}
+          <g class="chart-points">${pointsSvg}</g>
+          <g font-size="10" font-family="var(--font-mono)" fill="var(--cp-text-muted)">
+            <text x="45" y="180" text-anchor="middle">0.0</text>
+            <text x="150" y="180" text-anchor="middle">1.0</text>
+            <text x="255" y="180" text-anchor="middle">2.0</text>
+            <text x="360" y="180" text-anchor="middle">3.0</text>
+            <text x="465" y="180" text-anchor="middle">4.0</text>
+            <text x="35" y="169" text-anchor="end">0</text>
+            <text x="35" y="101" text-anchor="end">2</text>
+            <text x="35" y="34" text-anchor="end">4</text>
+          </g>
+        </svg>
+        <div class="cp-chart-legend">
+          <span><i class="legend-dot" style="background:#ff3038;"></i> Observed Transitions</span>
+          <span><i class="legend-line" style="background:#ff3038;"></i> Fitted Regression</span>
+          <span><i class="legend-line" style="background:#64748b; border-style:dashed;"></i> Persistence Baseline</span>
+        </div>
+      </article>
+    `;
+  }
+
+  /**
+   * Panel 3: Next-Semester Prediction Preview Table
+   */
+  renderPredictionPreviewPanel(dataset) {
+    const classResults = predictWholeClass(dataset);
+    const students = classResults.students || [];
+    const previewList = students.slice(0, 5);
+
+    const rowsHtml = previewList.map(s => {
+      const pred = s.predicted_sgpa;
+      const base = s.baseline_prediction;
+      const diff = pred !== null ? pred - base : null;
+      const diffStr = diff !== null ? (diff >= 0 ? `+${diff.toFixed(2)}` : diff.toFixed(2)) : '—';
+      const diffClass = diff !== null && diff >= 0 ? 'cp-positive' : 'cp-warning-text';
+      const statusBadge = s.out_of_range
+        ? `<span class="cp-badge cp-badge-warning">High (Unclipped)</span>`
+        : `<span class="cp-badge cp-badge-success">In Range</span>`;
+
+      return `
+        <tr>
+          <td><code>${this.escapeHtml(s.student_key)}</code></td>
+          <td>Sem ${s.latest_semester}</td>
+          <td>${pred !== null ? pred.toFixed(2) : '—'}</td>
+          <td>${base.toFixed(2)}</td>
+          <td class="${diffClass}">${diffStr}</td>
+          <td>${statusBadge}</td>
+        </tr>
+      `;
+    }).join('');
+
+    return `
+      <article class="cp-panel cp-panel-span-8">
+        <header class="cp-panel-header">
+          <div>
+            <span class="cp-kicker">Forecast Preview</span>
+            <h2>Next-Semester Prediction Preview</h2>
+          </div>
+          <button class="cp-button cp-button-ghost cp-button-sm" id="btn-preview-view-all" type="button">
+            View All →
+          </button>
+        </header>
+        <div class="cp-table-scroll">
+          <table class="cp-table">
+            <thead>
+              <tr>
+                <th>Student Key</th>
+                <th>Last Sem</th>
+                <th>Predicted</th>
+                <th>Baseline</th>
+                <th>Δ (Pred - Base)</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rowsHtml || '<tr><td colspan="6" style="text-align:center; color:var(--cp-text-muted);">No student predictions available</td></tr>'}
+            </tbody>
+          </table>
+        </div>
+      </article>
+    `;
+  }
+
+  /**
+   * Panel 4: Model Performance (Temporal Validation) Comparison Bars
+   */
+  renderTemporalEvaluationPanel(dataset) {
+    const evalData = computeDashboardTemporalEvaluation(dataset);
+
+    if (!evalData.evaluationAvailable) {
+      return `
+        <article class="cp-panel cp-panel-span-4">
+          <header class="cp-panel-header">
+            <div>
+              <span class="cp-kicker">Temporal Validation</span>
+              <h2>Model Performance (Temporal Validation)</h2>
+            </div>
+          </header>
+          <div class="cp-alert cp-alert-info" style="margin-top: 14px;">
+            <strong>Holdout Validation Status: Unavailable</strong>
+            <span>${this.escapeHtml(evalData.message || 'At least 2 consecutive historical test periods are required for holdout validation.')}</span>
+          </div>
+          <p class="cp-panel-note">Requires expanding-window historical folds.</p>
+        </article>
+      `;
+    }
+
+    const m = evalData.pairedMetrics;
+    const maxVal = Math.max(0.1, m.regressionMae, m.baselineMae, m.regressionRmse, m.baselineRmse);
+    const maxBarHeight = 90;
+
+    const rMaeH = (m.regressionMae / maxVal) * maxBarHeight;
+    const bMaeH = (m.baselineMae / maxVal) * maxBarHeight;
+    const rRmseH = (m.regressionRmse / maxVal) * maxBarHeight;
+    const bRmseH = (m.baselineRmse / maxVal) * maxBarHeight;
+
+    return `
+      <article class="cp-panel cp-panel-span-4">
+        <header class="cp-panel-header">
+          <div>
+            <span class="cp-kicker">Temporal Validation</span>
+            <h2>Model Performance (Temporal Validation)</h2>
+          </div>
+          <span class="cp-badge cp-badge-info">${evalData.pairedComparisonCount} pairs</span>
+        </header>
+        <svg class="cp-preview-chart" viewBox="0 0 380 180" role="img" aria-label="Temporal Validation Comparison Bar Chart">
+          <g class="chart-grid">
+            <line x1="30" y1="135" x2="350" y2="135" stroke="var(--cp-line-strong)" />
+          </g>
+          <!-- MAE Group -->
+          <g>
+            <rect x="65" y="${(135 - rMaeH).toFixed(1)}" width="36" height="${Math.max(2, rMaeH).toFixed(1)}" rx="3" fill="#ff3038" />
+            <text x="83" y="${Math.max(16, 130 - rMaeH).toFixed(1)}" text-anchor="middle" fill="#ffffff" font-size="10" font-family="var(--font-mono)" font-weight="700">${m.regressionMae.toFixed(3)}</text>
+            <rect x="108" y="${(135 - bMaeH).toFixed(1)}" width="36" height="${Math.max(2, bMaeH).toFixed(1)}" rx="3" fill="#64748b" />
+            <text x="126" y="${Math.max(16, 130 - bMaeH).toFixed(1)}" text-anchor="middle" fill="#cbd5e1" font-size="10" font-family="var(--font-mono)" font-weight="700">${m.baselineMae.toFixed(3)}</text>
+            <text x="105" y="155" text-anchor="middle" fill="var(--cp-text-muted)" font-size="11" font-weight="600">MAE (↓ better)</text>
+          </g>
+          <!-- RMSE Group -->
+          <g>
+            <rect x="235" y="${(135 - rRmseH).toFixed(1)}" width="36" height="${Math.max(2, rRmseH).toFixed(1)}" rx="3" fill="#ff3038" />
+            <text x="253" y="${Math.max(16, 130 - rRmseH).toFixed(1)}" text-anchor="middle" fill="#ffffff" font-size="10" font-family="var(--font-mono)" font-weight="700">${m.regressionRmse.toFixed(3)}</text>
+            <rect x="278" y="${(135 - bRmseH).toFixed(1)}" width="36" height="${Math.max(2, bRmseH).toFixed(1)}" rx="3" fill="#64748b" />
+            <text x="296" y="${Math.max(16, 130 - bRmseH).toFixed(1)}" text-anchor="middle" fill="#cbd5e1" font-size="10" font-family="var(--font-mono)" font-weight="700">${m.baselineRmse.toFixed(3)}</text>
+            <text x="275" y="155" text-anchor="middle" fill="var(--cp-text-muted)" font-size="11" font-weight="600">RMSE (↓ better)</text>
+          </g>
+        </svg>
+        <div class="cp-chart-legend">
+          <span><i class="legend-dot" style="background:#ff3038;"></i> Regression Model</span>
+          <span><i class="legend-dot" style="background:#64748b;"></i> Persistence Baseline</span>
+        </div>
+        <p class="cp-panel-note">Evaluation based on historical consecutive-semester holdouts where both current and next semester are observed.</p>
+      </article>
+    `;
+  }
+
 
   /**
    * Dispatches subtab rendering.
@@ -1138,7 +1394,7 @@ export class DashboardView {
 
         <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: var(--space-md);">
           Rows represent the source semester (s<sub>t</sub>), and columns represent the target semester (s<sub>t+1</sub>).
-          Under ClassPredict's non-bridging rule, only consecutive 1-step pairs are valid; non-consecutive jumps (e.g. Sem 1 → Sem 3) are strictly excluded from regression models.
+          Under Gradivue's non-bridging rule, only consecutive 1-step pairs are valid; non-consecutive jumps (e.g. Sem 1 → Sem 3) are strictly excluded from regression models.
         </div>
 
         <div class="matrix-wrapper">
@@ -1315,24 +1571,40 @@ export class DashboardView {
       });
     }
 
+    // Overview grid button listeners
+    const btnHeroLoadDataset = this.container.querySelector('#btn-hero-load-dataset');
+    if (btnHeroLoadDataset) {
+      btnHeroLoadDataset.addEventListener('click', () => {
+        const datasetNav = document.querySelector('[data-nav-id="dataset"]') || document.getElementById('tab-btn-dataset');
+        if (datasetNav) datasetNav.click();
+      });
+    }
+
+    const btnPreviewViewAll = this.container.querySelector('#btn-preview-view-all');
+    if (btnPreviewViewAll) {
+      btnPreviewViewAll.addEventListener('click', () => {
+        const classNav = document.querySelector('[data-nav-id="class"]') || document.getElementById('tab-btn-predictions');
+        if (classNav) classNav.click();
+      });
+    }
+
+    const semSelect = this.container.querySelector('#dashboard-semester-select');
+    if (semSelect) {
+      semSelect.addEventListener('change', (e) => {
+        this.selectedSemester = e.target.value;
+        this.render();
+        this.bindEvents();
+      });
+    }
+
     // Prediction preview navigation button
     const btnGotoPredPreview = this.container.querySelector('#btn-goto-predictions-preview');
     if (btnGotoPredPreview) {
       btnGotoPredPreview.addEventListener('click', () => {
-        const predTab = document.getElementById('tab-btn-predictions');
+        const predTab = document.querySelector('[data-nav-id="individual"]') || document.getElementById('tab-btn-predictions');
         if (predTab) predTab.click();
       });
     }
-
-    // Studio Hero button listeners
-    const btnHeroExplore = this.container.querySelector('#btn-hero-explore-pred');
-    const btnHeroExploreArrow = this.container.querySelector('#btn-hero-explore-pred-arrow');
-    const onExploreForecasts = () => {
-      const predTab = document.getElementById('tab-btn-predictions');
-      if (predTab) predTab.click();
-    };
-    if (btnHeroExplore) btnHeroExplore.addEventListener('click', onExploreForecasts);
-    if (btnHeroExploreArrow) btnHeroExploreArrow.addEventListener('click', onExploreForecasts);
 
     const loadDemoCohort = async () => {
       try {
@@ -1359,7 +1631,7 @@ export class DashboardView {
     const btnGotoDataset = this.container.querySelector('#btn-goto-dataset');
     if (btnGotoDataset) {
       btnGotoDataset.addEventListener('click', () => {
-        const datasetTab = document.getElementById('tab-btn-dataset');
+        const datasetTab = document.querySelector('[data-nav-id="dataset"]') || document.getElementById('tab-btn-dataset');
         if (datasetTab) datasetTab.click();
       });
     }
@@ -1367,7 +1639,7 @@ export class DashboardView {
     const btnGotoOcr = this.container.querySelector('#btn-goto-ocr');
     if (btnGotoOcr) {
       btnGotoOcr.addEventListener('click', () => {
-        const ocrTab = document.getElementById('tab-btn-ocr');
+        const ocrTab = document.querySelector('[data-nav-id="ocr"]') || document.getElementById('tab-btn-ocr');
         if (ocrTab) ocrTab.click();
       });
     }

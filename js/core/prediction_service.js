@@ -111,6 +111,8 @@ export function predictIndividualStudent(observations, options = {}) {
     return {
       modelId: "MODEL_C_INDIVIDUAL_TREND",
       modelName: "Individual Least-Squares Trend",
+      coefficients: trendResult.coefficients,
+      formula: trendResult.formula,
       targetSemester: trendResult.targetSemester,
       latestSemester: trendResult.latestSemester,
       latestSgpa: trendResult.latestSgpa,
@@ -363,6 +365,23 @@ export function predictWholeClass(dataset, options = {}) {
 }
 
 /**
+ * Helper to sanitize CSV text cells against formula injection (CWE-1236 / OWASP)
+ * and enforce RFC-4180 quotation and quote-escaping.
+ * 
+ * @param {string|any} val 
+ * @returns {string} Sanitized quoted cell
+ */
+export function sanitizeCsvCell(val) {
+  if (val === null || val === undefined) return '""';
+  let str = String(val);
+  // Neutralize formula triggers: =, +, -, @, tab (\t), carriage return (\r)
+  if (/^[=+\-@\t\r]/.test(str)) {
+    str = "'" + str;
+  }
+  return `"${str.replace(/"/g, '""')}"`;
+}
+
+/**
  * Generates an RFC-4180 compliant CSV string for whole-class predictions.
  * Strictly excludes names, roll numbers, or personal identifying information.
  * Unavailable predictions are represented as empty strings, never as zero.
@@ -391,7 +410,7 @@ export function exportWholeClassCSV(studentPredictions) {
 
   for (let i = 0; i < studentPredictions.length; i++) {
     const s = studentPredictions[i];
-    const key = `"${String(s.student_key || '').replace(/"/g, '""')}"`;
+    const key = sanitizeCsvCell(s.student_key || '');
     const latestSem = s.latest_semester !== undefined ? s.latest_semester : '';
     const latestSgpa = typeof s.latest_sgpa === 'number' && Number.isFinite(s.latest_sgpa)
       ? s.latest_sgpa.toFixed(4)
@@ -403,8 +422,8 @@ export function exportWholeClassCSV(studentPredictions) {
     const baselinePred = typeof s.baseline_prediction === 'number' && Number.isFinite(s.baseline_prediction)
       ? s.baseline_prediction.toFixed(4)
       : '';
-    const modelName = `"${String(s.model_name || '').replace(/"/g, '""')}"`;
-    const status = `"${String(s.prediction_status || '').replace(/"/g, '""')}"`;
+    const modelName = sanitizeCsvCell(s.model_name || '');
+    const status = sanitizeCsvCell(s.prediction_status || '');
     const outOfRange = s.out_of_range ? "TRUE" : "FALSE";
 
     rows.push([
@@ -438,10 +457,12 @@ export function exportIndividualCSV(individualResult) {
     ? individualResult.rawPrediction.toFixed(4)
     : '';
 
+  const safeModelName = sanitizeCsvCell(individualResult.modelName || '');
+
   const metaRows = [
-    `# ClassPredict Individual Prediction Result`,
+    `# Gradivue Individual Prediction Result`,
     `# Target Semester,Predicted SGPA,Model Name,Latest Semester,Latest SGPA,Out Of Range`,
-    `${individualResult.targetSemester},${rawPred},"${individualResult.modelName}",${individualResult.latestSemester},${individualResult.latestSgpa.toFixed(4)},${individualResult.isOutOfRange ? "TRUE" : "FALSE"}`,
+    `${individualResult.targetSemester},${rawPred},${safeModelName},${individualResult.latestSemester},${individualResult.latestSgpa.toFixed(4)},${individualResult.isOutOfRange ? "TRUE" : "FALSE"}`,
     ``,
     `semester_no,sgpa`
   ];

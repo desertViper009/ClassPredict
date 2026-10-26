@@ -1,8 +1,8 @@
-# Validation & Testing Strategy — ClassPredict
+# Validation & Testing Strategy — Gradivue
 
 > **Document ID**: DOC-TEST-001  
 > **Status**: Approved & Implemented (Phase 10 Production Deployment & Hardening Verified)  
-> **Lifecycle State**: Production Release & Tested (226 Automated Tests Passing across 40 Suites)  
+> **Lifecycle State**: Production Release & Tested (246 Automated Tests Passing across 47 Suites)  
 > **Last Updated**: October 2026
 
 ---

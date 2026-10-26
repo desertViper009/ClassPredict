@@ -1,6 +1,6 @@
 /**
  * @file numerical_lab.js
- * @description Educational Numerical Methods Laboratory calculation engine for ClassPredict.
+ * @description Educational Numerical Methods Laboratory calculation engine for Gradivue.
  * Implements step-by-step Gaussian elimination traces, linear vs. quadratic regression
  * comparison, Newton divided-difference term breakdown, and Runge's phenomenon demonstrations.
  * Pure mathematical core decoupled from the DOM.
@@ -75,6 +75,18 @@ export const GAUSSIAN_EXAMPLES = {
     ],
     b: [6, 12, 8],
     expectedSolution: null
+  },
+  qa_benchmark_3x3: {
+    id: 'qa_benchmark_3x3',
+    name: 'Row-Swap Partial Pivoting Benchmark (3×3)',
+    description: 'Requires row swap on first column with negative entries. Known integer solution [2, 3, -1].',
+    A: [
+      [2, 1, -1],
+      [-3, -1, 2],
+      [-2, 1, 2]
+    ],
+    b: [8, -11, -3],
+    expectedSolution: [2, 3, -1]
   }
 };
 
@@ -165,6 +177,22 @@ export const REGRESSION_LAB_DATASETS = {
     isSynthetic: true,
     x: [2.00, 2.40, 2.80, 3.10, 3.40, 3.70, 3.90],
     y: [2.50, 2.95, 3.35, 3.60, 3.78, 3.88, 3.92]
+  },
+  exact_linear_benchmark: {
+    id: 'exact_linear_benchmark',
+    name: 'Exact Linear y = 2x + 1 (Known Fixture)',
+    description: 'Known linear test fixture with slope = 2.00, intercept = 1.00, RSS = 0.',
+    isSynthetic: true,
+    x: [1.0, 2.0, 3.0, 4.0],
+    y: [3.0, 5.0, 7.0, 9.0]
+  },
+  exact_quadratic_benchmark: {
+    id: 'exact_quadratic_benchmark',
+    name: 'Exact Quadratic y = x² + 2x + 3 (Known Fixture)',
+    description: 'Known quadratic test fixture with a2 = 1.00, a1 = 2.00, a0 = 3.00, RSS = 0.',
+    isSynthetic: true,
+    x: [0.0, 1.0, 2.0, 3.0, 4.0],
+    y: [3.0, 6.0, 11.0, 18.0, 27.0]
   }
 };
 
@@ -447,6 +475,15 @@ export const INTERPOLATION_EXAMPLES = {
     x: [1, 2, 3, 4, 5],
     y: [3.50, 2.80, 3.70, 2.90, 3.80],
     xEval: 4.5
+  },
+  perfect_square_3pt: {
+    id: 'perfect_square_3pt',
+    name: 'Parabola P(x) = x² + 2x + 1 (Known Fixture)',
+    description: 'Nodes x = [0, 1, 2], y = [1, 4, 9]. Evaluates at x=3 to 16. Reconstructs exact polynomial P(x) = x² + 2x + 1.',
+    x: [0, 1, 2],
+    y: [1, 4, 9],
+    xEval: 3.0,
+    expectedEval: 16.0
   }
 };
 
@@ -617,8 +654,10 @@ export function runRungeExperiment(nodeCount = 7, distributionType = 'equally_sp
   // 2. Compute Newton divided differences
   const { coefficients, table } = computeDividedDifferences(xNodes, yNodes);
 
-  // 3. Evaluate over fine grid (101 points in [-1, 1]) to compute exact errors
-  const gridCount = 101;
+  // 3. Evaluate over fine grid (default 101 points in [-1, 1], configurable via options.gridCount)
+  const gridCount = typeof options.gridCount === 'number' && options.gridCount >= 11
+    ? Math.round(options.gridCount)
+    : 101;
   const grid = [];
   let maxAbsError = 0.0;
   let maxErrorLocation = 0.0;
@@ -717,14 +756,15 @@ export const NUMERICAL_STABILITY_TOPICS = [
     title: 'Normal Equations & Condition Squaring: κ₂(XᵀX) = (κ₂(X))²',
     badge: 'Least Squares',
     content: `
-      Solving linear least squares via Normal Equations (XᵀX)β = Xᵀy squares the 2-norm condition number:
+      Solving linear least squares via Normal Equations (XᵀX)β = Xᵀy inherently squares the 2-norm condition number:
       κ₂(XᵀX) = (κ₂(X))².
       
       If design matrix X has condition number 10⁴, the Normal Equations matrix XᵀX has condition number 10⁸!
       
-      **ClassPredict Mitigation**:
-      1. Predictor centering (x' = x - x̄) decouples slope and intercept, making off-diagonal covariance entries zero.
-      2. Scale-aware partial pivoting prevents multiplier blow-up during Gaussian elimination.
+      **Mathematical Trade-Offs**:
+      1. **Predictor Centering (x' = x - x̄)**: Substantially reduces the baseline condition number κ₂(X') by removing the large coordinate offset (which otherwise makes the column of ones and the grade predictor nearly collinear).
+      2. **Condition Squaring Persists**: Centering does NOT eliminate condition squaring. Solving (X'ᵀX') still squares the condition number of X'. For severely ill-conditioned matrices, normal equations lose up to half of the available floating-point digits, whereas orthogonal factorizations (Householder QR or SVD) avoid condition squaring entirely.
+      3. **Gradivue Architecture**: Because academic grade transitions are restricted to linear (d=1) and quadratic (d=2) models on centered coordinates, the system remains stable within IEEE-754 precision while providing direct pedagogical access to Gaussian elimination traces.
     `
   },
   {

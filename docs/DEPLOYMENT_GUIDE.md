@@ -1,4 +1,4 @@
-# Deployment & Runtime Guide — ClassPredict
+# Deployment & Runtime Guide — Gradivue
 
 > **Document ID**: DOC-DEP-001  
 > **Status**: Approved & Verified (Phase 10 Production Deployment & Hardening Complete)  
@@ -9,7 +9,7 @@
 
 ## 1. Runtime Environment & Tooling Clarity
 
-ClassPredict is a static client-side web application built with vanilla HTML5, CSS3, and ES6 JavaScript modules.
+Gradivue is a static client-side web application built with vanilla HTML5, CSS3, and ES6 JavaScript modules.
 
 ### 1.1 Requirements Breakdown:
 
@@ -95,8 +95,8 @@ In `index.html`, the browser runtime loads the following vendor libraries for do
 * Output Directory: `.` (Project root).
 
 ### 4.3 Service Worker & Offline Shell Caching (`sw.js`)
-ClassPredict incorporates a production Service Worker (`sw.js`) registered automatically in `js/app.js`:
-* **Cache Name**: `classpredict-v1.0.0-static`.
+Gradivue incorporates a production Service Worker (`sw.js`) registered automatically in `js/app.js`:
+* **Cache Name**: `gradivue-v1.1.0-static`.
 * **Strategy**: Network-first for `index.html` navigation requests (ensuring users receive new releases when online); Cache-first with network fallback for local static assets (CSS, JS, sample dataset).
 * **Strict Privacy Caching Guardrail**: The service worker explicitly ignores and **never caches** user uploads, blob URLs (`blob:*`), or student records.
 * **Offline Shell Status**: A visual connection badge (`#net-status-badge`) in the top navigation bar displays `Online` (emerald) when network is connected and switches to `Offline Shell` (amber) when offline.

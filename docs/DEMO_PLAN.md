@@ -1,4 +1,4 @@
-# Demonstration & Defense Plan — ClassPredict
+# Demonstration & Defense Plan — Gradivue
 
 > **Document ID**: DOC-DEMO-001  
 > **Status**: Approved & Verified (Phase 10 Production Release & Portfolio Demonstration Ready)  
