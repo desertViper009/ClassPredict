@@ -89,10 +89,34 @@ In `index.html`, the browser runtime loads the following vendor libraries for do
 4. Pages build source is configured to **GitHub Actions** (`build_type: workflow`).
 5. Every push to `main` executes 226 unit and numerical tests before automatically deploying to GitHub Pages.
 
-### 4.2 Cloudflare Pages / Vercel Deployment
-* Connect GitHub repository.
-* Build Command: *None* (Static site).
-* Output Directory: `.` (Project root).
+### 4.2 Vercel Deployment
+
+Gradivue includes a native production Vercel configuration (`vercel.json`) and deployment ignore rules (`.vercelignore`):
+
+* **Target URL**: [https://gradivue.vercel.app](https://gradivue.vercel.app) (Free `vercel.app` subdomain).
+* **Framework Preset**: `Other` (Vanilla Static HTML/CSS/ES6 Modules).
+* **Build Command**: *None* (Static site, no bundlers or node build required).
+* **Output Directory**: `.` (Root directory).
+* **Security & Caching Headers** (`vercel.json`):
+  - `X-Content-Type-Options: nosniff`
+  - `X-Frame-Options: DENY`
+  - `Referrer-Policy: strict-origin-when-cross-origin`
+  - `Permissions-Policy: camera=(), microphone=(), geolocation=()`
+  - `/sw.js`: `Cache-Control: public, max-age=0, must-revalidate` and `Service-Worker-Allowed: /`
+* **Exclusion Safeguards** (`.vercelignore`):
+  - Internal tests (`tests/`), test fixtures (`samples/test_synthetic.pdf`), internal QA reports (`docs/`), CI workflows (`.github/`), and local build artifacts (`node_modules/`) are strictly excluded from the deployment bundle.
+  - The synthetic CSV demonstration file (`samples/sample_class_sgpa.csv`) remains available for in-browser client-side demonstrations.
+
+#### Steps for Vercel Dashboard Import:
+1. Navigate to [https://vercel.com/new](https://vercel.com/new) and log in.
+2. Select **Import Git Repository** and choose `desertViper009/ClassPredict`.
+3. Configure Project:
+   - **Project Name**: `gradivue` (assigns `gradivue.vercel.app`).
+   - **Framework Preset**: `Other`.
+   - **Root Directory**: `./`.
+   - **Build and Output Settings**: Leave all switches disabled (empty).
+4. Click **Deploy**.
+5. Once deployment completes, Vercel maps the site directly to `https://gradivue.vercel.app`.
 
 ### 4.3 Service Worker & Offline Shell Caching (`sw.js`)
 Gradivue incorporates a production Service Worker (`sw.js`) registered automatically in `js/app.js`:

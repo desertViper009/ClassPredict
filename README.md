@@ -5,7 +5,8 @@
 > **Academic Context**: University Computer Science & Engineering (CSE) Undergraduate Final Project for **Numerical Methods**.  
 > **Status**: **Phase 10 Production Release & Data-First Premium Redesign Complete (246/246 Tests Passing)**.  
 > **Repository**: [https://github.com/desertViper009/ClassPredict](https://github.com/desertViper009/ClassPredict)  
-> **Live Web Application**: [https://desertviper009.github.io/ClassPredict/](https://desertviper009.github.io/ClassPredict/)
+> **Live Web Application (GitHub Pages)**: [https://desertviper009.github.io/ClassPredict/](https://desertviper009.github.io/ClassPredict/)  
+> **Live Web Application (Vercel Target)**: [https://gradivue.vercel.app](https://gradivue.vercel.app)
 
 ---
 
@@ -33,7 +34,7 @@ To maintain academic rigor and transparency, features and components are explici
 | **Implemented** | Source code written and operational in workspace | Phase 2 Foundation, Phase 3 Dataset Layer, Phase 4 Numerical Engine, Phase 5 Evaluation Engine, Phase 6 Prediction Workflows, Phase 7 Privacy-Preserving OCR, Phase 8 Analytical Dashboard, Phase 9 Educational Laboratory, & Phase 10 Production Hardening (`FR-01` through `FR-08`, `NFR-01` through `NFR-05`) |
 | **Tested** | Automated unit, numerical, integration, UI contract, and browser tests passing | **246 Automated Tests Passing** across 47 suites (`test_foundation.js`, `test_csv_parser.js`, `test_linear_algebra.js`, `test_regression.js`, `test_interpolation.js`, `test_validation.js`, `test_prediction.js`, `test_ocr.js`, `test_dashboard.js`, `test_numerical_lab.js`, `test_release_hardening.js`, `test_ui_contract.js`, `browser_ui_audit.mjs`) |
 | **Verified** | Evaluated against baseline benchmarks on temporal test splits & 5 responsive viewports | **`Verified` (Phase 10 & Data-First Redesign Complete: Multi-Viewport CDP Audit Clear, 0 Horizontal Overflow, 0 Console Errors)** |
-| **Deployed** | Packaged and accessible in production environment | **`Deployed & Live`**: Deployed to GitHub Pages via automated GitHub Actions at [https://desertviper009.github.io/ClassPredict/](https://desertviper009.github.io/ClassPredict/) |
+| **Deployed** | Packaged and accessible in production environment | **`Deployed & Live`**: GitHub Pages: [https://desertviper009.github.io/ClassPredict/](https://desertviper009.github.io/ClassPredict/) · Vercel Target: [https://gradivue.vercel.app](https://gradivue.vercel.app) |
 
 ---
 
